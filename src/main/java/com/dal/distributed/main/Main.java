@@ -20,6 +20,8 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         final String userInput = sc.nextLine();
 
+        Boolean flag = Boolean.FALSE;
+
         while (true) {
             switch (userInput) {
                 case "1":
@@ -31,9 +33,13 @@ public class Main {
                     login.accessSystem();
                     break;
                 case "3":
-                    System.exit(0);
+                    flag = Boolean.TRUE;
+                    break;
                 default:
                     logger.error("Please enter a valid input.");
+            }
+            if (flag == Boolean.TRUE) {
+                break;
             }
         }
     }
