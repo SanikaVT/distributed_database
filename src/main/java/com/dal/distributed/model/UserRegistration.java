@@ -3,16 +3,16 @@ package com.dal.distributed.model;
 import java.util.List;
 
 public class UserRegistration {
-    private String username;
+    private String userId;
     private String password;
     private List<SecurityQuestions> securityQuestions;
 
-    public String getUsername() {
-        return username;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getPassword() {
@@ -29,5 +29,24 @@ public class UserRegistration {
 
     public void setSecurityQuestions(List<SecurityQuestions> securityQuestions) {
         this.securityQuestions = securityQuestions;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder userRegistration = new StringBuilder(200);
+        userRegistration
+                .append(userId)
+                .append("|")
+                .append(password)
+                .append("|");
+
+        for (SecurityQuestions question : securityQuestions) {
+            userRegistration
+                    .append(question.getAnswer())
+                    .append("|");
+        }
+        //Delete the last appended pipe
+        userRegistration.deleteCharAt(userRegistration.length() - 1);
+        return userRegistration.toString();
     }
 }

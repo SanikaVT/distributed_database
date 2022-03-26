@@ -9,9 +9,9 @@ public class Logger {
     }
 
     /**
-     * This method returns the object of PrintMessage.
+     * This method returns the object of Logger.
      *
-     * @return PrintMessage singleton object
+     * @return Logger singleton object
      */
     public static Logger instance() {
         if (null == instance) {

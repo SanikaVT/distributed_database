@@ -1,7 +1,172 @@
 package com.dal.distributed.authentication;
 
+import com.dal.distributed.logger.Logger;
+import com.dal.distributed.model.SecurityQuestions;
+import com.dal.distributed.model.UserRegistration;
+import com.dal.distributed.utils.FileUtils;
+import org.apache.commons.codec.digest.DigestUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+import java.util.regex.Pattern;
+
 public class Registration {
 
+    Logger logger = Logger.instance();
+
     public void registerUser() {
+        Scanner sc = new Scanner(System.in);
+
+        String userId;
+        String password;
+
+        logger.info("Enter a UserID containing 5 to 15 characters: ");
+        userId = sc.nextLine();
+        Boolean userIdValid = performUserIdValidations(userId);
+        if (!userIdValid) {
+            return;
+        }
+
+        logger.info("Enter a password");
+        password = sc.nextLine();
+        Boolean isPasswordValid = performPasswordValidations(password);
+        if (!isPasswordValid) {
+            return;
+        }
+
+        logger.info("What is the name of your favorite movie?");
+        final String securityAnswerOne = sc.nextLine();
+        if (!validateSecurityInput(securityAnswerOne)) {
+            return;
+        }
+
+        logger.info("What is your favorite color?");
+        final String securityAnswerTwo = sc.nextLine();
+        if (!validateSecurityInput(securityAnswerTwo)) {
+            return;
+        }
+
+        logger.info("What is the name of your role model?");
+        final String securityAnswerThree = sc.nextLine();
+        if (!validateSecurityInput(securityAnswerThree)) {
+            return;
+        }
+
+        List<SecurityQuestions> securityQuestions = new ArrayList<>();
+        securityQuestions.add(new SecurityQuestions("What is the name of your favorite movie?", securityAnswerOne));
+        securityQuestions.add(new SecurityQuestions("What is your favorite color?", securityAnswerTwo));
+        securityQuestions.add(new SecurityQuestions("What is the name of your role model?", securityAnswerThree));
+
+        //Prepare the user registration object to be written in the User_Profile
+        UserRegistration user = new UserRegistration();
+        user.setUserId(hash(userId));
+        user.setPassword(hash(password));
+        user.setSecurityQuestions(securityQuestions);
+
+        FileUtils file = new FileUtils();
+        file.writeUserDetails("../usr/dpg9/authentication/User_Profile", user.toString());
+
+        logger.info("Registration completed successfully!!! You can now access the system with userID and Password.");
+    }
+
+    /**
+     * This method returns hashed password that is hashed using MD5
+     *
+     * @param password Input
+     * @return Hashed Password String
+     */
+    private String hash(String password) {
+        return DigestUtils.md5Hex(password);
+    }
+
+    /**
+     * This method performs userID validations
+     *
+     * @param userId Input
+     * @return True if the validations pass and false if fail
+     */
+    private Boolean performUserIdValidations(String userId) {
+        Boolean isValid = Boolean.TRUE;
+        if (userId.isEmpty() || userId.trim().isEmpty()) {
+            isValid = Boolean.FALSE;
+        } else {
+            if (!checkIfTheUserIdExists(userId)) {
+                if (!validateUserId(userId)) {
+                    isValid = Boolean.FALSE;
+                }
+            } else {
+                logger.error("UserID already exists. Please enter a new userID.");
+                isValid = Boolean.FALSE;
+            }
+        }
+        return isValid;
+    }
+
+    /**
+     * This method checks if the userID already exists in the system
+     *
+     * @param userId Input
+     * @return True if exists and False if does not exist
+     */
+    private Boolean checkIfTheUserIdExists(String userId) {
+        //To Do: Check if the UserId already exists in the system
+        return Boolean.FALSE;
+    }
+
+    /**
+     * This method validates userID entered by the user.
+     * Condition: Alphanumeric, length should be between 5 and 15
+     *
+     * @param userId Input
+     * @return True if valid and False if invalid
+     */
+    private Boolean validateUserId(String userId) {
+        Pattern pattern = Pattern.compile("^[a-zA-Z0-9]{5,15}");
+        if (!pattern.matcher(userId).matches()) {
+            logger.error("Please enter a valid alphanumeric userID. Accepted Length: 5 to 15");
+            return Boolean.FALSE;
+        }
+        return Boolean.TRUE;
+    }
+
+    /**
+     * This method validates the password entered by the user
+     *
+     * @param password Input
+     * @return True if valid and False if invalid
+     */
+    private Boolean performPasswordValidations(String password) {
+        Boolean isValid = Boolean.TRUE;
+        if (password.isEmpty() || password.trim().isEmpty()) {
+            isValid = Boolean.FALSE;
+        } else {
+            Pattern pattern = Pattern.compile("^[a-zA-Z0-9!@#$&*]{8,20}$");
+            if (!pattern.matcher(password).matches()) {
+                logger.error("Please enter a valid password. Accepted Length: 8 to 20 | Allowed special characters: ! @ # $ & *");
+                return Boolean.FALSE;
+            }
+        }
+        return isValid;
+    }
+
+    /**
+     * This method validates the user input for security questions.
+     *
+     * @param securityAnswer Input
+     * @return True if valid and False if invalid
+     */
+    private boolean validateSecurityInput(String securityAnswer) {
+        if (securityAnswer.isEmpty() || securityAnswer.trim().isEmpty()) {
+            logger.error("Please enter a non empty response.");
+            return Boolean.FALSE;
+        } else {
+            Pattern pattern = Pattern.compile("^[a-zA-Z0-9 !@#$%^&*]{3,20}$");
+            if (!pattern.matcher(securityAnswer).matches()) {
+                logger.error("Please enter a valid answer. Accepted Length: 3 to 20");
+                return Boolean.FALSE;
+            }
+            return Boolean.TRUE;
+        }
     }
 }

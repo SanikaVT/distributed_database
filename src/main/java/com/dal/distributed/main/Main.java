@@ -11,18 +11,16 @@ public class Main {
     public static void main(String [] args) {
         Logger logger = Logger.instance();
 
-        logger.info("Welcome to DPG9 Distributed Database\n");
-        logger.info("Please select an option from the below list");
-        logger.info("1. User Registration");
-        logger.info("2. Login");
-        logger.info("3. Exit");
-
-        Scanner sc = new Scanner(System.in);
-        final String userInput = sc.nextLine();
-
-        Boolean flag = Boolean.FALSE;
-
+        logger.info("Welcome to DPG9 Distributed Database");
         while (true) {
+            logger.info("\n1. User Registration");
+            logger.info("2. Login");
+            logger.info("3. Exit\n");
+
+            logger.info("Please select an option from the above list");
+            Scanner sc = new Scanner(System.in);
+            final String userInput = sc.nextLine();
+
             switch (userInput) {
                 case "1":
                     Registration registration = new Registration();
@@ -33,12 +31,11 @@ public class Main {
                     login.accessSystem();
                     break;
                 case "3":
-                    flag = Boolean.TRUE;
                     break;
                 default:
                     logger.error("Please enter a valid input.");
             }
-            if (flag == Boolean.TRUE) {
+            if (userInput.equals("3")) {
                 break;
             }
         }
