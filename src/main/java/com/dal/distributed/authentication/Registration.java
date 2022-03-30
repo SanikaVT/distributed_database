@@ -1,5 +1,6 @@
 package com.dal.distributed.authentication;
 
+import com.dal.distributed.constant.AuthConstants;
 import com.dal.distributed.logger.Logger;
 import com.dal.distributed.model.SecurityQuestions;
 import com.dal.distributed.model.UserRegistration;
@@ -8,10 +9,17 @@ import org.apache.commons.codec.digest.DigestUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
 public class Registration {
+
+    private static final String PASSWORD_VALIDATION_REGEX = "^[a-zA-Z0-9!@#$&*]{8,20}$";
+
+    private static final String USER_ID_VALIDATION_REGEX = "^[a-zA-Z0-9]{5,15}";
+
+    private final String SECURITY_ANS_VALIDATION_REGEX = "^[a-zA-Z0-9 !@#$%^&*]{3,20}$";
 
     Logger logger = Logger.instance();
 
@@ -35,28 +43,28 @@ public class Registration {
             return;
         }
 
-        logger.info("What is the name of your favorite movie?");
+        logger.info(AuthConstants.SECURITY_QUESTION_1);
         final String securityAnswerOne = sc.nextLine();
         if (!validateSecurityInput(securityAnswerOne)) {
             return;
         }
 
-        logger.info("What is your favorite color?");
+        logger.info(AuthConstants.SECURITY_QUESTION_2);
         final String securityAnswerTwo = sc.nextLine();
         if (!validateSecurityInput(securityAnswerTwo)) {
             return;
         }
 
-        logger.info("What is the name of your role model?");
+        logger.info(AuthConstants.SECURITY_QUESTION_3);
         final String securityAnswerThree = sc.nextLine();
         if (!validateSecurityInput(securityAnswerThree)) {
             return;
         }
 
         List<SecurityQuestions> securityQuestions = new ArrayList<>();
-        securityQuestions.add(new SecurityQuestions("What is the name of your favorite movie?", securityAnswerOne));
-        securityQuestions.add(new SecurityQuestions("What is your favorite color?", securityAnswerTwo));
-        securityQuestions.add(new SecurityQuestions("What is the name of your role model?", securityAnswerThree));
+        securityQuestions.add(new SecurityQuestions(AuthConstants.SECURITY_QUESTION_1, securityAnswerOne));
+        securityQuestions.add(new SecurityQuestions(AuthConstants.SECURITY_QUESTION_2, securityAnswerTwo));
+        securityQuestions.add(new SecurityQuestions(AuthConstants.SECURITY_QUESTION_3, securityAnswerThree));
 
         //Prepare the user registration object to be written in the User_Profile
         UserRegistration user = new UserRegistration();
@@ -65,7 +73,7 @@ public class Registration {
         user.setSecurityQuestions(securityQuestions);
 
         FileUtils file = new FileUtils();
-        file.writeUserDetails("../usr/dpg9/authentication/User_Profile", user.toString());
+        file.writeUserDetails(AuthConstants.USER_DETAILS_FILE_LOCATION, user.toString());
 
         logger.info("Registration completed successfully!!! You can now access the system with userID and Password.");
     }
@@ -109,9 +117,10 @@ public class Registration {
      * @param userId Input
      * @return True if exists and False if does not exist
      */
-    private Boolean checkIfTheUserIdExists(String userId) {
-        //To Do: Check if the UserId already exists in the system
-        return Boolean.FALSE;
+    private boolean checkIfTheUserIdExists(String userId) {
+        String hashedUserId = hash(userId);
+        Optional<UserRegistration> userOpt = FileUtils.readUserDetails(AuthConstants.USER_DETAILS_FILE_LOCATION, hashedUserId);
+        return userOpt.isPresent();
     }
 
     /**
@@ -122,7 +131,7 @@ public class Registration {
      * @return True if valid and False if invalid
      */
     private Boolean validateUserId(String userId) {
-        Pattern pattern = Pattern.compile("^[a-zA-Z0-9]{5,15}");
+        Pattern pattern = Pattern.compile(USER_ID_VALIDATION_REGEX);
         if (!pattern.matcher(userId).matches()) {
             logger.error("Please enter a valid alphanumeric userID. Accepted Length: 5 to 15");
             return Boolean.FALSE;
@@ -141,7 +150,7 @@ public class Registration {
         if (password.isEmpty() || password.trim().isEmpty()) {
             isValid = Boolean.FALSE;
         } else {
-            Pattern pattern = Pattern.compile("^[a-zA-Z0-9!@#$&*]{8,20}$");
+            Pattern pattern = Pattern.compile(PASSWORD_VALIDATION_REGEX);
             if (!pattern.matcher(password).matches()) {
                 logger.error("Please enter a valid password. Accepted Length: 8 to 20 | Allowed special characters: ! @ # $ & *");
                 return Boolean.FALSE;
@@ -161,7 +170,7 @@ public class Registration {
             logger.error("Please enter a non empty response.");
             return Boolean.FALSE;
         } else {
-            Pattern pattern = Pattern.compile("^[a-zA-Z0-9 !@#$%^&*]{3,20}$");
+            Pattern pattern = Pattern.compile(SECURITY_ANS_VALIDATION_REGEX);
             if (!pattern.matcher(securityAnswer).matches()) {
                 logger.error("Please enter a valid answer. Accepted Length: 3 to 20");
                 return Boolean.FALSE;

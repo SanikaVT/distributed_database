@@ -28,7 +28,7 @@ public class Main {
                     break;
                 case "2":
                     Login login = new Login();
-                    login.accessSystem();
+                    login.flow(sc);
                     break;
                 case "3":
                     break;

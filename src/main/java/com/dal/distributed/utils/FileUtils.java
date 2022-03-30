@@ -3,12 +3,14 @@ package com.dal.distributed.utils;
 import com.dal.distributed.logger.Logger;
 import com.dal.distributed.model.UserRegistration;
 
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.util.Optional;
 
 public class FileUtils {
 
     Logger logger = Logger.instance();
+
+    private static final String PIPE = "\\|";
 
     /**
      * This method writes the user registration information in the file
@@ -29,8 +31,24 @@ public class FileUtils {
         }
     }
 
-    public UserRegistration readUserDetails(String filePath, String userId) {
+    public static Optional<UserRegistration> readUserDetails(String filePath, String hashedUserId) {
         //TODO get user authentication details from the user details file
-        return new UserRegistration();
+        try(FileReader fr = new FileReader(filePath);
+            BufferedReader br = new BufferedReader(fr)){
+            String entireLine;
+            while ((entireLine=br.readLine())!=null) {
+                String [] userDetailsArr = entireLine.split(PIPE);
+                if (!userDetailsArr[0].equals(hashedUserId))
+                    continue;
+                // create userRegistration model from
+                UserRegistration user = UserRegistration.createUserRegistrationFromString(userDetailsArr);
+                return Optional.of(user);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return Optional.empty();
     }
 }
