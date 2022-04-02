@@ -8,6 +8,7 @@ import com.dal.distributed.model.UserRegistration;
 import com.dal.distributed.utils.FileUtils;
 import org.apache.commons.codec.digest.DigestUtils;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -20,7 +21,7 @@ public class Login {
 
     public static Logger logger = Logger.instance();
 
-    public void flow(Scanner sc) {
+    public void flow(Scanner sc) throws IOException {
         logger.info("For login, please provide your userId and press enter");
         String userId = sc.nextLine();
         if(userId == null || userId.isEmpty()) {
