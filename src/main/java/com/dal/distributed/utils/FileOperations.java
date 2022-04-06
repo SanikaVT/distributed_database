@@ -5,10 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.Scanner;
 
 
@@ -26,7 +22,7 @@ public class FileOperations {
     public static String readFileContent(File file) throws IOException
     {
         StringBuilder jString = new StringBuilder();
-        Scanner scanner = new Scanner(file, StandardCharsets.ISO_8859_1);
+        Scanner scanner = new Scanner(file);
             while (scanner.hasNextLine()) {
                 jString.append(scanner.nextLine());
                 jString.append(System.lineSeparator());
