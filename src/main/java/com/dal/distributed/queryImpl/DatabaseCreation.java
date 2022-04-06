@@ -8,12 +8,11 @@ import com.dal.distributed.main.Main;
 import com.dal.distributed.utils.FileOperations;
 
 public class DatabaseCreation {
-    FileOperations fileOperations=new FileOperations();
     public boolean createDatabase(String sql,String filepath) throws IOException{
         String[] query = sql.split("\\s+");
         if(query[0].toLowerCase().equals("create")&& query[1].toLowerCase().equals("database")){
         String databaseName = query[2];
-            File[] databases=fileOperations.readFiles(filepath);
+            File[] databases=FileOperations.readFiles(filepath);
             if(databases.length==0)
                 return false;
             for(File file:databases){
@@ -22,8 +21,8 @@ public class DatabaseCreation {
                     return false;
                 }
             }
-            fileOperations.createNewFolder(filepath, databaseName);
-            fileOperations.writeToExistingFile(databaseName+"|","databases.psv", AuthConstants.LOGS_FILE_LOCATION);
+            FileOperations.createNewFolder(filepath, databaseName);
+            FileOperations.writeToExistingFile(databaseName+"|","databases.psv", AuthConstants.LOGS_FILE_LOCATION);
             return true;
         }
         else
@@ -39,7 +38,7 @@ public String useDatabase(String sql) throws IOException
     if(query.length==2&&query[0].toLowerCase().equals("use")){
     String dbName=query[1];
     File f=new File(AuthConstants.LOGS_FILE_LOCATION+"databases.psv");
-    String dbNames=fileOperations.readFileContent(f);
+    String dbNames=FileOperations.readFileContent(f);
     if(dbNames.toLowerCase().contains(dbName))
     {
         Main.databaseName=dbName;
