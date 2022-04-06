@@ -1,4 +1,6 @@
 package com.dal.distributed.utils;
+
+import com.dal.distributed.constant.MiscConstants;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -6,6 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Scanner;
+import java.util.*;
 
 
 // Class for file operations
@@ -13,12 +16,25 @@ public class FileOperations {
     static PrintWriter printWriter;
     
     // Read files from the directory
+
+    /**
+     *
+     * @param dir
+     * @return
+     */
     public static File[] readFiles(String dir) {
         File file = new File(dir);
         return file.listFiles();
     }
 
     //Read file content from specific file, returns String content
+
+    /**
+     *
+     * @param file
+     * @return
+     * @throws IOException
+     */
     public static String readFileContent(File file) throws IOException
     {
         StringBuilder jString = new StringBuilder();
@@ -33,6 +49,13 @@ public class FileOperations {
     }
 
     //Write file to the given directory
+    /**
+     *
+     * @param fileContent
+     * @param filename
+     * @param fileDirectory
+     * @throws FileNotFoundException
+     */
     public static void writeToNewFile(String fileContent, String filename, String fileDirectory) throws FileNotFoundException
     {
 
@@ -48,6 +71,12 @@ public class FileOperations {
         }
     }
 
+    /**
+     *
+     * @param fileContent
+     * @param filename
+     * @param fileDirectory
+     */
     public static void writeToExistingFile(String fileContent, String filename, String fileDirectory)
     {
         try{
@@ -66,7 +95,13 @@ public class FileOperations {
            }
     }
 
-
+    /**
+     *
+     * @param filepath
+     * @param filename
+     * @return
+     * @throws IOException
+     */
     public static boolean createNewFile(String filepath, String filename) throws IOException
     {
         boolean createStatus = false;
@@ -81,6 +116,13 @@ public class FileOperations {
         return createStatus;
     }
 
+    /**
+     *
+     * @param filepath
+     * @param folderName
+     * @return
+     * @throws IOException
+     */
     public static boolean createNewFolder(String filepath, String folderName) throws IOException
     {
         boolean createStatus = false;
@@ -95,6 +137,12 @@ public class FileOperations {
         return createStatus;
     }
 
+    /**
+     *
+     * @param filePath
+     * @return
+     * @throws IOException
+     */
     public static boolean createNewFolderRecursively(String filePath) throws IOException {
         boolean createStatus = false;
         String[] folders = filePath.split("/");
@@ -110,5 +158,62 @@ public class FileOperations {
             }
         }
         return createStatus;
+    }
+
+    /**
+     *
+     * @param text
+     * @return
+     */
+    public String[] getArrayForPipeString(String text){
+        if(text!=null)
+            return text.split(MiscConstants.PIPE);
+        else
+            return null;
+    }
+
+    /**
+     *
+     * @param filePath
+     * @return ArrayList - first element is {"columns" : []}, second onwards - Map<>
+     * @throws Exception
+     */
+    public ArrayList<Map<String, Object>> readPsvFileForQueryOps(String filePath) throws Exception {
+        ArrayList result = new ArrayList();
+        String[] columns = new String[0];
+        File fileObject = new File(filePath);
+        Scanner sc = new Scanner(fileObject);
+        int count = 0;
+        while (sc.hasNext()){
+            if(count==0){
+                columns = getArrayForPipeString(sc.nextLine());
+                if(columns==null)
+                    break;
+                else{
+                    String[] finalColumns = columns;
+                    Map dataDict = new HashMap(){{
+                        put("columns", Arrays.asList(finalColumns));
+                    }};
+                    result.add(dataDict);
+                    count++;
+                }
+            }
+            else{
+                if(columns.length == 0)
+                    break;
+                else{
+                    String[] rowData = getArrayForPipeString(sc.nextLine());
+                    if(rowData!=null){
+                        Map dataDict = new HashMap<String, Object>();
+                        for(int i=0; i<columns.length; i++){
+                            dataDict.put(columns[i], rowData[i]);
+                        }
+                        result.add(dataDict);
+                    }
+                }
+            }
+        }
+        sc.close();
+        return result;
     }
 }
