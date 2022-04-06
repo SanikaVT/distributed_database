@@ -1,17 +1,13 @@
 package com.dal.distributed.authentication;
 
-import com.dal.distributed.OperationsMenu;
+import com.dal.distributed.main.OperationsMenu;
 import com.dal.distributed.constant.AuthConstants;
 import com.dal.distributed.logger.Logger;
-import com.dal.distributed.model.SecurityQuestions;
-import com.dal.distributed.model.UserRegistration;
-import com.dal.distributed.utils.FileUtils;
+import com.dal.distributed.authentication.model.SecurityQuestions;
+import com.dal.distributed.authentication.model.UserRegistration;
 import org.apache.commons.codec.digest.DigestUtils;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
+import java.io.IOException;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
@@ -20,7 +16,7 @@ public class Login {
 
     public static Logger logger = Logger.instance();
 
-    public void flow(Scanner sc) {
+    public void flow(Scanner sc) throws IOException {
         logger.info("For login, please provide your userId and press enter");
         String userId = sc.nextLine();
         if(userId == null || userId.isEmpty()) {
@@ -33,7 +29,7 @@ public class Login {
             logger.error("Password can't be empty!");
             return;
         }
-        Optional<UserRegistration> userOpt = FileUtils.readUserDetails(AuthConstants.USER_DETAILS_FILE_LOCATION, getHashedValue(userId));
+        Optional<UserRegistration> userOpt = AuthFileUtils.readUserDetails(AuthConstants.USER_DETAILS_FILE_LOCATION, getHashedValue(userId));
         if(!userOpt.isPresent()) {
             logger.error("Either userId/password is not correct");
             return;

@@ -2,9 +2,8 @@ package com.dal.distributed.authentication;
 
 import com.dal.distributed.constant.AuthConstants;
 import com.dal.distributed.logger.Logger;
-import com.dal.distributed.model.SecurityQuestions;
-import com.dal.distributed.model.UserRegistration;
-import com.dal.distributed.utils.FileUtils;
+import com.dal.distributed.authentication.model.SecurityQuestions;
+import com.dal.distributed.authentication.model.UserRegistration;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.util.ArrayList;
@@ -72,7 +71,7 @@ public class Registration {
         user.setPassword(hash(password));
         user.setSecurityQuestions(securityQuestions);
 
-        FileUtils file = new FileUtils();
+        AuthFileUtils file = new AuthFileUtils();
         file.writeUserDetails(AuthConstants.USER_DETAILS_FILE_LOCATION, user.toString());
 
         logger.info("Registration completed successfully!!! You can now access the system with userID and Password.");
@@ -119,7 +118,7 @@ public class Registration {
      */
     private boolean checkIfTheUserIdExists(String userId) {
         String hashedUserId = hash(userId);
-        Optional<UserRegistration> userOpt = FileUtils.readUserDetails(AuthConstants.USER_DETAILS_FILE_LOCATION, hashedUserId);
+        Optional<UserRegistration> userOpt = AuthFileUtils.readUserDetails(AuthConstants.USER_DETAILS_FILE_LOCATION, hashedUserId);
         return userOpt.isPresent();
     }
 
