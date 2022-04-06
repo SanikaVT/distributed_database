@@ -9,7 +9,7 @@ import com.dal.distributed.main.Main;
 import com.dal.distributed.utils.FileOperations;
 
 public class TableCreation {
-
+///////// We will delete this file afterwards, have just kept this temporarily for reference
     FileOperations fileOperations=new FileOperations();
     public String createTable(String sql) throws IOException
     {

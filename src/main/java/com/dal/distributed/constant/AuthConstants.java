@@ -10,11 +10,7 @@ public final class AuthConstants {
 
     public static final String USER_DETAILS_FILE_LOCATION = "usr/dpg9/authentication/User_Profile/";
 
-    public static final String DATABASES_FOLDER_LOCATION="usr/dpg9/databases/";
-    
-    public static final String LOGS_FILE_LOCATION="usr/dpg9/logs/";
 
-    //public static final String TABLESPATH="src/main/java/com/dal/distributed/files/tables/";
 
     public static final String SUCCESS = "SUCCESS";
 

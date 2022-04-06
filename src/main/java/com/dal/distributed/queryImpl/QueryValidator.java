@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 
-public class QueryExecutor {
+public class QueryValidator {
     public Map validateQuery(String query){
         Map result = new HashMap(){{
             put("isValidate", false);
@@ -53,41 +53,6 @@ public class QueryExecutor {
             result.replace("isValidate", true);
             result.put("queryType", QueryTypes.SELECT);
         }
-
         return result;
-    }
-
-    public Map executeQuery(String query){
-        // Take care of the logging part
-
-        Map checkQuery = validateQuery(query);
-        if(checkQuery.get("isValidate")){
-            switch(checkQuery.get("queryType")){
-                case QueryTypes.CREATE_DATABASE:
-                    // Call
-                    break;
-                case QueryTypes.USE:
-                    // Call
-                    break;
-                case QueryTypes.CREATE_TABLE:
-                    // Call
-                    break;
-                case QueryTypes.UPDATE:
-                    // Call
-                    break;
-                case QueryTypes.DELETE:
-                    // Call
-                    break;
-                case QueryTypes.INSERT:
-                    // Call
-                    break;
-                case QueryTypes.SELECT:
-                    // Call
-                    break;
-                default:
-                    // return inappropriate message
-            }
-        }
-
     }
 }
