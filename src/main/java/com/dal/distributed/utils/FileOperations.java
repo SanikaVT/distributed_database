@@ -125,10 +125,15 @@ public class FileOperations {
     public static boolean createNewFolder(String filepath, String folderName) throws IOException
     {
         boolean createStatus = false;
+        StringBuilder sb = new StringBuilder();
+        if(filepath!=null)
+            sb.append(filepath).append("/");
+        if(folderName!=null)
+            sb.append(folderName);
         try{
-            File f=new File(filepath+"/"+folderName);
+            File f=new File(sb.toString());
             f.mkdir();
-            return createStatus;
+            createStatus = true;
         }
         catch(Exception e){
             e.printStackTrace();
@@ -146,7 +151,7 @@ public class FileOperations {
         boolean createStatus = false;
         String[] folders = filePath.split("/");
         if(folders.length >= 2){
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new StringBuilder("./");
             for(String eachFolder:folders){
                 sb.append(eachFolder);
                 createStatus = createNewFolder(sb.toString(), null);
