@@ -1,6 +1,5 @@
 package com.dal.distributed.main;
 
-import com.dal.distributed.OperationsMenu;
 import com.dal.distributed.authentication.Login;
 import com.dal.distributed.authentication.Registration;
 import com.dal.distributed.logger.Logger;

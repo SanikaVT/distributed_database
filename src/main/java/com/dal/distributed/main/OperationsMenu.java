@@ -1,4 +1,4 @@
-package com.dal.distributed;
+package com.dal.distributed.main;
 
 import com.dal.distributed.constant.AuthConstants;
 import com.dal.distributed.logger.Logger;

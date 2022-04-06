@@ -1,6 +1,6 @@
 package com.dal.distributed.authentication;
 
-import com.dal.distributed.OperationsMenu;
+import com.dal.distributed.main.OperationsMenu;
 import com.dal.distributed.constant.AuthConstants;
 import com.dal.distributed.logger.Logger;
 import com.dal.distributed.authentication.model.SecurityQuestions;
