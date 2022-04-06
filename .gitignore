@@ -1,0 +1,10 @@
+.idea/
+.mvn/
+mvnw
+mvnw.cmd
+target/
+.DS_Store
+*.iml
+.idea/
+run-designite.bat
+output-designite/
