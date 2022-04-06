@@ -14,16 +14,16 @@ import java.util.Scanner;
 
 // Class for file operations
 public class FileOperations {
-    PrintWriter printWriter;
+    static PrintWriter printWriter;
     
     // Read files from the directory
-    public File[] readFiles(String dir) {
+    public static File[] readFiles(String dir) {
         File file = new File(dir);
         return file.listFiles();
     }
 
     //Read file content from specific file, returns String content
-    public String readFileContent(File file) throws IOException
+    public static String readFileContent(File file) throws IOException
     {
         StringBuilder jString = new StringBuilder();
         Scanner scanner = new Scanner(file, StandardCharsets.ISO_8859_1);
@@ -37,7 +37,7 @@ public class FileOperations {
     }
 
     //Write file to the given directory
-    public void writeToNewFile(String fileContent, String filename, String fileDirectory) throws FileNotFoundException
+    public static void writeToNewFile(String fileContent, String filename, String fileDirectory) throws FileNotFoundException
     {
 
         try{
@@ -52,7 +52,7 @@ public class FileOperations {
         }
     }
 
-    public void writeToExistingFile(String fileContent, String filename, String fileDirectory)
+    public static void writeToExistingFile(String fileContent, String filename, String fileDirectory)
     {
         try{
             
@@ -71,17 +71,48 @@ public class FileOperations {
     }
 
 
-    public boolean createNewFile(String filepath, String filename) throws IOException
+    public static boolean createNewFile(String filepath, String filename) throws IOException
     {
-        File f=new File(filepath+"/"+filename+".psv");
-        f.createNewFile();
-        return true;
+        boolean createStatus = false;
+        try{
+            File f=new File(filepath+"/"+filename+".psv");
+            f.createNewFile();
+            createStatus = true;
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return createStatus;
     }
 
-    public boolean createNewFolder(String filepath, String folderName) throws IOException
+    public static boolean createNewFolder(String filepath, String folderName) throws IOException
     {
-        File f=new File(filepath+"/"+folderName);
-        f.mkdir();
-        return true;
+        boolean createStatus = false;
+        try{
+            File f=new File(filepath+"/"+folderName);
+            f.mkdir();
+            return createStatus;
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return createStatus;
+    }
+
+    public static boolean createNewFolderRecursively(String filePath) throws IOException {
+        boolean createStatus = false;
+        String[] folders = filePath.split("/");
+        if(folders.length >= 2){
+            StringBuilder sb = new StringBuilder();
+            for(String eachFolder:folders){
+                sb.append(eachFolder);
+                createStatus = createNewFolder(sb.toString(), null);
+                if(!createStatus)
+                    break;
+                else
+                    sb.append("/");
+            }
+        }
+        return createStatus;
     }
 }

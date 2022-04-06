@@ -1,16 +1,15 @@
-package com.dal.distributed.utils;
+package com.dal.distributed.authentication;
 
+import com.dal.distributed.constant.MiscConstants;
 import com.dal.distributed.logger.Logger;
-import com.dal.distributed.model.UserRegistration;
+import com.dal.distributed.authentication.model.UserRegistration;
 
 import java.io.*;
 import java.util.Optional;
 
-public class FileUtils {
+public class AuthFileUtils {
 
     Logger logger = Logger.instance();
-
-    private static final String PIPE = "\\|";
 
     /**
      * This method writes the user registration information in the file
@@ -37,7 +36,7 @@ public class FileUtils {
             BufferedReader br = new BufferedReader(fr)){
             String entireLine;
             while ((entireLine=br.readLine())!=null) {
-                String [] userDetailsArr = entireLine.split(PIPE);
+                String [] userDetailsArr = entireLine.split(MiscConstants.PIPE);
                 if (!userDetailsArr[0].equals(hashedUserId))
                     continue;
                 // create userRegistration model from

@@ -1,4 +1,4 @@
-package com.dal.distributed.model;
+package com.dal.distributed.authentication.model;
 
 public class SecurityQuestions {
     private String question;
