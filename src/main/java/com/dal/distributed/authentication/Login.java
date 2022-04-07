@@ -16,7 +16,7 @@ public class Login {
 
     public static Logger logger = Logger.instance();
 
-    public void flow(Scanner sc) throws Exception {
+    public void flow(Scanner sc) throws IOException {
         logger.info("For login, please provide your userId and press enter");
         String userId = sc.nextLine();
         if (userId == null || userId.isEmpty()) {
@@ -30,7 +30,7 @@ public class Login {
             return;
         }
         Optional<UserRegistration> userOpt = AuthFileUtils.readUserDetails(AuthConstants.USER_DETAILS_FILE_LOCATION, getHashedValue(userId));
-        if (!userOpt.isPresent()) {
+        if(!userOpt.isPresent()) {
             logger.error("Either userId/password is not correct");
             return;
         }
