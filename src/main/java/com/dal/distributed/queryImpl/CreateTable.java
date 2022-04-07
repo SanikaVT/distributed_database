@@ -21,9 +21,19 @@ public class CreateTable {
                 columnNames+=col.substring(0,col.indexOf(" "));
                 if(i!=columns.length-1)
                 columnNames+="|";
-                i++;
+                i++;                
             }
-            schema=schema.replaceAll(",", "|");
+            String schemaRow[]=schema.split(",");
+            schema="ColumnName|Datatype|Constraint"+"\n";
+            for(int j=0;j<schemaRow.length;j++)
+            {
+                String temp=schemaRow[j];
+                temp=temp.replaceFirst(" ", "|").replaceFirst(" ", "|");
+                schema+=temp;
+                if(j!=columns.length-1)
+                schema+="\n";
+            }
+
             FileOperations.writeToExistingFile(columnNames, tableName+".psv", DataConstants.DATABASES_FOLDER_LOCATION+Main.databaseName+"/");
             FileOperations.writeToExistingFile(schema, tableName+"_Schema"+".psv", DataConstants.DATABASES_FOLDER_LOCATION+Main.databaseName+"/");
             //FileOperations.writeToExistingFile(tableName+"|", Main.databaseName+".psv", DataConstants.LOGS_FILE_LOCATION);
