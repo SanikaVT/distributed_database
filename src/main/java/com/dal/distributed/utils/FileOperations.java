@@ -156,7 +156,7 @@ public class FileOperations {
      * @param text
      * @return
      */
-    public String[] getArrayForPipeString(String text) {
+    public static String[] getArrayForPipeString(String text) {
         if (text != null)
             return text.split(MiscConstants.PIPE);
         else
@@ -168,7 +168,7 @@ public class FileOperations {
      * @return ArrayList - first element is {"columns" : []}, second onwards - Map<>
      * @throws Exception
      */
-    public ArrayList<Map<String, Object>> readPsvFileForQueryOps(String filePath) throws Exception {
+    public static ArrayList<Map<String, Object>> readPsvFileForQueryOps(String filePath) throws Exception {
         ArrayList result = new ArrayList();
         String[] columns = new String[0];
         File fileObject = new File(filePath);

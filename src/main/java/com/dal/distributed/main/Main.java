@@ -27,8 +27,10 @@ public class Main {
                     registration.registerUser();
                     break;
                 case "2":
-                    Login login = new Login();
-                    login.flow(sc);
+//                    Login login = new Login();
+//                    login.flow(sc);
+                    OperationsMenu operationsMenu = new OperationsMenu();
+                    operationsMenu.displayOperationsMenu(null, sc);
                     break;
                 case "3":
                     break;
