@@ -67,19 +67,29 @@ public class OperationsMenu {
         Map queryValidatorResults = queryExecutorObj.validateQuery(query);
 
         if (((boolean) queryValidatorResults.get("isValidate")) && (queryValidatorResults.get("queryType") == QueryTypes.CREATE_DATABASE)) {
-            createDatabase.execute(query);
+            if (createDatabase.execute(query)) {
+                logger.info("Action: " + query + "\nMessage: 1 row(s) affected.\n");
+            }
         } else if (((boolean) queryValidatorResults.get("isValidate")) && (queryValidatorResults.get("queryType") == QueryTypes.USE)) {
-            useDatabase.execute(query);
+            if (useDatabase.execute(query)) {
+                logger.info("Action: " + query + "\nMessage: 0 row(s) affected.\n");
+            }
         } else if (((boolean) queryValidatorResults.get("isValidate")) && (queryValidatorResults.get("queryType") == QueryTypes.CREATE_TABLE)) {
-            createTable.execute(query);
+            if (createTable.execute(query)) {
+                logger.info("Action: " + query + "\nMessage: 0 row(s) affected.\n");
+            }
         } else if (((boolean) queryValidatorResults.get("isValidate")) && (queryValidatorResults.get("queryType") == QueryTypes.INSERT)) {
             insertIntoTable.execute(query);
         } else if (((boolean) queryValidatorResults.get("isValidate")) && (queryValidatorResults.get("queryType") == QueryTypes.SELECT)) {
             selectQuery.execute(query);
         } else if (((boolean) queryValidatorResults.get("isValidate")) && (queryValidatorResults.get("queryType") == QueryTypes.UPDATE)) {
-            updateTable.execute(query);
+            if (updateTable.execute(query)) {
+                logger.info("Action: " + query + "\nMessage: 1 row(s) affected.\n");
+            }
         } else if (((boolean) queryValidatorResults.get("isValidate")) && (queryValidatorResults.get("queryType") == QueryTypes.DELETE)) {
-            deleteDataFromTable.execute(query);
+            if (deleteDataFromTable.execute(query)) {
+                logger.info("Action: " + query + "\nMessage: 1 row(s) affected.\n");
+            }
         } else {
             logQuery.setFlag("invalid");
             logger.error("Oops.. looks like I encountered error in parsing query");
