@@ -13,7 +13,7 @@ public class DeleteDataFromTable {
     public boolean execute(String query) throws Exception {
             String[] sql = query.split("\\s+");
             String tablename=sql[2];
-            String condition=query.substring(query.toLowerCase().indexOf("where")+6);
+            String condition=query.substring(query.toLowerCase().indexOf("where")+6,query.indexOf(";"));
             String column_name=condition.substring(0,condition.indexOf("="));
             String value=condition.substring(condition.indexOf("=")+1);
             String databaseName=Main.databaseName;

@@ -13,7 +13,7 @@ public class UpdateTable {
         String updateStatement = query.substring(query.toLowerCase().indexOf("set") + 4);
         String updateColumn = updateStatement.substring(0, updateStatement.indexOf("="));
         String updateValue = updateStatement.substring(updateStatement.indexOf("=") + 1, updateStatement.indexOf("where") - 1);
-        String condition = query.substring(query.toLowerCase().indexOf("where") + 6);
+        String condition = query.substring(query.toLowerCase().indexOf("where") + 6,query.indexOf(";"));
         String column_name = condition.substring(0, condition.indexOf("="));
         String value = condition.substring(condition.indexOf("=") + 1);
         String databaseName = Main.databaseName;
