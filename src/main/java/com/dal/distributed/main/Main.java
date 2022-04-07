@@ -4,14 +4,12 @@ import com.dal.distributed.authentication.Login;
 import com.dal.distributed.authentication.Registration;
 import com.dal.distributed.logger.Logger;
 import com.dal.distributed.miscellaneous.MiscOperations;
-
-import java.io.IOException;
 import java.util.Scanner;
 
 public class Main {
-    public static String databaseName="default";
+    public static String databaseName="";
 
-    public static void main(String [] args) throws IOException {
+    public static void main(String [] args) throws Exception {
         Logger logger = Logger.instance();
         MiscOperations.createInitFolders();
         logger.info("Welcome to DPG9 Distributed Database");
@@ -21,6 +19,7 @@ public class Main {
             logger.info("3. Exit\n");
             logger.info("Please select an option from the above list");
             Scanner sc = new Scanner(System.in);
+            //new OperationsMenu().implementQuery(sc);
             final String userInput = sc.nextLine();
             switch (userInput) {
                 case "1":

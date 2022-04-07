@@ -16,7 +16,7 @@ public class Login {
 
     public static Logger logger = Logger.instance();
 
-    public void flow(Scanner sc) throws IOException {
+    public void flow(Scanner sc) throws Exception {
         logger.info("For login, please provide your userId and press enter");
         String userId = sc.nextLine();
         if (userId == null || userId.isEmpty()) {

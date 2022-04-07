@@ -1,13 +1,8 @@
 package com.dal.distributed.main;
-
-import com.dal.distributed.constant.AuthConstants;
-import com.dal.distributed.constant.DataConstants;
 import com.dal.distributed.constant.QueryTypes;
 import com.dal.distributed.logger.Logger;
 
 import com.dal.distributed.queryImpl.*;
-
-import java.io.IOException;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -15,7 +10,7 @@ public class OperationsMenu {
 
     Logger logger = Logger.instance();
 
-    public void displayOperationsMenu(String userId, Scanner scanner) throws IOException {
+    public void displayOperationsMenu(String userId, Scanner scanner) throws Exception {
         while (true) {
             logger.info("Please choose from the following options:");
             logger.info("\n1. Write Queries");
@@ -46,7 +41,7 @@ public class OperationsMenu {
         }
     }
 
-    public void implementQuery(Scanner sc) throws IOException {
+    public void implementQuery(Scanner sc) throws Exception {
         QueryValidator queryExecutorObj = new QueryValidator();
         CreateDatabase createDatabase = new CreateDatabase();
         UseDatabase useDatabase = new UseDatabase();
@@ -83,6 +78,7 @@ public class OperationsMenu {
                         logger.error("Oops.. looks like I encountered error in parsing query");
                     break;
                 case "2":
+
                     queryValidatorResults = queryExecutorObj.validateQuery(query);
                     if (((boolean) queryValidatorResults.get("isValidate")) && (queryValidatorResults.get("queryType") == QueryTypes.USE)) {
                         useDatabase.execute(query);
@@ -111,6 +107,7 @@ public class OperationsMenu {
                         logger.error("Oops.. looks like I encountered error in parsing query");
                     break;
                 case "6":
+
                     queryValidatorResults = queryExecutorObj.validateQuery(query);
                     if (((boolean) queryValidatorResults.get("isValidate")) && (queryValidatorResults.get("queryType") == QueryTypes.UPDATE)) {
                         updateTable.execute(query);

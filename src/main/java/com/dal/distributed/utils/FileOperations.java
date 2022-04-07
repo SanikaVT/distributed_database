@@ -2,9 +2,11 @@ package com.dal.distributed.utils;
 
 import com.dal.distributed.constant.MiscConstants;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -202,5 +204,37 @@ public class FileOperations {
         }
         sc.close();
         return result;
+    }
+
+
+    public List<List<Object>> readDataFromPSV(String filePath) {
+        List<List<Object>> rows = new ArrayList<>();
+        List<Object> columnValues = new ArrayList<>();
+        File file = new File(filePath+".psv");
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            String line = "";
+            while ((line = br.readLine()) != null) {
+                columnValues = new ArrayList<>(Arrays.asList(line.split(MiscConstants.PIPE, -1)));
+                rows.add(columnValues);
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return rows;
+    }
+
+    public void writeDataToPSV(List<List<Object>> rows, String filePath) {
+        FileWriter psvWriter = null;
+        try {
+            psvWriter = new FileWriter(filePath+".psv");
+            for (List<Object> rowData : rows) {
+                psvWriter.append(rowData.toString().replace("[", "").replace("]", "").replaceAll(",", "|"));
+                psvWriter.append("\n");
+            }
+            psvWriter.flush();
+            psvWriter.close();
+        } catch (Exception e) {
+            e.getCause();
+        }
     }
 }
