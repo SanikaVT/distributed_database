@@ -5,6 +5,7 @@ public class QueryLog {
     private String query;
     private String submissionTimestamp;
     private String submittedBy;
+    private String tableName;
 
     public String getFlag() {
         return flag;
@@ -38,6 +39,14 @@ public class QueryLog {
         this.submittedBy = submittedBy;
     }
 
+    public String getTableName() {
+        return tableName;
+    }
+
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
+    }
+
     @Override
     public String toString() {
         return ",\n" +
@@ -46,6 +55,7 @@ public class QueryLog {
                 "\t\"query\": \"" + query + "\",\n" +
                 "\t\"submissionTimestamp\": \"" + submissionTimestamp + "\"\n" +
                 "\t\"submittedBy\": \"" + submittedBy + "\"\n" +
+                "\t\"tableName\": \"" + tableName + "\"\n" +
                 "}";
     }
 }
