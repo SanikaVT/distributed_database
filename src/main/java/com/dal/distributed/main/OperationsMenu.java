@@ -39,7 +39,7 @@ public class OperationsMenu {
                 default:
                     logger.error("Please choose valid option!");
             }
-            if("5".equals(userInput)) {
+            if ("5".equals(userInput)) {
                 logger.info("You are logged out");
                 break;
             }
@@ -58,7 +58,7 @@ public class OperationsMenu {
 
         Map queryValidatorResults;
         while (true) {
-        String query="";
+            String query = "";
             logger.info("Please choose from the following options:");
             logger.info("\n1. Create databases");
             logger.info("2. Use databases");
@@ -69,75 +69,68 @@ public class OperationsMenu {
             logger.info("7. Delete a row with single where condition");
             logger.info("8. Exit");
             String userInput = sc.nextLine();
-            if(!userInput.equals("8")){
-            logger.info("Write query for selected option:");
-            query=sc.nextLine();
+            if (!userInput.equals("8")) {
+                logger.info("Write query for selected option:");
+                query = sc.nextLine();
             }
 
-        switch (userInput) {
-            case "1":
-                queryValidatorResults = queryExecutorObj.validateQuery(query);
-                if(((boolean) queryValidatorResults.get("isValidate")) && (queryValidatorResults.get("queryType")== QueryTypes.CREATE_DATABASE)){
-                    createDatabase.execute(query);
-                }
-                else
-                    logger.error("Oops.. looks like I encountered error in parsing query");
+            switch (userInput) {
+                case "1":
+                    queryValidatorResults = queryExecutorObj.validateQuery(query);
+                    if (((boolean) queryValidatorResults.get("isValidate")) && (queryValidatorResults.get("queryType") == QueryTypes.CREATE_DATABASE)) {
+                        createDatabase.execute(query);
+                    } else
+                        logger.error("Oops.. looks like I encountered error in parsing query");
+                    break;
+                case "2":
+                    queryValidatorResults = queryExecutorObj.validateQuery(query);
+                    if (((boolean) queryValidatorResults.get("isValidate")) && (queryValidatorResults.get("queryType") == QueryTypes.USE)) {
+                        useDatabase.execute(query);
+                    } else
+                        logger.error("Oops.. looks like I encountered error in parsing query");
+                    break;
+                case "3":
+                    queryValidatorResults = queryExecutorObj.validateQuery(query);
+                    if (((boolean) queryValidatorResults.get("isValidate")) && (queryValidatorResults.get("queryType") == QueryTypes.CREATE_TABLE)) {
+                        createTable.execute(query);
+                    } else
+                        logger.error("Oops.. looks like I encountered error in parsing query");
+                    break;
+                case "4":
+                    queryValidatorResults = queryExecutorObj.validateQuery(query);
+                    if (((boolean) queryValidatorResults.get("isValidate")) && (queryValidatorResults.get("queryType") == QueryTypes.INSERT)) {
+                        insertIntoTable.execute(query);
+                    } else
+                        logger.error("Oops.. looks like I encountered error in parsing query");
+                    break;
+                case "5":
+                    queryValidatorResults = queryExecutorObj.validateQuery(query);
+                    if (((boolean) queryValidatorResults.get("isValidate")) && (queryValidatorResults.get("queryType") == QueryTypes.SELECT)) {
+                        selectQuery.execute(query);
+                    } else
+                        logger.error("Oops.. looks like I encountered error in parsing query");
+                    break;
+                case "6":
+                    queryValidatorResults = queryExecutorObj.validateQuery(query);
+                    if (((boolean) queryValidatorResults.get("isValidate")) && (queryValidatorResults.get("queryType") == QueryTypes.UPDATE)) {
+                        updateTable.execute(query);
+                    } else
+                        logger.error("Oops.. looks like I encountered error in parsing query");
+                    break;
+                case "7":
+                    queryValidatorResults = queryExecutorObj.validateQuery(query);
+                    if (((boolean) queryValidatorResults.get("isValidate")) && (queryValidatorResults.get("queryType") == QueryTypes.DELETE)) {
+                        deleteDataFromTable.execute(query);
+                    } else
+                        logger.error("Oops.. looks like I encountered error in parsing query");
+                    break;
+                default:
+                    logger.error("Please choose valid option!");
+            }
+            if ("8".equals(userInput)) {
+                logger.info("You are logged out.");
                 break;
-            case "2":
-                queryValidatorResults = queryExecutorObj.validateQuery(query);
-                if(((boolean) queryValidatorResults.get("isValidate")) && (queryValidatorResults.get("queryType")== QueryTypes.USE)){
-                    useDatabase.execute(query);
-                }
-                else
-                    logger.error("Oops.. looks like I encountered error in parsing query");
-                break;
-            case "3":
-                queryValidatorResults = queryExecutorObj.validateQuery(query);
-                if(((boolean) queryValidatorResults.get("isValidate")) && (queryValidatorResults.get("queryType")== QueryTypes.CREATE_TABLE)){
-                    createTable.execute(query);
-                }
-                else
-                    logger.error("Oops.. looks like I encountered error in parsing query");
-                break;
-            case "4":
-                queryValidatorResults = queryExecutorObj.validateQuery(query);
-                if(((boolean) queryValidatorResults.get("isValidate")) && (queryValidatorResults.get("queryType")== QueryTypes.INSERT)){
-                    insertIntoTable.execute(query);
-                }
-                else
-                    logger.error("Oops.. looks like I encountered error in parsing query");
-                break;
-            case "5":
-                queryValidatorResults = queryExecutorObj.validateQuery(query);
-                if(((boolean) queryValidatorResults.get("isValidate")) && (queryValidatorResults.get("queryType")== QueryTypes.SELECT)){
-                    selectQuery.execute(query);
-                }
-                else
-                    logger.error("Oops.. looks like I encountered error in parsing query");
-                break;
-            case "6":
-                queryValidatorResults = queryExecutorObj.validateQuery(query);
-                if(((boolean) queryValidatorResults.get("isValidate")) && (queryValidatorResults.get("queryType")== QueryTypes.UPDATE)){
-                    updateTable.execute(query);
-                }
-                else
-                    logger.error("Oops.. looks like I encountered error in parsing query");
-                break;
-            case "7":
-                queryValidatorResults = queryExecutorObj.validateQuery(query);
-                if(((boolean) queryValidatorResults.get("isValidate")) && (queryValidatorResults.get("queryType")== QueryTypes.DELETE)){
-                    deleteDataFromTable.execute(query);
-                }
-                else
-                    logger.error("Oops.. looks like I encountered error in parsing query");
-                break;
-            default:
-                logger.error("Please choose valid option!");
-        }
-        if("8".equals(userInput)) {
-            logger.info("You are logged out.");
-            break;
+            }
         }
     }
-}
 }

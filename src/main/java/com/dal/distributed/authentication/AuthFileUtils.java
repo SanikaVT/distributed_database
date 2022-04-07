@@ -32,11 +32,11 @@ public class AuthFileUtils {
 
     public static Optional<UserRegistration> readUserDetails(String filePath, String hashedUserId) {
         //TODO get user authentication details from the user details file
-        try(FileReader fr = new FileReader(filePath);
-            BufferedReader br = new BufferedReader(fr)){
+        try (FileReader fr = new FileReader(filePath);
+             BufferedReader br = new BufferedReader(fr)) {
             String entireLine;
-            while ((entireLine=br.readLine())!=null) {
-                String [] userDetailsArr = entireLine.split(MiscConstants.PIPE);
+            while ((entireLine = br.readLine()) != null) {
+                String[] userDetailsArr = entireLine.split(MiscConstants.PIPE);
                 if (!userDetailsArr[0].equals(hashedUserId))
                     continue;
                 // create userRegistration model from

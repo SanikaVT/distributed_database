@@ -8,3 +8,4 @@ target/
 .idea/
 run-designite.bat
 output-designite/
+*.psv
