@@ -19,13 +19,13 @@ public class Login {
     public void flow(Scanner sc) throws IOException {
         logger.info("For login, please provide your userId and press enter");
         String userId = sc.nextLine();
-        if(userId == null || userId.isEmpty()) {
+        if (userId == null || userId.isEmpty()) {
             logger.info("Please type something before enter!");
             return;
         }
         logger.info("Please provide your password and press enter");
         String password = sc.nextLine();
-        if(password == null || password.isEmpty()) {
+        if (password == null || password.isEmpty()) {
             logger.error("Password can't be empty!");
             return;
         }
@@ -36,7 +36,7 @@ public class Login {
         }
         UserRegistration user = userOpt.get();
         String hashedPassword = getHashedValue(password);
-        if(!hashedPassword.equals(user.getPassword())) {
+        if (!hashedPassword.equals(user.getPassword())) {
             logger.error("Either userId/password is not correct");
             return;
         }
@@ -45,18 +45,18 @@ public class Login {
         logger.info("Please answer following security question and press enter");
         logger.info(securityQuestion.getQuestion());
         String securingAnsByUser = sc.nextLine();
-        if(securingAnsByUser == null || securingAnsByUser.isEmpty()) {
+        if (securingAnsByUser == null || securingAnsByUser.isEmpty()) {
             logger.error("Your security answer can't be empty!");
             return;
         }
-        if(!securingAnsByUser.equals(securityQuestion.getAnswer())) {
+        if (!securingAnsByUser.equals(securityQuestion.getAnswer())) {
             logger.info("Invalid answer please try again!");
             return;
         }
         logger.info("You are successfully logged in!!");
         OperationsMenu operationsMenu = new OperationsMenu();
         operationsMenu.displayOperationsMenu(userId, sc);
-        return ;
+        return;
     }
 
     private String getHashedValue(String originalString) {
