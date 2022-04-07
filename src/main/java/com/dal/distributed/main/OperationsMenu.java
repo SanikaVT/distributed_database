@@ -3,7 +3,9 @@ package com.dal.distributed.main;
 import com.dal.distributed.constant.DataConstants;
 import com.dal.distributed.constant.QueryTypes;
 import com.dal.distributed.logger.Logger;
+
 import com.dal.distributed.queryImpl.*;
+
 import com.dal.distributed.queryImpl.model.QueryLog;
 import com.dal.distributed.utils.FileOperations;
 
@@ -16,7 +18,7 @@ public class OperationsMenu {
 
     Logger logger = Logger.instance();
 
-    public void displayOperationsMenu(String userId, Scanner scanner) throws IOException {
+    public void displayOperationsMenu(String userId, Scanner scanner) throws Exception {
         while (true) {
             logger.info("Please choose from the following options:");
             logger.info("\n1. Write Queries");
@@ -47,7 +49,7 @@ public class OperationsMenu {
         }
     }
 
-    public void implementQuery(Scanner sc, String userId) throws IOException {
+    public void implementQuery(Scanner sc, String userId) throws Exception {
         QueryValidator queryExecutorObj = new QueryValidator();
         CreateDatabase createDatabase = new CreateDatabase();
         UseDatabase useDatabase = new UseDatabase();
