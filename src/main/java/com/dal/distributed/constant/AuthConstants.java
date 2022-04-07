@@ -14,4 +14,6 @@ public final class AuthConstants {
 
     public static final String SUCCESS = "SUCCESS";
 
+    public static final String FAILURE = "FAILURE";
+
 }

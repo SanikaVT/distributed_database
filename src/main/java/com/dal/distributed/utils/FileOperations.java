@@ -208,8 +208,15 @@ public class FileOperations {
 
     public List<List<Object>> readDataFromPSV(String filePath) {
         List<List<Object>> rows = new ArrayList<>();
-        List<Object> columnValues = new ArrayList<>();
-        File file = new File(filePath+".psv");
+        List<Object> columnValues;
+
+        String path;
+        if (filePath.contains(".psv")) {
+            path = filePath;
+        } else {
+            path = filePath + "psv";
+        }
+        File file = new File(path);
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line = "";
             while ((line = br.readLine()) != null) {
@@ -230,6 +237,19 @@ public class FileOperations {
                 psvWriter.append(rowData.toString().replace("[", "").replace("]", "").replaceAll(",", "|"));
                 psvWriter.append("\n");
             }
+            psvWriter.flush();
+            psvWriter.close();
+        } catch (Exception e) {
+            e.getCause();
+        }
+    }
+
+    public void writeStringToPSV(String row, String filePath) {
+        FileWriter psvWriter = null;
+        try {
+            psvWriter = new FileWriter(filePath, true);
+            psvWriter.append(row);
+            psvWriter.append("\n");
             psvWriter.flush();
             psvWriter.close();
         } catch (Exception e) {
