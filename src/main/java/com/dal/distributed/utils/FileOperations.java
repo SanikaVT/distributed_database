@@ -1,20 +1,8 @@
 package com.dal.distributed.utils;
-import com.dal.distributed.constant.MiscConstants;
-
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
 
 import com.dal.distributed.constant.MiscConstants;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.*;
 
 
@@ -174,7 +162,7 @@ public class FileOperations {
      * @return ArrayList - first element is {"columns" : []}, second onwards - Map<>
      * @throws Exception
      */
-    public static ArrayList<Map<String, Object>> readPsvFileForQueryOps(String filePath) throws Exception {
+    public static ArrayList<Map<String, Object>> readPsvFileForQueryOps(String filePath) throws FileNotFoundException {
         ArrayList result = new ArrayList();
         String[] columns = new String[0];
         File fileObject = new File(filePath);

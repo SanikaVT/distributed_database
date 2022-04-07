@@ -3,11 +3,11 @@ package com.dal.distributed.main;
 import com.dal.distributed.constant.DataConstants;
 import com.dal.distributed.constant.QueryTypes;
 import com.dal.distributed.logger.Logger;
-
 import com.dal.distributed.queryImpl.*;
-
 import com.dal.distributed.queryImpl.model.QueryLog;
 import com.dal.distributed.utils.FileOperations;
+
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Map;
 import java.util.Scanner;
@@ -16,7 +16,7 @@ public class OperationsMenu {
 
     Logger logger = Logger.instance();
 
-    public void displayOperationsMenu(String userId, Scanner scanner) throws Exception {
+    public void displayOperationsMenu(String userId, Scanner scanner) throws IOException {
         while (true) {
             logger.info("Please choose from the following options:");
             logger.info("\n1. Write Queries");
@@ -47,7 +47,7 @@ public class OperationsMenu {
         }
     }
 
-    public void implementQuery(Scanner sc, String userId) throws Exception {
+    public void implementQuery(Scanner sc, String userId) throws IOException {
         QueryValidator queryExecutorObj = new QueryValidator();
         CreateDatabase createDatabase = new CreateDatabase();
         UseDatabase useDatabase = new UseDatabase();
@@ -69,26 +69,33 @@ public class OperationsMenu {
         Map queryValidatorResults = queryExecutorObj.validateQuery(query);
 
         if (((boolean) queryValidatorResults.get("isValidate")) && (queryValidatorResults.get("queryType") == QueryTypes.CREATE_DATABASE)) {
+            logQuery.setOperation(QueryTypes.CREATE_DATABASE);
             if (createDatabase.execute(query)) {
                 logger.info("Action: " + query + "\nMessage: 1 row(s) affected.\n");
             }
         } else if (((boolean) queryValidatorResults.get("isValidate")) && (queryValidatorResults.get("queryType") == QueryTypes.USE)) {
+            logQuery.setOperation(QueryTypes.USE);
             if (useDatabase.execute(query)) {
                 logger.info("Action: " + query + "\nMessage: 0 row(s) affected.\n");
             }
         } else if (((boolean) queryValidatorResults.get("isValidate")) && (queryValidatorResults.get("queryType") == QueryTypes.CREATE_TABLE)) {
+            logQuery.setOperation(QueryTypes.CREATE_TABLE);
             if (createTable.execute(query)) {
                 logger.info("Action: " + query + "\nMessage: 0 row(s) affected.\n");
             }
         } else if (((boolean) queryValidatorResults.get("isValidate")) && (queryValidatorResults.get("queryType") == QueryTypes.INSERT)) {
+            logQuery.setOperation(QueryTypes.INSERT);
             insertIntoTable.execute(query);
         } else if (((boolean) queryValidatorResults.get("isValidate")) && (queryValidatorResults.get("queryType") == QueryTypes.SELECT)) {
+            logQuery.setOperation(QueryTypes.SELECT);
             selectQuery.execute(query);
         } else if (((boolean) queryValidatorResults.get("isValidate")) && (queryValidatorResults.get("queryType") == QueryTypes.UPDATE)) {
+            logQuery.setOperation(QueryTypes.UPDATE);
             if (updateTable.execute(query)) {
                 logger.info("Action: " + query + "\nMessage: 1 row(s) affected.\n");
             }
         } else if (((boolean) queryValidatorResults.get("isValidate")) && (queryValidatorResults.get("queryType") == QueryTypes.DELETE)) {
+            logQuery.setOperation(QueryTypes.DELETE);
             if (deleteDataFromTable.execute(query)) {
                 logger.info("Action: " + query + "\nMessage: 1 row(s) affected.\n");
             }

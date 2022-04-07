@@ -3,6 +3,7 @@ package com.dal.distributed.queryImpl.model;
 public class QueryLog {
     private String flag;
     private String query;
+    private String operation;
     private String submissionTimestamp;
     private String submittedBy;
     private String tableName;
@@ -21,6 +22,14 @@ public class QueryLog {
 
     public void setQuery(String query) {
         this.query = query;
+    }
+
+    public String getOperation() {
+        return operation;
+    }
+
+    public void setOperation(String operation) {
+        this.operation = operation;
     }
 
     public String getSubmissionTimestamp() {
@@ -53,6 +62,7 @@ public class QueryLog {
                 "\"QueryLog\": {\n" +
                 "\t\"flag\": \"" + flag + "\",\n" +
                 "\t\"query\": \"" + query + "\",\n" +
+                "\t\"operation\": \"" + operation + "\",\n" +
                 "\t\"submissionTimestamp\": \"" + submissionTimestamp + "\"\n" +
                 "\t\"submittedBy\": \"" + submittedBy + "\"\n" +
                 "\t\"tableName\": \"" + tableName + "\"\n" +
