@@ -8,9 +8,9 @@ import com.dal.distributed.miscellaneous.MiscOperations;
 import java.io.IOException;
 import java.util.Scanner;
 
-public class Main {
+public class Main
+{
     public static String databaseName="default";
-
     public static void main(String [] args) throws IOException {
         Logger logger = Logger.instance();
         MiscOperations.createInitFolders();
@@ -36,7 +36,8 @@ public class Main {
                 default:
                     logger.error("Please enter a valid input.");
             }
-            if (userInput.equals("3")) {
+            if (userInput.equals("3"))
+            {
                 break;
             }
         }

@@ -30,9 +30,6 @@ public class DatabaseCreation {
         return false;
 
 }
-
-
-
 public String useDatabase(String sql) throws IOException
 {
     String[] query = sql.split("\\s+");
