@@ -1,4 +1,9 @@
 package com.dal.distributed.utils;
+import com.dal.distributed.constant.MiscConstants;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
 
 import com.dal.distributed.constant.MiscConstants;
 
@@ -16,7 +21,6 @@ import java.util.*;
 // Class for file operations
 public class FileOperations {
     static PrintWriter printWriter;
-
     // Read files from the directory
 
     /**
@@ -72,24 +76,26 @@ public class FileOperations {
      * @param filename
      * @param fileDirectory
      */
-    public static void writeToExistingFile(String fileContent, String filename, String fileDirectory) {
-        try {
-
-            File file = new File(fileDirectory + filename);
-            if (!file.exists()) {
-                file.createNewFile();
+    public static void writeToExistingFile(String fileContent, String filename, String fileDirectory)
+    {
+        try{
+            
+            File file =new File(fileDirectory+filename);
+            if(!file.exists()){
+               file.createNewFile();
             }
-            FileWriter fw = new FileWriter(file, true);
+            FileWriter fw = new FileWriter(file,true);
             BufferedWriter bw = new BufferedWriter(fw);
             bw.write(fileContent);
-            bw.close();
-        } catch (IOException ioe) {
-            System.out.println("Exception occurred:");
-            ioe.printStackTrace();
-        }
+            bw.close();    
+          }catch(IOException ioe){
+             System.out.println("Exception occurred:");
+             ioe.printStackTrace();
+           }
     }
 
     /**
+     *
      * @param filepath
      * @param filename
      * @return
