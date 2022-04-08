@@ -60,7 +60,7 @@ public class ExportDatabase {
     }
 
     private void displayDatabases() {
-        File[] files = FileOperations.readFiles("usr/dpg9/databases");
+        File[] files = FileOperations.readFiles(DataConstants.DATABASES_FOLDER_LOCATION);
         List<String> databaseNames = new ArrayList<>();
         for (File file: files) {
             if(file.isDirectory())
