@@ -11,6 +11,7 @@ public class Main {
     public static void main(String [] args) throws Exception {
         Logger logger = Logger.instance();
         MiscOperations.createInitFolders();
+        MiscOperations.createUserProfileFile();
         logger.info("Welcome to DPG9 Distributed Database");
         while (true) {
             logger.info("\n1. User Registration");

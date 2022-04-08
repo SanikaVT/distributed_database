@@ -12,7 +12,6 @@ public class QueryRegex {
     public static final Pattern selectDataFromTable = Pattern.compile("select\\s+((\\*)|(\\w+)|(\\w+\\,\\s*)+\\w+)\\s+from\\s+(\\w+)\\s*(where\\s+(\\w+)\\s*(\\=|\\<|\\>|\\!\\=|\\<\\=|\\>\\=)\\s*(\\d+|\\'\\w+\\'))?\\;$", Pattern.CASE_INSENSITIVE);
     public static final Pattern startTransaction = Pattern.compile("^start\\s+transaction;\\s*$", Pattern.CASE_INSENSITIVE);
     public static final Pattern endTransaction = Pattern.compile("^end\\s+transaction;\\s*$", Pattern.CASE_INSENSITIVE);
-    public static final Pattern extractValuesFromInsert = Pattern.compile("(?<=\\().*?(?=\\))");
     public static final Pattern valueBetweenQuotes = Pattern.compile("(?<=\").*?(?=\")");
 
     public static final Pattern digitOnlyRegex = Pattern.compile("^[0-9]+$");

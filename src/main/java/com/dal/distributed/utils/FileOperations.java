@@ -85,10 +85,9 @@ public class FileOperations {
     public static void writeToExistingFile(String fileContent, String filename, String fileDirectory)
     {
         try{
-            
-            File file =new File(fileDirectory+filename);
-            if(!file.exists()){
-               file.createNewFile();
+            File file = new File(fileDirectory + filename);
+            if (!file.exists()) {
+                file.createNewFile();
             }
             FileWriter fw = new FileWriter(file,true);
             BufferedWriter bw = new BufferedWriter(fw);
@@ -109,11 +108,11 @@ public class FileOperations {
     public static boolean createNewFile(String filepath, String filename) {
         boolean createStatus = false;
         try {
-            File f = new File(filepath + "/" + filename + ".psv");
-            f.createNewFile();
-            createStatus = true;
-        }
-        catch(IOException e){
+            File file = new File(filepath + filename);
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return createStatus;

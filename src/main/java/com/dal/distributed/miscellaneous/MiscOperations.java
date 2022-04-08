@@ -12,4 +12,9 @@ public class MiscOperations {
         FileOperations.createNewFolderRecursively(DataConstants.LOGS_FILE_LOCATION);
         FileOperations.createNewFolderRecursively(DataConstants.DATABASES_FOLDER_LOCATION);
     }
+
+    public static void createUserProfileFile() throws IOException {
+        FileOperations.createNewFile(AuthConstants.AUTHENTICATION_FOLDER,
+                AuthConstants.AUTHENTICATION_FILE);
+    }
 }
