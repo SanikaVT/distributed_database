@@ -2,6 +2,7 @@ package com.dal.distributed.main;
 
 import com.dal.distributed.constant.DataConstants;
 import com.dal.distributed.constant.QueryTypes;
+import com.dal.distributed.export.ExportDatabase;
 import com.dal.distributed.logger.Logger;
 import com.dal.distributed.queryImpl.*;
 import com.dal.distributed.queryImpl.model.QueryLog;
@@ -30,6 +31,8 @@ public class OperationsMenu {
                 case "2":
                     break;
                 case "3":
+                    ExportDatabase export = new ExportDatabase();
+                    export.flow(scanner);
                     break;
                 case "4":
                     break;

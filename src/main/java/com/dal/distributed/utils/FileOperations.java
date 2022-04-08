@@ -19,6 +19,19 @@ public class FileOperations {
 
     // Read files from the directory
 
+    public static List<String> getColumnDefinitions(File table) {
+        try (FileReader fr = new FileReader(table);
+             BufferedReader br = new BufferedReader(fr)){
+            String columnDefLine = br.readLine();
+            return Arrays.asList(columnDefLine.split(MiscConstants.PIPE));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return Collections.emptyList();
+    }
+
     /**
      * @param dir
      * @return
@@ -93,41 +106,41 @@ public class FileOperations {
      * @param filepath
      * @param filename
      * @return
-     * @throws IOException
      */
-    public static boolean createNewFile(String filepath, String filename) throws IOException {
+    public static boolean createNewFile(String filepath, String filename) {
         boolean createStatus = false;
         try {
             File f = new File(filepath + "/" + filename + ".psv");
             f.createNewFile();
             createStatus = true;
-        } catch (Exception e) {
+        }
+        catch(IOException e){
             e.printStackTrace();
         }
         return createStatus;
     }
 
+    private static boolean dotInFileName(String fileName) {
+        if (fileName == null || fileName.isEmpty())
+            return false;
+        return fileName.contains(".");
+    }
+
     /**
+     *
      * @param filepath
      * @param folderName
      * @return
-     * @throws IOException
      */
-    public static boolean createNewFolder(String filepath, String folderName) throws IOException {
-        boolean createStatus = false;
+    public static boolean createNewFolder(String filepath, String folderName) {
         StringBuilder sb = new StringBuilder();
         if (filepath != null)
             sb.append(filepath).append("/");
         if (folderName != null)
             sb.append(folderName);
-        try {
-            File f = new File(sb.toString());
-            f.mkdir();
-            createStatus = true;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return createStatus;
+        File f=new File(sb.toString());
+        f.mkdir();
+        return true;
     }
 
     /**
@@ -135,7 +148,7 @@ public class FileOperations {
      * @return
      * @throws IOException
      */
-    public static boolean createNewFolderRecursively(String filePath) throws IOException {
+    public static boolean createNewFolderRecursively(String filePath) {
         boolean createStatus = false;
         String[] folders = filePath.split("/");
         if (folders.length >= 2) {
