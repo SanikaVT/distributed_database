@@ -30,7 +30,7 @@ public class Login {
             return;
         }
         Optional<UserRegistration> userOpt = AuthFileUtils.readUserDetails(AuthConstants.USER_DETAILS_FILE_LOCATION, getHashedValue(userId));
-        if (!userOpt.isPresent()) {
+        if(!userOpt.isPresent()) {
             logger.error("Either userId/password is not correct");
             return;
         }

@@ -1,22 +1,19 @@
 package com.dal.distributed.utils;
-
 import com.dal.distributed.constant.MiscConstants;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+
+import com.dal.distributed.constant.MiscConstants;
+
+import java.io.*;
 import java.util.*;
 
 
 // Class for file operations
 public class FileOperations {
     static PrintWriter printWriter;
-
     // Read files from the directory
 
     public static List<String> getColumnDefinitions(File table) {
@@ -85,24 +82,26 @@ public class FileOperations {
      * @param filename
      * @param fileDirectory
      */
-    public static void writeToExistingFile(String fileContent, String filename, String fileDirectory) {
-        try {
-
-            File file = new File(fileDirectory + filename);
-            if (!file.exists()) {
-                file.createNewFile();
+    public static void writeToExistingFile(String fileContent, String filename, String fileDirectory)
+    {
+        try{
+            
+            File file =new File(fileDirectory+filename);
+            if(!file.exists()){
+               file.createNewFile();
             }
-            FileWriter fw = new FileWriter(file, true);
+            FileWriter fw = new FileWriter(file,true);
             BufferedWriter bw = new BufferedWriter(fw);
             bw.write(fileContent);
-            bw.close();
-        } catch (IOException ioe) {
-            System.out.println("Exception occurred:");
-            ioe.printStackTrace();
-        }
+            bw.close();    
+          }catch(IOException ioe){
+             System.out.println("Exception occurred:");
+             ioe.printStackTrace();
+           }
     }
 
     /**
+     *
      * @param filepath
      * @param filename
      * @return
@@ -169,9 +168,17 @@ public class FileOperations {
      * @param text
      * @return
      */
-    public static String[] getArrayForPipeString(String text) {
-        if (text != null)
-            return text.split(MiscConstants.PIPE);
+    public static ArrayList getArrayForPipeString(String text) {
+        if (text != null){
+            ArrayList<String> result = new ArrayList();
+            String[] splittedText = text.split(MiscConstants.PIPE);
+            for(String each:splittedText){
+                each = each.trim();
+                result.add(each);
+            }
+            return result;
+        }
+
         else
             return null;
     }
@@ -181,9 +188,9 @@ public class FileOperations {
      * @return ArrayList - first element is {"columns" : []}, second onwards - Map<>
      * @throws Exception
      */
-    public static ArrayList<Map<String, Object>> readPsvFileForQueryOps(String filePath) throws Exception {
+    public static ArrayList<Map<String, Object>> readPsvFileForQueryOps(String filePath) throws FileNotFoundException {
         ArrayList result = new ArrayList();
-        String[] columns = new String[0];
+        ArrayList columns = new ArrayList();
         File fileObject = new File(filePath);
         Scanner sc = new Scanner(fileObject);
         int count = 0;
@@ -193,22 +200,22 @@ public class FileOperations {
                 if (columns == null)
                     break;
                 else {
-                    String[] finalColumns = columns;
+                    ArrayList finalCols = columns;
                     Map dataDict = new HashMap() {{
-                        put("columns", Arrays.asList(finalColumns));
+                        put("columns", finalCols);
                     }};
                     result.add(dataDict);
                     count++;
                 }
             } else {
-                if (columns.length == 0)
+                if (columns.size() == 0)
                     break;
                 else {
-                    String[] rowData = getArrayForPipeString(sc.nextLine());
+                    ArrayList rowData = getArrayForPipeString(sc.nextLine());
                     if (rowData != null) {
                         Map dataDict = new HashMap<String, Object>();
-                        for (int i = 0; i < columns.length; i++) {
-                            dataDict.put(columns[i], rowData[i]);
+                        for (int i = 0; i < columns.size(); i++) {
+                            dataDict.put(columns.get(i), rowData.get(i));
                         }
                         result.add(dataDict);
                     }
@@ -222,8 +229,15 @@ public class FileOperations {
 
     public List<List<Object>> readDataFromPSV(String filePath) {
         List<List<Object>> rows = new ArrayList<>();
-        List<Object> columnValues = new ArrayList<>();
-        File file = new File(filePath+".psv");
+        List<Object> columnValues;
+
+        String path;
+        if (filePath.contains(".psv")) {
+            path = filePath;
+        } else {
+            path = filePath + "psv";
+        }
+        File file = new File(path);
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line = "";
             while ((line = br.readLine()) != null) {
@@ -244,6 +258,19 @@ public class FileOperations {
                 psvWriter.append(rowData.toString().replace("[", "").replace("]", "").replaceAll(",", "|"));
                 psvWriter.append("\n");
             }
+            psvWriter.flush();
+            psvWriter.close();
+        } catch (Exception e) {
+            e.getCause();
+        }
+    }
+
+    public void writeStringToPSV(String row, String filePath) {
+        FileWriter psvWriter = null;
+        try {
+            psvWriter = new FileWriter(filePath, true);
+            psvWriter.append(row);
+            psvWriter.append("\n");
             psvWriter.flush();
             psvWriter.close();
         } catch (Exception e) {
