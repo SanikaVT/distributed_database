@@ -155,9 +155,17 @@ public class FileOperations {
      * @param text
      * @return
      */
-    public static String[] getArrayForPipeString(String text) {
-        if (text != null)
-            return text.split(MiscConstants.PIPE);
+    public static ArrayList getArrayForPipeString(String text) {
+        if (text != null){
+            ArrayList<String> result = new ArrayList();
+            String[] splittedText = text.split(MiscConstants.PIPE);
+            for(String each:splittedText){
+                each = each.trim();
+                result.add(each);
+            }
+            return result;
+        }
+
         else
             return null;
     }
@@ -169,7 +177,7 @@ public class FileOperations {
      */
     public static ArrayList<Map<String, Object>> readPsvFileForQueryOps(String filePath) throws FileNotFoundException {
         ArrayList result = new ArrayList();
-        String[] columns = new String[0];
+        ArrayList columns = new ArrayList();
         File fileObject = new File(filePath);
         Scanner sc = new Scanner(fileObject);
         int count = 0;
@@ -179,22 +187,22 @@ public class FileOperations {
                 if (columns == null)
                     break;
                 else {
-                    String[] finalColumns = columns;
+                    ArrayList finalCols = columns;
                     Map dataDict = new HashMap() {{
-                        put("columns", Arrays.asList(finalColumns));
+                        put("columns", finalCols);
                     }};
                     result.add(dataDict);
                     count++;
                 }
             } else {
-                if (columns.length == 0)
+                if (columns.size() == 0)
                     break;
                 else {
-                    String[] rowData = getArrayForPipeString(sc.nextLine());
+                    ArrayList rowData = getArrayForPipeString(sc.nextLine());
                     if (rowData != null) {
                         Map dataDict = new HashMap<String, Object>();
-                        for (int i = 0; i < columns.length; i++) {
-                            dataDict.put(columns[i], rowData[i]);
+                        for (int i = 0; i < columns.size(); i++) {
+                            dataDict.put(columns.get(i), rowData.get(i));
                         }
                         result.add(dataDict);
                     }

@@ -14,4 +14,6 @@ public class QueryRegex {
     public static final Pattern endTransaction = Pattern.compile("^end\\s+transaction;\\s*$", Pattern.CASE_INSENSITIVE);
     public static final Pattern extractValuesFromInsert = Pattern.compile("(?<=\\().*?(?=\\))");
     public static final Pattern valueBetweenQuotes = Pattern.compile("(?<=\").*?(?=\")");
+
+    public static final Pattern digitOnlyRegex = Pattern.compile("^[0-9]+$");
 }

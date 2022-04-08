@@ -8,4 +8,6 @@ public class DataConstants {
     public static final String QUERY_LOGS_FILE_LOCATION = "usr/dpg9/logs/";
 
     public static final String QUERY_LOG_FILE_NAME = "query_logs";
+
+    public static final String FILE_FORMAT = ".psv";
 }
