@@ -1,6 +1,4 @@
 package com.dal.distributed.main;
-
-import com.dal.distributed.authentication.Login;
 import com.dal.distributed.authentication.Registration;
 import com.dal.distributed.logger.Logger;
 import com.dal.distributed.miscellaneous.MiscOperations;
@@ -8,6 +6,7 @@ import java.util.Scanner;
 
 public class Main {
     public static String databaseName="";
+    public static boolean isTransaction=false;
 
     public static void main(String [] args) throws Exception {
         Logger logger = Logger.instance();

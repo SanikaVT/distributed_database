@@ -1,13 +1,16 @@
 package com.dal.distributed.queryImpl;
 
 import com.dal.distributed.constant.DataConstants;
+import com.dal.distributed.constant.QueryTypes;
 import com.dal.distributed.main.Main;
+import com.dal.distributed.queryImpl.model.OperationStatus;
 import com.dal.distributed.utils.FileOperations;
 
 import java.util.List;
 
 public class DeleteDataFromTable {
-    public boolean execute(String query) {
+    public OperationStatus execute(String query) {
+        OperationStatus operationStatus=null;
         String[] sql = query.split("\\s+");
         String tablename = sql[2];
         String condition = query.substring(query.toLowerCase().indexOf("where") + 6, query.indexOf(";"));
@@ -30,9 +33,12 @@ public class DeleteDataFromTable {
 
             }
         }
+        if(!Main.isTransaction)
         new FileOperations().writeDataToPSV(data, filepath);
+        else
+        operationStatus=new OperationStatus(true, data, query, filepath,QueryTypes.DELETE,tablename);
 
-        return true;
+        return operationStatus;
 
     }
 }

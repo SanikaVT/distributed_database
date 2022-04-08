@@ -3,11 +3,14 @@ package com.dal.distributed.queryImpl;
 import java.util.List;
 
 import com.dal.distributed.constant.DataConstants;
+import com.dal.distributed.constant.QueryTypes;
 import com.dal.distributed.main.Main;
+import com.dal.distributed.queryImpl.model.OperationStatus;
 import com.dal.distributed.utils.FileOperations;
 
 public class UpdateTable {
-    public boolean execute(String query) {
+    public OperationStatus execute(String query) {
+        OperationStatus operationStatus=null;
         String[] sql = query.split("\\s+");
         String tableName = sql[1];
         String updateStatement = query.substring(query.toLowerCase().indexOf("set") + 4);
@@ -37,8 +40,15 @@ public class UpdateTable {
 
             }
         }
+        if(!Main.isTransaction)
+        {
         new FileOperations().writeDataToPSV(data, filepath);
+        }
+        else
+        {
+            operationStatus=new OperationStatus(true, data, query, filepath,QueryTypes.DELETE,tableName);
+        }
 
-        return true;
+        return operationStatus;
     }
 }
