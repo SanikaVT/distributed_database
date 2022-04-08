@@ -1,0 +1,113 @@
+,
+"QueryLog": {
+	"flag": "valid",
+	"query": "use dbdbdb;",
+	"operation": "USE",
+	"submissionTimestamp": "2022-04-08 16:12:59.674"
+	"submittedBy": "null"
+	"tableName": "null"
+},
+"QueryLog": {
+	"flag": "invalid",
+	"query": "delete from dbdbdb where PersonID=5",
+	"operation": "null",
+	"submissionTimestamp": "2022-04-08 17:33:46.912"
+	"submittedBy": "null"
+	"tableName": "null"
+},
+"QueryLog": {
+	"flag": "valid",
+	"query": "delete from dbdbdb where PersonID=5;",
+	"operation": "DELETE",
+	"submissionTimestamp": "2022-04-08 17:33:58.557"
+	"submittedBy": "null"
+	"tableName": "null"
+},
+"QueryLog": {
+	"flag": "invalid",
+	"query": "use dbdbdb",
+	"operation": "null",
+	"submissionTimestamp": "2022-04-08 17:34:41.016"
+	"submittedBy": "null"
+	"tableName": "null"
+},
+"QueryLog": {
+	"flag": "valid",
+	"query": "use dbdbdb;",
+	"operation": "USE",
+	"submissionTimestamp": "2022-04-08 17:34:51.197"
+	"submittedBy": "null"
+	"tableName": "null"
+},
+"QueryLog": {
+	"flag": "valid",
+	"query": "delete from Persons where PersonID=5;",
+	"operation": "DELETE",
+	"submissionTimestamp": "2022-04-08 17:35:07.415"
+	"submittedBy": "null"
+	"tableName": "null"
+},
+"QueryLog": {
+	"flag": "valid",
+	"query": "delete from Persons where PersonID=5;",
+	"operation": "DELETE",
+	"submissionTimestamp": "2022-04-08 17:36:58.916"
+	"submittedBy": "null"
+	"tableName": "null"
+},
+"QueryLog": {
+	"flag": "valid",
+	"query": "use dbdbdb;",
+	"operation": "USE",
+	"submissionTimestamp": "2022-04-08 17:43:19.974"
+	"submittedBy": "null"
+	"tableName": "null"
+},
+"QueryLog": {
+	"flag": "valid",
+	"query": "use dbdbdb;",
+	"operation": "USE",
+	"submissionTimestamp": "2022-04-08 17:45:32.12"
+	"submittedBy": "null"
+	"tableName": "null"
+},
+"QueryLog": {
+	"flag": "valid",
+	"query": "delete from Persons where PersonID=5;",
+	"operation": "DELETE",
+	"submissionTimestamp": "2022-04-08 17:45:46.976"
+	"submittedBy": "null"
+	"tableName": "null"
+},
+"QueryLog": {
+	"flag": "invalid",
+	"query": "delete from Persons where ",
+	"operation": "null",
+	"submissionTimestamp": "2022-04-08 18:05:32.691"
+	"submittedBy": "null"
+	"tableName": "null"
+},
+"QueryLog": {
+	"flag": "valid",
+	"query": "delete from Persons where PersonID=5;",
+	"operation": "DELETE",
+	"submissionTimestamp": "2022-04-08 18:05:50.084"
+	"submittedBy": "null"
+	"tableName": "null"
+},
+"QueryLog": {
+	"flag": "valid",
+	"query": "start transaction;",
+	"operation": "START_TRANSACTION",
+	"submissionTimestamp": "2022-04-08 18:14:08.313"
+	"submittedBy": "null"
+	"tableName": "null"
+},
+"QueryLog": {
+	"flag": "valid",
+	"query": "start transaction;",
+	"operation": "START_TRANSACTION",
+	"submissionTimestamp": "2022-04-08 18:15:01.936"
+	"submittedBy": "null"
+	"tableName": "null"
+}

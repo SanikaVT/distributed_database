@@ -4,21 +4,23 @@ import java.util.List;
 
 import com.dal.distributed.constant.DataConstants;
 import com.dal.distributed.constant.QueryTypes;
+import com.dal.distributed.constant.RelationalOperators;
 import com.dal.distributed.main.Main;
 import com.dal.distributed.queryImpl.model.OperationStatus;
 import com.dal.distributed.utils.FileOperations;
 
 public class UpdateTable {
+    private String relationalOp;
     public OperationStatus execute(String query) {
         OperationStatus operationStatus=null;
         String[] sql = query.split("\\s+");
         String tableName = sql[1];
         String updateStatement = query.substring(query.toLowerCase().indexOf("set") + 4);
-        String updateColumn = updateStatement.substring(0, updateStatement.indexOf("="));
-        String updateValue = updateStatement.substring(updateStatement.indexOf("=") + 1, updateStatement.indexOf("where") - 1);
+        String updateColumn = updateStatement.substring(0, updateStatement.indexOf(relationalOp));
+        String updateValue = updateStatement.substring(updateStatement.indexOf(relationalOp) + 1, updateStatement.indexOf("where") - 1);
         String condition = query.substring(query.toLowerCase().indexOf("where") + 6,query.indexOf(";"));
-        String column_name = condition.substring(0, condition.indexOf("="));
-        String value = condition.substring(condition.indexOf("=") + 1);
+        String column_name = condition.substring(0, condition.indexOf(relationalOp));
+        String value = condition.substring(condition.indexOf(relationalOp) + 1);
         String databaseName = Main.databaseName;
         int conditionColumnIndex = -1;
         int updateColumnIndex = -1;
@@ -34,12 +36,50 @@ public class UpdateTable {
                         updateColumnIndex = j;
                     }
                 }
-                if (data.get(i).get(conditionColumnIndex).toString().equals(value)) {
-                    data.get(i).set(updateColumnIndex, updateValue);
+                try{
+                switch(relationalOp)
+                {
+                    case RelationalOperators.EQUAL:
+                    if (data.get(i).get(conditionColumnIndex).toString().equals(value)) {
+                        data.get(i).set(updateColumnIndex, updateValue);
+                    }
+                    break;
+                    case RelationalOperators.GREATER:
+                    if(Integer.parseInt(data.get(i).get(conditionColumnIndex).toString())>Integer.parseInt(value)){
+                        data.get(i).set(updateColumnIndex, updateValue);
+                    break;
+                    }
+                    case RelationalOperators.LESS:
+                    if(Integer.parseInt(data.get(i).get(conditionColumnIndex).toString())<Integer.parseInt(value)){
+                        data.get(i).set(updateColumnIndex, updateValue);
+                    break;
+                    }
+                    case RelationalOperators.GREATEREQUAL:
+                    if(Integer.parseInt(data.get(i).get(conditionColumnIndex).toString())>=Integer.parseInt(value)){
+                        data.get(i).set(updateColumnIndex, updateValue);
+                    break;
+                    }
+                    case RelationalOperators.LESSEQUAL:
+                    if(Integer.parseInt(data.get(i).get(conditionColumnIndex).toString())<=Integer.parseInt(value)){
+                        data.get(i).set(updateColumnIndex, updateValue);
+                    break;
+                    }
+                    case RelationalOperators.NOTEQUAL:
+                    case RelationalOperators.NOTEQUAL1:
+                    case RelationalOperators.NOTEQUAL2:
+                    if(Integer.parseInt(data.get(i).get(conditionColumnIndex).toString())!=Integer.parseInt(value)){
+                        data.get(i).set(updateColumnIndex, updateValue);
+                    break;
+                    }
+                    }
+                    operationStatus=new OperationStatus(true);
                 }
-
+                catch(NumberFormatException e)
+                {
+                    operationStatus=new OperationStatus(false);
+                }
+                }
             }
-        }
         if(!Main.isTransaction)
         {
         new FileOperations().writeDataToPSV(data, filepath);
@@ -51,4 +91,5 @@ public class UpdateTable {
 
         return operationStatus;
     }
+
 }

@@ -24,6 +24,7 @@ public class OperationStatus {
         this.status = status;
     }
 
+
     public String getQueryType() {
         return queryType;
     }
@@ -79,5 +80,6 @@ public class OperationStatus {
     public void setRepeatTable(boolean isRepeatTable) {
         this.isRepeatTable = isRepeatTable;
     }
+
 
 }

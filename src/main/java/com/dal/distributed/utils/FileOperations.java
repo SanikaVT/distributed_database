@@ -234,7 +234,7 @@ public class FileOperations {
         if (filePath.contains(".psv")) {
             path = filePath;
         } else {
-            path = filePath + "psv";
+            path = filePath + ".psv";
         }
         File file = new File(path);
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
