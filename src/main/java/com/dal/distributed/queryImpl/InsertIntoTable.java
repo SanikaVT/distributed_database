@@ -88,7 +88,7 @@ public class InsertIntoTable {
                 List<Object> resultVal=new ArrayList();
                 resultVal.addAll(Arrays.asList(finalValue.split("|")));
                 result.add(resultVal);
-                operationStatus=new OperationStatus(true, result, sql, f.getPath(), QueryTypes.INSERT);
+                operationStatus=new OperationStatus(true, result, sql, f.getPath(), QueryTypes.INSERT, tableName);
             }
             break;
         }
