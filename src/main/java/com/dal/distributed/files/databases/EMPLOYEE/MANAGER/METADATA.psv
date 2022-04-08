@@ -1,0 +1,4 @@
+TABLE|manager
+COLUMN|id|int
+COLUMN|name|varchar
+COLUMN|contact|int

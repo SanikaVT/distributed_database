@@ -1,0 +1,4 @@
+TABLE|product
+COLUMN|product_id|int
+COLUMN|product_name|varchar
+COLUMN|product_desc|varchar

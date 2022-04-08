@@ -1,0 +1,4 @@
+column_name|data_type|constraints
+id|int(11)|PRIMARY KEY
+name|varchar(256)|
+email_id|varchar(256)|

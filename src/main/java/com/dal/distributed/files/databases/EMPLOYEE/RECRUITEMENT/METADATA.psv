@@ -1,0 +1,3 @@
+TABLE|recruitement
+COLUMN|recruit_id|int
+COLUMN|recruit_name|varchar

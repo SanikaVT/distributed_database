@@ -1,0 +1,19 @@
+****************************************************Entity Relationship Diagram for database EMPLOYEE****************************************************
+
+Total number of relations/tables in the database EMPLOYEE = 4
+
+TABLE NAME: MANAGER :: COLUMN_NAME_1 : id (PRIMARY KEY) [Primary/Foreign Key relationship on Column: id among tables: SALARY, MANAGER
+TABLE NAME: MANAGER :: COLUMN_NAME_2 : name
+TABLE NAME: MANAGER :: COLUMN_NAME_3 : contact
+
+TABLE NAME: PRODUCT :: COLUMN_NAME_1 : product_id (PRIMARY KEY)
+TABLE NAME: PRODUCT :: COLUMN_NAME_2 : product_name
+TABLE NAME: PRODUCT :: COLUMN_NAME_3 : product_desc
+
+TABLE NAME: RECRUITEMENT :: COLUMN_NAME_1 : recruit_id (PRIMARY KEY)
+TABLE NAME: RECRUITEMENT :: COLUMN_NAME_2 : recruit_name
+
+TABLE NAME: SALARY :: COLUMN_NAME_1 : id (PRIMARY KEY) [Primary/Foreign Key relationship on Column: id among tables: SALARY, MANAGER
+TABLE NAME: SALARY :: COLUMN_NAME_2 : name
+TABLE NAME: SALARY :: COLUMN_NAME_3 : salary
+

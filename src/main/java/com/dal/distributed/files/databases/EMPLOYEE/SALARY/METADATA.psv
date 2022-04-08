@@ -1,0 +1,4 @@
+TABLE|salary
+COLUMN|id|int
+COLUMN|name|varchar
+COLUMN|salary|int

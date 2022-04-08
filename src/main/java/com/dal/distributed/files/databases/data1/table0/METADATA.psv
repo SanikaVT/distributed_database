@@ -1,0 +1,4 @@
+column_name|data_type|constraints
+id|int(11)|PRIMARY KEY
+table1_id|int(11)|FOREIGN KEY REFERENCES table1(id)
+phone_number|varchar(26)|NOT NULL
