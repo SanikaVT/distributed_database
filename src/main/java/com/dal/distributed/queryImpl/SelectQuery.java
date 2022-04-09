@@ -10,13 +10,15 @@ import com.dal.distributed.logger.Logger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 
 public class SelectQuery {
     Logger logger = Logger.instance();
     public void execute(String query) throws Exception {
-        ArrayList resultList = new ArrayList();
+        List<Map> resultList = new ArrayList();
+        List<List<Object>> queryResult=new ArrayList<>();
         Map resultDict;
         Matcher matcher = QueryRegex.selectDataFromTable.matcher(query);
         if(matcher.find()){
@@ -59,16 +61,16 @@ public class SelectQuery {
                     switch (relationOperator){
                         case RelationalOperators.EQUAL:
                             for(int i=1; i<fileContent.size(); i++){
-                                Map dataDict = (Map) fileContent.get(i);
+                                Map<String,String> dataDict = (Map) fileContent.get(i);
                                 if((dataDict.containsKey(compareColumn)) && (dataDict.get(compareColumn).equals(value)))
                                     resultList.add(dataDict);
                             }
                             break;
                         case RelationalOperators.GREATER:
                             for(int i=1; i<fileContent.size(); i++) {
-                                Map dataDict = (Map) fileContent.get(i);
+                                Map<String,String> dataDict = (Map) fileContent.get(i);
                                 if (valueType == "int") {
-                                    if ((dataDict.containsKey(compareColumn)) && ((int) dataDict.get(compareColumn) > Integer.parseInt(value)))
+                                    if ((dataDict.containsKey(compareColumn)) && (Integer.parseInt(dataDict.get(compareColumn)) > Integer.parseInt(value)))
                                         resultList.add(dataDict);
                                 }
                                 else
@@ -77,9 +79,9 @@ public class SelectQuery {
                             break;
                         case RelationalOperators.LESS:
                             for(int i=1; i<fileContent.size(); i++) {
-                                Map dataDict = (Map) fileContent.get(i);
+                                Map<String,String> dataDict = (Map) fileContent.get(i);
                                 if (valueType == "int") {
-                                    if ((dataDict.containsKey(compareColumn)) && ((int) dataDict.get(compareColumn) < Integer.parseInt(value)))
+                                    if ((dataDict.containsKey(compareColumn)) && (Integer.parseInt(dataDict.get(compareColumn)) < Integer.parseInt(value)))
                                         resultList.add(dataDict);
                                 }
                                 else
@@ -88,9 +90,9 @@ public class SelectQuery {
                             break;
                         case RelationalOperators.GREATEREQUAL:
                             for(int i=1; i<fileContent.size(); i++) {
-                                Map dataDict = (Map) fileContent.get(i);
+                                Map<String,String> dataDict = (Map) fileContent.get(i);
                                 if (valueType == "int") {
-                                    if ((dataDict.containsKey(compareColumn)) && ((int) dataDict.get(compareColumn) >= Integer.parseInt(value)))
+                                    if ((dataDict.containsKey(compareColumn)) && (Integer.parseInt(dataDict.get(compareColumn)) >= Integer.parseInt(value)))
                                         resultList.add(dataDict);
                                 }
                                 else
@@ -99,9 +101,9 @@ public class SelectQuery {
                             break;
                         case RelationalOperators.LESSEQUAL:
                             for(int i=1; i<fileContent.size(); i++) {
-                                Map dataDict = (Map) fileContent.get(i);
+                                Map<String,String> dataDict = (Map) fileContent.get(i);
                                 if (valueType == "int") {
-                                    if ((dataDict.containsKey(compareColumn)) && ((int) dataDict.get(compareColumn) >= Integer.parseInt(value)))
+                                    if ((dataDict.containsKey(compareColumn)) && (Integer.parseInt(dataDict.get(compareColumn) )>= Integer.parseInt(value)))
                                         resultList.add(dataDict);
                                 }
                                 else
@@ -112,9 +114,9 @@ public class SelectQuery {
                         case RelationalOperators.NOTEQUAL1:
                         case RelationalOperators.NOTEQUAL2:
                             for(int i=1; i<fileContent.size(); i++) {
-                                Map dataDict = (Map) fileContent.get(i);
+                                Map<String,String> dataDict = (Map) fileContent.get(i);
                                 if (valueType == "int") {
-                                    if ((dataDict.containsKey(compareColumn)) && ((int) dataDict.get(compareColumn) != Integer.parseInt(value)))
+                                    if ((dataDict.containsKey(compareColumn)) && (Integer.parseInt(dataDict.get(compareColumn)) != Integer.parseInt(value)))
                                         resultList.add(dataDict);
                                 }
                                 else{
@@ -128,16 +130,20 @@ public class SelectQuery {
                 }
                 else{
                     for(int i=1; i<fileContent.size(); i++) {
-                        Map dataDict = (Map) fileContent.get(i);
+                        Map<String,String> dataDict = (Map) fileContent.get(i);
                         resultList.add(dataDict);
                     }
                 }
                 resultList = this.filterProjectionsForOutput(resultList, projectionList);
+                for(Map m:resultList){
+                    //for(Map.Entry<String,String> pair : m.entrySet())
+                    
+                }
             }
         }
     }
 
-    private ArrayList filterProjectionsForOutput(ArrayList resultList, ArrayList projectionList) {
+    private ArrayList filterProjectionsForOutput(List<Map> resultList, ArrayList projectionList) {
         ArrayList result = new ArrayList();
         for(int i=0; i<resultList.size(); i++){
             Map dataDict = (Map) resultList.get(i);

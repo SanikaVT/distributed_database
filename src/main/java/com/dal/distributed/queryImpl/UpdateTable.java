@@ -7,12 +7,14 @@ import com.dal.distributed.constant.QueryTypes;
 import com.dal.distributed.constant.RelationalOperators;
 import com.dal.distributed.main.Main;
 import com.dal.distributed.queryImpl.model.OperationStatus;
+import com.dal.distributed.utils.DataUtils;
 import com.dal.distributed.utils.FileOperations;
 
 public class UpdateTable {
     private String relationalOp;
     public OperationStatus execute(String query) {
         OperationStatus operationStatus=null;
+        relationalOp=DataUtils.checkRelationalOperator(query);
         String[] sql = query.split("\\s+");
         String tableName = sql[1];
         String updateStatement = query.substring(query.toLowerCase().indexOf("set") + 4);
@@ -21,6 +23,10 @@ public class UpdateTable {
         String condition = query.substring(query.toLowerCase().indexOf("where") + 6,query.indexOf(";"));
         String column_name = condition.substring(0, condition.indexOf(relationalOp));
         String value = condition.substring(condition.indexOf(relationalOp) + 1);
+        while(updateValue.contains("\'"))
+        {
+            updateValue=updateValue.replace("\'", "");
+        }
         String databaseName = Main.databaseName;
         int conditionColumnIndex = -1;
         int updateColumnIndex = -1;
@@ -86,7 +92,7 @@ public class UpdateTable {
         }
         else
         {
-            operationStatus=new OperationStatus(true, data, query, filepath,QueryTypes.DELETE,tableName);
+            operationStatus=new OperationStatus(true, data, query, filepath,QueryTypes.UPDATE,tableName);
         }
 
         return operationStatus;
