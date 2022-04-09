@@ -33,8 +33,7 @@ public class DatabaseUtils {
     }
 
     public static List<String> getColumnDefinitions(String database, File tableSchemaFile) {
-        String fileLocation = DataConstants.DATABASES_FOLDER_LOCATION + File.separator + database + File.separator + tableSchemaFile.getName();
-        try (FileReader fr = new FileReader(fileLocation);
+        try (FileReader fr = new FileReader(tableSchemaFile);
              BufferedReader br = new BufferedReader(fr)){
             //The buffered reader will now point after header row
             br.readLine();

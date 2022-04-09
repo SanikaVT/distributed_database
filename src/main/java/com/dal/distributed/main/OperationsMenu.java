@@ -6,11 +6,12 @@ import com.dal.distributed.constant.QueryTypes;
 import com.dal.distributed.export.ExportDatabase;
 import com.dal.distributed.logger.Logger;
 
+import com.dal.distributed.logger.model.EventLog;
+import com.dal.distributed.main.model.Pair;
 import com.dal.distributed.queryImpl.*;
 import com.dal.distributed.queryImpl.model.OperationStatus;
 import com.dal.distributed.queryImpl.model.QueryLog;
 import com.dal.distributed.utils.FileOperations;
-
 import transactionProcessing.TransactionProcessing;
 
 import java.sql.Timestamp;
@@ -52,6 +53,7 @@ public class OperationsMenu {
                     logger.error("Please choose valid option!");
             }
             if ("5".equals(userInput)) {
+                EventLog.logLogoutEvent(userId);
                 logger.info("You are logged out");
                 break;
             }
@@ -78,13 +80,17 @@ public class OperationsMenu {
             logQuery.setSubmittedBy(userId);
 
             Map queryValidatorResults = queryExecutorObj.validateQuery(query);
-
             if (((boolean) queryValidatorResults.get("isValidate")) && (queryValidatorResults.get("queryType") == QueryTypes.CREATE_DATABASE)) {
+                EventLog createDbEvent = new EventLog("CREATE_DB", userId);
                 logQuery.setOperation(QueryTypes.CREATE_DATABASE);
                 logQuery.setDatabaseName((String) queryValidatorResults.get("entity"));
-                if (createDatabase.execute(query)) {
+                Pair<Boolean, String> res = createDatabase.execute(query);
+                createDbEvent.setSuccess(res.getFirst());
+                createDbEvent.setDatabaseName(res.getSecond());
+                if (res.getFirst()) {
                     logger.info("Action: " + query + "\nMessage: 1 row(s) affected.\n");
                 }
+                EventLog.logEvent(createDbEvent);
             } else if (((boolean) queryValidatorResults.get("isValidate")) && (queryValidatorResults.get("queryType") == QueryTypes.USE)) {
                 logQuery.setOperation(QueryTypes.USE);
                 logQuery.setDatabaseName((String) queryValidatorResults.get("entity"));
@@ -92,13 +98,18 @@ public class OperationsMenu {
                     logger.info("Action: " + query + "\nMessage: 0 row(s) affected.\n");
                 }
             } else if (((boolean) queryValidatorResults.get("isValidate")) && (queryValidatorResults.get("queryType") == QueryTypes.CREATE_TABLE)) {
+                EventLog createTableEvent = new EventLog("CREATE_TABLE", userId);
+                createTableEvent.setDatabaseName(Main.databaseName);
                 logQuery.setOperation(QueryTypes.CREATE_TABLE);
                 logQuery.setTableName((String) queryValidatorResults.get("entity"));
                 OperationStatus result = createTable.execute(query);
+                createTableEvent.setSuccess(result.isStatus());
+                createTableEvent.setTableName(logQuery.getTableName());
                 if (result.isStatus()) {
                     logger.info("Action: " + query + "\nMessage: 0 row(s) affected.\n");
                 }
                 logQuery.setDatabaseName(result.getDatabaseName());
+                EventLog.logEvent(createTableEvent);
             } else if (((boolean) queryValidatorResults.get("isValidate")) && (queryValidatorResults.get("queryType") == QueryTypes.INSERT)) {
                 logQuery.setOperation(QueryTypes.INSERT);
                 logQuery.setTableName((String) queryValidatorResults.get("entity"));
