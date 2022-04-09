@@ -1,5 +1,6 @@
 package com.dal.distributed.main;
 
+import com.dal.distributed.analytics.Analytics;
 import com.dal.distributed.constant.DataConstants;
 import com.dal.distributed.constant.QueryTypes;
 import com.dal.distributed.export.ExportDatabase;
@@ -43,6 +44,8 @@ public class OperationsMenu {
                     export.flow(scanner);
                     break;
                 case "4":
+                    Analytics analytics = new Analytics();
+                    analytics.analyze(scanner);
                     break;
                 case "5":
                     break;

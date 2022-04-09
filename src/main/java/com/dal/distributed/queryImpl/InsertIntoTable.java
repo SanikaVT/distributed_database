@@ -73,7 +73,7 @@ public class InsertIntoTable {
                     if (schema.get(i + 1).get(1).equals("int")) {
                         String value;
                         //store value = 5 instead of "5"
-                        if (values[i].contains("\"")) {
+                        if (values[i].contains("'")) {
                             Matcher matcher = QueryRegex.valueBetweenQuotes.matcher(values[i]);
                             value = matcher.group();
                         } else {

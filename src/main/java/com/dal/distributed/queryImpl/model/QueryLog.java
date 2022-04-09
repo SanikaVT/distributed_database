@@ -63,8 +63,8 @@ public class QueryLog {
                 "\t\"flag\": \"" + flag + "\",\n" +
                 "\t\"query\": \"" + query + "\",\n" +
                 "\t\"operation\": \"" + operation + "\",\n" +
-                "\t\"submissionTimestamp\": \"" + submissionTimestamp + "\"\n" +
-                "\t\"submittedBy\": \"" + submittedBy + "\"\n" +
+                "\t\"submissionTimestamp\": \"" + submissionTimestamp + "\",\n" +
+                "\t\"submittedBy\": \"" + submittedBy + "\",\n" +
                 "\t\"tableName\": \"" + tableName + "\"\n" +
                 "}";
     }
