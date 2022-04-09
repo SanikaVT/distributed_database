@@ -7,6 +7,7 @@ public class QueryLog {
     private String submissionTimestamp;
     private String submittedBy;
     private String tableName;
+    private String databaseName;
 
     public String getFlag() {
         return flag;
@@ -56,6 +57,14 @@ public class QueryLog {
         this.tableName = tableName;
     }
 
+    public String getDatabaseName() {
+        return databaseName;
+    }
+
+    public void setDatabaseName(String databaseName) {
+        this.databaseName = databaseName;
+    }
+
     @Override
     public String toString() {
         return ",\n" +
@@ -63,9 +72,10 @@ public class QueryLog {
                 "\t\"flag\": \"" + flag + "\",\n" +
                 "\t\"query\": \"" + query + "\",\n" +
                 "\t\"operation\": \"" + operation + "\",\n" +
-                "\t\"submissionTimestamp\": \"" + submissionTimestamp + "\"\n" +
-                "\t\"submittedBy\": \"" + submittedBy + "\"\n" +
-                "\t\"tableName\": \"" + tableName + "\"\n" +
+                "\t\"submissionTimestamp\": \"" + submissionTimestamp + "\",\n" +
+                "\t\"submittedBy\": \"" + submittedBy + "\",\n" +
+                "\t\"tableName\": \"" + tableName + "\",\n" +
+                "\t\"databaseName\": \"" + databaseName + "\"\n" +
                 "}";
     }
 }

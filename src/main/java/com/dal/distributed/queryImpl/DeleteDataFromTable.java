@@ -14,12 +14,12 @@ public class DeleteDataFromTable {
     private String relationalOp;
 
     public OperationStatus execute(String query) {
-        if(Main.databaseName==null){
+        if (Main.databaseName == null) {
             System.out.println("No database selected");
             return null;
         }
-        relationalOp=DataUtils.checkRelationalOperator(query);
-        OperationStatus operationStatus=null;
+        relationalOp = DataUtils.checkRelationalOperator(query);
+        OperationStatus operationStatus = null;
         String[] sql = query.split("\\s+");
         String tablename = sql[2];
         String condition = query.substring(query.toLowerCase().indexOf("where") + 6, query.indexOf(";"));
@@ -27,80 +27,76 @@ public class DeleteDataFromTable {
         String value = condition.substring(condition.indexOf(relationalOp) + 1);
         String databaseName = Main.databaseName;
         int columnIndex = -1;
-        boolean isRemoved=false;
+        boolean isRemoved = false;
         String filepath = DataConstants.DATABASES_FOLDER_LOCATION + databaseName + "/" + tablename;
         List<List<Object>> data = new FileOperations().readDataFromPSV(filepath);
-        int rowLength=data.size();
-        int columnLength=data.get(0).size();
+        int rowLength = data.size();
+        int columnLength = data.get(0).size();
         for (int i = 0; i < rowLength; i++) {
-            isRemoved=false;
+            isRemoved = false;
             for (int j = 0; j < columnLength; j++) {
-                if(isRemoved)
-                break;
+                if (isRemoved)
+                    break;
                 if (i == 0)
                     if (data.get(0).get(j).toString().toLowerCase().equals(column_name.toLowerCase())) {
                         columnIndex = j;
                         break;
                     }
-                    try{
-                    switch(relationalOp)
-                    {
+                try {
+                    switch (relationalOp) {
                         case RelationalOperators.EQUAL:
-                        if (data.get(i).get(columnIndex).toString().equals(value)) {
-                            data.remove(data.get(i));
-                            rowLength-=rowLength;
-                            isRemoved=true;
-                        }
-                        break;
+                            if (data.get(i).get(columnIndex).toString().equals(value)) {
+                                data.remove(data.get(i));
+                                rowLength -= rowLength;
+                                isRemoved = true;
+                            }
+                            break;
                         case RelationalOperators.GREATER:
-                        if(Integer.parseInt(data.get(i).get(columnIndex).toString())>Integer.parseInt(value)){
-                            data.remove(data.get(i));
-                            rowLength-=rowLength;
-                        break;
-                        }
+                            if (Integer.parseInt(data.get(i).get(columnIndex).toString()) > Integer.parseInt(value)) {
+                                data.remove(data.get(i));
+                                rowLength -= rowLength;
+                                break;
+                            }
                         case RelationalOperators.LESS:
-                        if(Integer.parseInt(data.get(i).get(columnIndex).toString())<Integer.parseInt(value)){
-                            data.remove(data.get(i));
-                            rowLength-=rowLength;
-                        break;
-                        }
+                            if (Integer.parseInt(data.get(i).get(columnIndex).toString()) < Integer.parseInt(value)) {
+                                data.remove(data.get(i));
+                                rowLength -= rowLength;
+                                break;
+                            }
                         case RelationalOperators.GREATEREQUAL:
-                        if(Integer.parseInt(data.get(i).get(columnIndex).toString())>=Integer.parseInt(value)){
-                            data.remove(data.get(i));
-                            rowLength-=rowLength;
-                        break;
-                        }
+                            if (Integer.parseInt(data.get(i).get(columnIndex).toString()) >= Integer.parseInt(value)) {
+                                data.remove(data.get(i));
+                                rowLength -= rowLength;
+                                break;
+                            }
                         case RelationalOperators.LESSEQUAL:
-                        if(Integer.parseInt(data.get(i).get(columnIndex).toString())<=Integer.parseInt(value)){
-                            data.remove(data.get(i));
-                            rowLength-=rowLength;
-                        break;
-                        }
+                            if (Integer.parseInt(data.get(i).get(columnIndex).toString()) <= Integer.parseInt(value)) {
+                                data.remove(data.get(i));
+                                rowLength -= rowLength;
+                                break;
+                            }
                         case RelationalOperators.NOTEQUAL:
                         case RelationalOperators.NOTEQUAL1:
                         case RelationalOperators.NOTEQUAL2:
-                        if(Integer.parseInt(data.get(i).get(columnIndex).toString())!=Integer.parseInt(value)){
-                            data.remove(data.get(i));
-                            rowLength-=rowLength;
-                        break;
-                        }
-                        operationStatus=new OperationStatus(true);
+                            if (Integer.parseInt(data.get(i).get(columnIndex).toString()) != Integer.parseInt(value)) {
+                                data.remove(data.get(i));
+                                rowLength -= rowLength;
+                                break;
+                            }
+                            operationStatus = new OperationStatus(true);
                     }
+                } catch (NumberFormatException e) {
+                    operationStatus = new OperationStatus(false);
                 }
-                        catch(NumberFormatException e)
-                        {
-                            operationStatus=new OperationStatus(false);
-                        }
             }
         }
 
-    
-        if(!Main.isTransaction)
-        new FileOperations().writeDataToPSV(data, filepath);
+
+        if (!Main.isTransaction)
+            new FileOperations().writeDataToPSV(data, filepath);
         else
-        operationStatus=new OperationStatus(true, data, query, filepath,QueryTypes.DELETE,tablename);
+            operationStatus = new OperationStatus(true, data, query, filepath, QueryTypes.DELETE, tablename, databaseName);
 
         return operationStatus;
-
     }
 }
