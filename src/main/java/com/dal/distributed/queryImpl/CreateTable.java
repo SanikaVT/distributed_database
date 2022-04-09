@@ -2,13 +2,14 @@ package com.dal.distributed.queryImpl;
 
 import com.dal.distributed.constant.DataConstants;
 import com.dal.distributed.main.Main;
+import com.dal.distributed.queryImpl.model.OperationStatus;
 import com.dal.distributed.utils.FileOperations;
 
 public class CreateTable {
-    public boolean execute(String query) {
+    public OperationStatus execute(String query) {
         if (Main.databaseName == null) {
             System.out.println("No database selected");
-            return false;
+            return new OperationStatus(Boolean.FALSE, null);
         }
         String[] sql = query.split("\\s+");
         if (sql.length > 3 && sql[0].toLowerCase().equals("create") && sql[1].toLowerCase().equals("table")) {
@@ -37,11 +38,9 @@ public class CreateTable {
             FileOperations.writeToExistingFile(columnNames, tableName + ".psv", DataConstants.DATABASES_FOLDER_LOCATION + Main.databaseName + "/");
             FileOperations.writeToExistingFile(schema, tableName + "_Schema" + ".psv", DataConstants.DATABASES_FOLDER_LOCATION + Main.databaseName + "/");
             //FileOperations.writeToExistingFile(tableName+"|", Main.databaseName+".psv", DataConstants.LOGS_FILE_LOCATION);
-            return true;
+            return new OperationStatus(Boolean.TRUE, Main.databaseName);
         } else
-            return false;
-
+            return new OperationStatus(Boolean.FALSE, Main.databaseName);
     }
-
 }
 
