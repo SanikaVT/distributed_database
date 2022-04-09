@@ -100,36 +100,38 @@ public class OperationsMenu {
             logQuery.setTableName((String) queryValidatorResults.get("entity"));
             if (Main.isTransaction) {
                 transactionQueries.add(insertIntoTable.execute(query));
-            } else
+            } else{
                 insertIntoTable.execute(query);
+            }
         } else if (((boolean) queryValidatorResults.get("isValidate")) && (queryValidatorResults.get("queryType") == QueryTypes.SELECT)) {
             logQuery.setOperation(QueryTypes.SELECT);
             logQuery.setTableName((String) queryValidatorResults.get("entity"));
             if (Main.isTransaction) {
                 transactionQueries.add(selectQuery.execute(query));
 
-            } else
+            } else{
                 selectQuery.execute(query);
+            }
         } else if (((boolean) queryValidatorResults.get("isValidate")) && (queryValidatorResults.get("queryType") == QueryTypes.UPDATE)) {
             logQuery.setOperation(QueryTypes.UPDATE);
             logQuery.setTableName((String) queryValidatorResults.get("entity"));
             if (Main.isTransaction){
                 transactionQueries.add(updateTable.execute(query));
             }
-            else
+            else{
                 updateTable.execute(query);
             logger.info("Action: " + query + "\nMessage: 1 row(s) affected.\n");
-
+            }
         } else if (((boolean) queryValidatorResults.get("isValidate")) && (queryValidatorResults.get("queryType") == QueryTypes.DELETE)) {
             logQuery.setOperation(QueryTypes.DELETE);
             logQuery.setTableName((String) queryValidatorResults.get("entity"));
             if (Main.isTransaction){
                 transactionQueries.add(deleteDataFromTable.execute(query));
             }
-            else
+            else{
                 deleteDataFromTable.execute(query);
             logger.info("Action: " + query + "\nMessage: 1 row(s) affected.\n");
-
+            }
         } else if (((boolean) queryValidatorResults.get("isValidate")) && (queryValidatorResults.get("queryType") == QueryTypes.START_TRANSACTION)) {
             logQuery.setOperation(QueryTypes.START_TRANSACTION);
             Main.isTransaction = true;

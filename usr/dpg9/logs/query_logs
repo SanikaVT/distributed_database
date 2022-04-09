@@ -670,4 +670,68 @@
 	"submissionTimestamp": "2022-04-09 00:22:27.449"
 	"submittedBy": "null"
 	"tableName": "Persons"
+},
+"QueryLog": {
+	"flag": "valid",
+	"query": "start transaction;",
+	"operation": "START_TRANSACTION",
+	"submissionTimestamp": "2022-04-09 10:57:31.622"
+	"submittedBy": "null"
+	"tableName": "null"
+},
+"QueryLog": {
+	"flag": "valid",
+	"query": "update Persons set FirstName='ababab' where PersonID=5;",
+	"operation": "UPDATE",
+	"submissionTimestamp": "2022-04-09 10:59:20.099"
+	"submittedBy": "null"
+	"tableName": "Persons"
+},
+"QueryLog": {
+	"flag": "invalid",
+	"query": " c:; cd 'c:\Users\sanik\Dropbox\PC\Desktop\DMWA\csci-5408-group-project-dpg9'; & 'C:\Program Files\Java\jdk-17.0.2\bin\java.exe' '-XX:+ShowCodeDetailsInExceptionMessages' '@C:\Users\sanik\AppData\Local\Temp\cp_9oy5r3oq50fainbj9fz4y2njw.argfile' 'com.dal.distributed.main.Main' ",
+	"operation": "null",
+	"submissionTimestamp": "2022-04-09 11:00:31.921"
+	"submittedBy": "null"
+	"tableName": "null"
+},
+"QueryLog": {
+	"flag": "valid",
+	"query": "start transaction;",
+	"operation": "START_TRANSACTION",
+	"submissionTimestamp": "2022-04-09 11:00:55.339"
+	"submittedBy": "null"
+	"tableName": "null"
+},
+"QueryLog": {
+	"flag": "valid",
+	"query": "update Persons set FirstName='sanika' where PersonID=4;",
+	"operation": "UPDATE",
+	"submissionTimestamp": "2022-04-09 11:01:22.999"
+	"submittedBy": "null"
+	"tableName": "Persons"
+},
+"QueryLog": {
+	"flag": "valid",
+	"query": "use dbdbdb;",
+	"operation": "USE",
+	"submissionTimestamp": "2022-04-09 11:02:56.419"
+	"submittedBy": "null"
+	"tableName": "dbdbdb"
+},
+"QueryLog": {
+	"flag": "valid",
+	"query": "start transaction;",
+	"operation": "START_TRANSACTION",
+	"submissionTimestamp": "2022-04-09 11:03:05.963"
+	"submittedBy": "null"
+	"tableName": "null"
+},
+"QueryLog": {
+	"flag": "valid",
+	"query": "update Persons set FirstName='abcd' where PersonID=4;",
+	"operation": "UPDATE",
+	"submissionTimestamp": "2022-04-09 11:03:30.019"
+	"submittedBy": "null"
+	"tableName": "Persons"
 }

@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 
-import javax.naming.spi.DirStateFactory.Result;
 
 public class SelectQuery {
     Logger logger = Logger.instance();
