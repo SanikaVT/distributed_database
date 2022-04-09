@@ -39,18 +39,18 @@ public class Analytics {
 
     private void analyzeQueries(String queryString) throws IOException {
         String[] query = queryString.split(" ");
-        if (query[1].equalsIgnoreCase("queries")) {
-            countQueries();
-        } else if (query[1].equalsIgnoreCase("update")) {
+        if (query[1].contains("queries")) {
+            countQueries(queryString);
+        } else if (query[1].contains("update")) {
             countOperationType("UPDATE");
-        } else if (query[1].equalsIgnoreCase("insert")) {
+        } else if (query[1].contains("insert")) {
             countOperationType("INSERT");
-        } else if (query[1].equalsIgnoreCase("delete")) {
+        } else if (query[1].contains("delete")) {
             countOperationType("DELETE");
-        } else if (query[1].equalsIgnoreCase("create")) {
-            countOperationType("CREATE");
-        } else if (query[1].equalsIgnoreCase("select")) {
+        } else if (query[1].contains("select")) {
             countOperationType("SELECT");
+        } else if (query[1].contains("create")) {
+            countOperationType("CREATE TABLE");
         }
     }
 
@@ -78,20 +78,61 @@ public class Analytics {
         }
     }
 
-    private void countQueries() throws IOException {
+    private void countQueries(String queryString) throws IOException {
+        String [] query = queryString.split(" ");
+        Matcher matcher = QueryRegex.countQueriesAnalytics.matcher(queryString);
+        if (matcher.find()) {
+            String userName = matcher.group(1).trim();
+            String databaseName = matcher.group(2).replace(";","");
+            countQueriesForUser(userName, databaseName);
+        } else if (query.length == 2) {
+            countTotalQueries();
+        }
+    }
+
+    private void countTotalQueries() throws IOException {
         List<QueryLog> queryLogs = getQueryLogFileInformation();
         HashMap<String, Integer> userMap = new HashMap<>();
         for (QueryLog queryLog : queryLogs) {
-            if (null != userMap.get(queryLog.getSubmittedBy())) {
-                userMap.put(queryLog.getSubmittedBy(), userMap.get(queryLog.getSubmittedBy()) + 1);
+            String key = queryLog.getSubmittedBy() + "|" + queryLog.getDatabaseName();
+            if (null != userMap.get(key)) {
+                userMap.put(key, userMap.get(key) + 1);
             } else {
-                userMap.put(queryLog.getSubmittedBy(), 1);
+                userMap.put(key, 1);
             }
         }
 
         Boolean flag = Boolean.FALSE;
         for (Map.Entry<String, Integer> user : userMap.entrySet()) {
-            logger.info("User " + user.getKey() + " submitted " + user.getValue() + " query(s).");
+            String[] details = user.getKey().split("\\|");
+            if (null != details[1] && !details[1].equalsIgnoreCase("null")) {
+                logger.info("User " + details[0] + " submitted " + user.getValue() + " query(s) for " + details[1]);
+            }
+            flag = Boolean.TRUE;
+        }
+
+        if (!flag) {
+            logger.info("No queries found");
+        }
+    }
+
+    private void countQueriesForUser(String userName, String databaseName) throws IOException {
+        List<QueryLog> queryLogs = getQueryLogFileInformation();
+        HashMap<String, Integer> userMap = new HashMap<>();
+        for (QueryLog queryLog : queryLogs) {
+            if (queryLog.getDatabaseName().equalsIgnoreCase(databaseName) &&
+                    queryLog.getSubmittedBy().equalsIgnoreCase(userName)) {
+                if (null != userMap.get(queryLog.getSubmittedBy())) {
+                    userMap.put(queryLog.getSubmittedBy(), userMap.get(queryLog.getSubmittedBy()) + 1);
+                } else {
+                    userMap.put(queryLog.getSubmittedBy(), 1);
+                }
+            }
+        }
+
+        Boolean flag = Boolean.FALSE;
+        for (Map.Entry<String, Integer> user : userMap.entrySet()) {
+            logger.info("User " + user.getKey() + " submitted " + user.getValue() + " query(s) for " + databaseName);
             flag = Boolean.TRUE;
         }
 
@@ -140,6 +181,11 @@ public class Analytics {
                         matcher.find();
                         if (matcher.find()) {
                             queryLog.setTableName(matcher.group());
+                        }
+                    } else if (matcher.group().equalsIgnoreCase("databaseName")) {
+                        matcher.find();
+                        if (matcher.find()) {
+                            queryLog.setDatabaseName(matcher.group());
                         }
                         break;
                     }

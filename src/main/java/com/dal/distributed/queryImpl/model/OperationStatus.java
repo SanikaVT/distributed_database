@@ -10,20 +10,26 @@ public class OperationStatus {
     private String queryType;
     private String tableName;
     private boolean isRepeatTable;
+    private String databaseName;
 
-    public OperationStatus(boolean status, List<List<Object>> result, String query, String filePath, String queryType, String tableName) {
+    public OperationStatus(boolean status, List<List<Object>> result, String query, String filePath, String queryType, String tableName, String databaseName) {
         this.status = status;
         this.result = result;
         this.query = query;
         this.filePath = filePath;
         this.queryType = queryType;
         this.tableName = tableName;
+        this.databaseName = databaseName;
     }
 
     public OperationStatus(boolean status) {
         this.status = status;
     }
 
+    public OperationStatus(boolean status, String databaseName) {
+        this.status = status;
+        this.databaseName = databaseName;
+    }
 
     public String getQueryType() {
         return queryType;
@@ -81,5 +87,11 @@ public class OperationStatus {
         this.isRepeatTable = isRepeatTable;
     }
 
+    public String getDatabaseName() {
+        return databaseName;
+    }
 
+    public void setDatabaseName(String databaseName) {
+        this.databaseName = databaseName;
+    }
 }

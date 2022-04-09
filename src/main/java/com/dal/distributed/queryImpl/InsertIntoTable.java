@@ -21,10 +21,6 @@ public class InsertIntoTable {
     FileOperations fileOperations = new FileOperations();
 
     public OperationStatus execute(String sql) {
-        if(Main.databaseName==null){
-            System.out.println("No database selected");
-            return null;
-        }
         OperationStatus operationStatus = null;
         boolean isTableExist = false;
         String[] query = sql.split("\\s+");
@@ -62,14 +58,14 @@ public class InsertIntoTable {
                         fileOperations.readDataFromPSV(
                                 DataConstants.DATABASES_FOLDER_LOCATION + databaseName + "/" + tableName + "_Schema.psv");
 
-                if (values.length != schema.size()-1) {
+                if (values.length != schema.size() - 1) {
                     logger.error("Fields count mismatch: Expected " + (schema.size() - 1) + " fields but received " + values.length);
-                    return new OperationStatus(false);
+                    return new OperationStatus(false, databaseName);
                 }
 
                 //Primary Key already exists in the database
                 if (checkForPrimaryKeyConstraint(f.getPath(), schema, values)) {
-                    return new OperationStatus(false);
+                    return new OperationStatus(false, databaseName);
                 }
 
                 for (int i = 0; i < values.length; i++) {
@@ -88,7 +84,7 @@ public class InsertIntoTable {
                         } catch (NumberFormatException ex) {
                             logger.error("Incorrect integer value: '" + values[i] +
                                     "' for column '" + schema.get(i + 1).get(0) + "'");
-                            return new OperationStatus(false);
+                            return new OperationStatus(false, databaseName);
                         }
                     }
                 }
@@ -102,7 +98,7 @@ public class InsertIntoTable {
                 List<Object> resultVal = new ArrayList();
                 resultVal.addAll(Arrays.asList(finalValue.split("|")));
                 result.add(resultVal);
-                operationStatus=new OperationStatus(true, result, sql, f.getPath(), QueryTypes.INSERT,tableName);
+                operationStatus = new OperationStatus(true, result, sql, f.getPath(), QueryTypes.INSERT, tableName, databaseName);
             }
             break;
         }
@@ -112,7 +108,7 @@ public class InsertIntoTable {
         return operationStatus;
     }
 
-    private Boolean checkForPrimaryKeyConstraint(String path, List<List<Object>> schema, String [] value) {
+    private Boolean checkForPrimaryKeyConstraint(String path, List<List<Object>> schema, String[] value) {
         String primaryKey = getPrimaryKeyColumnName(schema);
         List<List<Object>> existingFile = fileOperations.readDataFromPSV(path);
 
