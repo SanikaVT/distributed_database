@@ -478,4 +478,196 @@
 	"submissionTimestamp": "2022-04-08 20:47:46.307"
 	"submittedBy": "null"
 	"tableName": "null"
+},
+"QueryLog": {
+	"flag": "valid",
+	"query": "use dbdbdb;",
+	"operation": "USE",
+	"submissionTimestamp": "2022-04-08 23:38:58.571"
+	"submittedBy": "null"
+	"tableName": "dbdbdb"
+},
+"QueryLog": {
+	"flag": "valid",
+	"query": "use dbdbdb;",
+	"operation": "USE",
+	"submissionTimestamp": "2022-04-08 23:39:07.166"
+	"submittedBy": "null"
+	"tableName": "dbdbdb"
+},
+"QueryLog": {
+	"flag": "valid",
+	"query": "use dbdbdb;",
+	"operation": "USE",
+	"submissionTimestamp": "2022-04-08 23:39:43.261"
+	"submittedBy": "null"
+	"tableName": "dbdbdb"
+},
+"QueryLog": {
+	"flag": "valid",
+	"query": "select * from Persons;",
+	"operation": "SELECT",
+	"submissionTimestamp": "2022-04-08 23:40:02.443"
+	"submittedBy": "null"
+	"tableName": "Persons"
+},
+"QueryLog": {
+	"flag": "valid",
+	"query": "use dbdbdb;",
+	"operation": "USE",
+	"submissionTimestamp": "2022-04-08 23:41:13.934"
+	"submittedBy": "null"
+	"tableName": "dbdbdb"
+},
+"QueryLog": {
+	"flag": "valid",
+	"query": "select * from Persons;",
+	"operation": "SELECT",
+	"submissionTimestamp": "2022-04-08 23:41:27.925"
+	"submittedBy": "null"
+	"tableName": "Persons"
+},
+"QueryLog": {
+	"flag": "valid",
+	"query": "use dbdbdb;",
+	"operation": "USE",
+	"submissionTimestamp": "2022-04-08 23:44:09.938"
+	"submittedBy": "null"
+	"tableName": "dbdbdb"
+},
+"QueryLog": {
+	"flag": "valid",
+	"query": "select * from Persons;",
+	"operation": "SELECT",
+	"submissionTimestamp": "2022-04-08 23:44:25.784"
+	"submittedBy": "null"
+	"tableName": "Persons"
+},
+"QueryLog": {
+	"flag": "invalid",
+	"query": "select * from Persons",
+	"operation": "null",
+	"submissionTimestamp": "2022-04-08 23:48:52.131"
+	"submittedBy": "null"
+	"tableName": "null"
+},
+"QueryLog": {
+	"flag": "valid",
+	"query": "use dbdbdb;",
+	"operation": "USE",
+	"submissionTimestamp": "2022-04-08 23:53:23.25"
+	"submittedBy": "null"
+	"tableName": "dbdbdb"
+},
+"QueryLog": {
+	"flag": "valid",
+	"query": "select * from Persons;",
+	"operation": "SELECT",
+	"submissionTimestamp": "2022-04-08 23:53:29.407"
+	"submittedBy": "null"
+	"tableName": "Persons"
+},
+"QueryLog": {
+	"flag": "valid",
+	"query": "use dbdbdb;",
+	"operation": "USE",
+	"submissionTimestamp": "2022-04-08 23:54:36.54"
+	"submittedBy": "null"
+	"tableName": "dbdbdb"
+},
+"QueryLog": {
+	"flag": "valid",
+	"query": "select * from Persons;",
+	"operation": "SELECT",
+	"submissionTimestamp": "2022-04-08 23:54:49.225"
+	"submittedBy": "null"
+	"tableName": "Persons"
+},
+"QueryLog": {
+	"flag": "valid",
+	"query": "use dbdbdb;",
+	"operation": "USE",
+	"submissionTimestamp": "2022-04-08 23:55:07.466"
+	"submittedBy": "null"
+	"tableName": "dbdbdb"
+},
+"QueryLog": {
+	"flag": "valid",
+	"query": "use dbdbdb;",
+	"operation": "USE",
+	"submissionTimestamp": "2022-04-09 00:08:03.662"
+	"submittedBy": "null"
+	"tableName": "dbdbdb"
+},
+"QueryLog": {
+	"flag": "valid",
+	"query": "select * from Persons;",
+	"operation": "SELECT",
+	"submissionTimestamp": "2022-04-09 00:08:12.876"
+	"submittedBy": "null"
+	"tableName": "Persons"
+},
+"QueryLog": {
+	"flag": "valid",
+	"query": "use dbdbdb;",
+	"operation": "USE",
+	"submissionTimestamp": "2022-04-09 00:10:15.517"
+	"submittedBy": "null"
+	"tableName": "dbdbdb"
+},
+"QueryLog": {
+	"flag": "valid",
+	"query": "select * from Persons;",
+	"operation": "SELECT",
+	"submissionTimestamp": "2022-04-09 00:10:33.527"
+	"submittedBy": "null"
+	"tableName": "Persons"
+},
+"QueryLog": {
+	"flag": "valid",
+	"query": "use dbdbdb;",
+	"operation": "USE",
+	"submissionTimestamp": "2022-04-09 00:13:38.866"
+	"submittedBy": "null"
+	"tableName": "dbdbdb"
+},
+"QueryLog": {
+	"flag": "valid",
+	"query": "use dbdbdb;",
+	"operation": "USE",
+	"submissionTimestamp": "2022-04-09 00:19:50.108"
+	"submittedBy": "null"
+	"tableName": "dbdbdb"
+},
+"QueryLog": {
+	"flag": "valid",
+	"query": "select * from Persons;",
+	"operation": "SELECT",
+	"submissionTimestamp": "2022-04-09 00:20:04.111"
+	"submittedBy": "null"
+	"tableName": "Persons"
+},
+"QueryLog": {
+	"flag": "valid",
+	"query": "select Adress from Persons;",
+	"operation": "SELECT",
+	"submissionTimestamp": "2022-04-09 00:20:54.471"
+	"submittedBy": "null"
+	"tableName": "Persons"
+},
+"QueryLog": {
+	"flag": "valid",
+	"query": "select PersonID from Persons;",
+	"operation": "SELECT",
+	"submissionTimestamp": "2022-04-09 00:22:08.979"
+	"submittedBy": "null"
+	"tableName": "Persons"
+},
+"QueryLog": {
+	"flag": "valid",
+	"query": "select Address from Persons;",
+	"operation": "SELECT",
+	"submissionTimestamp": "2022-04-09 00:22:27.449"
+	"submittedBy": "null"
+	"tableName": "Persons"
 }

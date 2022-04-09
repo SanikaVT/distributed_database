@@ -6,7 +6,10 @@ import com.dal.distributed.utils.FileOperations;
 
 public class CreateTable {
     public boolean execute(String query) {
-
+        if(Main.databaseName==null){
+            System.out.println("No database selected");
+            return false;
+        }
         String[] sql = query.split("\\s+");   
         if(sql.length>3&& sql[0].toLowerCase().equals("create")&&sql[1].toLowerCase().equals("table"))
         {

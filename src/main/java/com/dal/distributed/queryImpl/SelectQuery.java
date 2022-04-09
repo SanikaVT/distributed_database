@@ -23,6 +23,10 @@ import javax.naming.spi.DirStateFactory.Result;
 public class SelectQuery {
     Logger logger = Logger.instance();
     public OperationStatus execute(String query) throws Exception {
+        if(Main.databaseName==null){
+            System.out.println("No database selected");
+            return null;
+        }
         OperationStatus operationStatus=null;
         List<Map> resultList = new ArrayList();
         List<List<Object>> queryResult=new ArrayList<>();
@@ -146,13 +150,19 @@ public class SelectQuery {
                 resultList = this.filterProjectionsForOutput(resultList, projectionList);
                 int c=0;
                 for(Map<String,String> m:resultList){
+                    if(c==0)
+                    {
                     for(Map.Entry<String,String> mp : m.entrySet())
                     {
-                        if(c==0)
                         mapToList.add(mp.getKey());
-                        else
+                    }
+                    queryResult.add(mapToList);
+                }
+                mapToList=new ArrayList<>();
+                    c+=1;
+                    for(Map.Entry<String,String> mp : m.entrySet())
+                    {
                         mapToList.add(mp.getValue());
-                        c=c+1;
                     }
                     queryResult.add(mapToList);
                 }

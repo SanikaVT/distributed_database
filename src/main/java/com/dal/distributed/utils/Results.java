@@ -10,7 +10,7 @@ public class Results {
         {
             for(Object result:resultVal)
             {
-                System.out.println(result.toString()+" ");
+                System.out.print(result.toString()+"  ");
             }
             System.out.println();
         }

@@ -13,6 +13,10 @@ import com.dal.distributed.utils.FileOperations;
 public class UpdateTable {
     private String relationalOp;
     public OperationStatus execute(String query) {
+        if(Main.databaseName==null){
+            System.out.println("No database selected");
+            return null;
+        }
         OperationStatus operationStatus=null;
         relationalOp=DataUtils.checkRelationalOperator(query);
         String[] sql = query.split("\\s+");

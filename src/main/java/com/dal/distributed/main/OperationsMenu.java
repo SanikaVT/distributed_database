@@ -106,7 +106,7 @@ public class OperationsMenu {
             logQuery.setOperation(QueryTypes.SELECT);
             logQuery.setTableName((String) queryValidatorResults.get("entity"));
             if (Main.isTransaction) {
-                //transactionQueries.add(selectQuery.execute(query));
+                transactionQueries.add(selectQuery.execute(query));
 
             } else
                 selectQuery.execute(query);
