@@ -38,7 +38,7 @@ public class Analytics {
     }
 
     private void analyzeQueries(String queryString) throws IOException {
-        String [] query = queryString.split(" ");
+        String[] query = queryString.split(" ");
         if (query[1].equalsIgnoreCase("queries")) {
             countQueries();
         } else if (query[1].equalsIgnoreCase("update")) {
@@ -47,8 +47,8 @@ public class Analytics {
             countOperationType("INSERT");
         } else if (query[1].equalsIgnoreCase("delete")) {
             countOperationType("DELETE");
-        } else if (query[1].equalsIgnoreCase("update")) {
-            countOperationType("UPDATE");
+        } else if (query[1].equalsIgnoreCase("create")) {
+            countOperationType("CREATE");
         } else if (query[1].equalsIgnoreCase("select")) {
             countOperationType("SELECT");
         }
