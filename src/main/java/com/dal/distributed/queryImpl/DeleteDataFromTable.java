@@ -14,6 +14,10 @@ public class DeleteDataFromTable {
     private String relationalOp;
 
     public OperationStatus execute(String query) {
+        if(Main.databaseName==null){
+            System.out.println("No database selected");
+            return null;
+        }
         relationalOp=DataUtils.checkRelationalOperator(query);
         OperationStatus operationStatus=null;
         String[] sql = query.split("\\s+");

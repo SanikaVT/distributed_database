@@ -5,6 +5,7 @@ import com.dal.distributed.constant.QueryTypes;
 import com.dal.distributed.main.Main;
 import com.dal.distributed.queryImpl.DeleteDataFromTable;
 import com.dal.distributed.queryImpl.InsertIntoTable;
+import com.dal.distributed.queryImpl.SelectQuery;
 import com.dal.distributed.queryImpl.UpdateTable;
 import com.dal.distributed.queryImpl.model.OperationStatus;
 import com.dal.distributed.utils.FileOperations;
@@ -13,7 +14,7 @@ import com.dal.distributed.utils.Results;
 public class TransactionProcessing {
     FileOperations fileOperations=new FileOperations();
     OperationStatus oStatus=null;
-    public boolean execute(List<OperationStatus> listTransactionQueries)
+    public boolean execute(List<OperationStatus> listTransactionQueries) throws Exception
     {
         Main.isTransaction=true;
         for(int i=0;i<listTransactionQueries.size();i++)
@@ -58,7 +59,7 @@ public class TransactionProcessing {
             {
                 if(listTransactionQueries.get(i).isRepeatTable())
                 {
-                    //oStatus=new SelectQuery().execute(listTransactionQueries.get(i).getQuery());
+                    oStatus=new SelectQuery().execute(listTransactionQueries.get(i).getQuery());
                     listTransactionQueries.set(i,oStatus);
                 }
                 Results.printResult(listTransactionQueries.get(i).getResult());
@@ -66,8 +67,7 @@ public class TransactionProcessing {
         }
 
         Main.isTransaction=false;
-        
-        return false;
+        return true;
 
     }
 }

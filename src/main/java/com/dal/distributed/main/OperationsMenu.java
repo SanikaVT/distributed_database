@@ -13,7 +13,6 @@ import com.dal.distributed.utils.FileOperations;
 
 import transactionProcessing.TransactionProcessing;
 
-import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -68,7 +67,8 @@ public class OperationsMenu {
         SelectQuery selectQuery = new SelectQuery();
         UpdateTable updateTable = new UpdateTable();
         DeleteDataFromTable deleteDataFromTable = new DeleteDataFromTable();
-
+        do
+        {
         logger.info("Write query for selected option:");
         String query = sc.nextLine();
 
@@ -103,33 +103,38 @@ public class OperationsMenu {
             logQuery.setTableName((String) queryValidatorResults.get("entity"));
             if (Main.isTransaction) {
                 transactionQueries.add(insertIntoTable.execute(query));
-            } else
+            } else{
                 insertIntoTable.execute(query);
+            }
         } else if (((boolean) queryValidatorResults.get("isValidate")) && (queryValidatorResults.get("queryType") == QueryTypes.SELECT)) {
             logQuery.setOperation(QueryTypes.SELECT);
             logQuery.setTableName((String) queryValidatorResults.get("entity"));
             if (Main.isTransaction) {
-                //transactionQueries.add(selectQuery.execute(query));
-            } else
+                transactionQueries.add(selectQuery.execute(query));
+
+            } else{
                 selectQuery.execute(query);
+            }
         } else if (((boolean) queryValidatorResults.get("isValidate")) && (queryValidatorResults.get("queryType") == QueryTypes.UPDATE)) {
             logQuery.setOperation(QueryTypes.UPDATE);
             logQuery.setTableName((String) queryValidatorResults.get("entity"));
-            if (Main.isTransaction)
+            if (Main.isTransaction){
                 transactionQueries.add(updateTable.execute(query));
-            else
+            }
+            else{
                 updateTable.execute(query);
             logger.info("Action: " + query + "\nMessage: 1 row(s) affected.\n");
-
+            }
         } else if (((boolean) queryValidatorResults.get("isValidate")) && (queryValidatorResults.get("queryType") == QueryTypes.DELETE)) {
             logQuery.setOperation(QueryTypes.DELETE);
             logQuery.setTableName((String) queryValidatorResults.get("entity"));
-            if (Main.isTransaction)
+            if (Main.isTransaction){
                 transactionQueries.add(deleteDataFromTable.execute(query));
-            else
+            }
+            else{
                 deleteDataFromTable.execute(query);
             logger.info("Action: " + query + "\nMessage: 1 row(s) affected.\n");
-
+            }
         } else if (((boolean) queryValidatorResults.get("isValidate")) && (queryValidatorResults.get("queryType") == QueryTypes.START_TRANSACTION)) {
             logQuery.setOperation(QueryTypes.START_TRANSACTION);
             Main.isTransaction = true;
@@ -150,5 +155,6 @@ public class OperationsMenu {
         }
         FileOperations.writeToExistingFile(logQuery.toString(),
                 DataConstants.QUERY_LOG_FILE_NAME, DataConstants.QUERY_LOGS_FILE_LOCATION);
+    }while(Main.isTransaction);
     }
 }

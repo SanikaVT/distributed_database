@@ -21,6 +21,10 @@ public class InsertIntoTable {
     FileOperations fileOperations = new FileOperations();
 
     public OperationStatus execute(String sql) {
+        if(Main.databaseName==null){
+            System.out.println("No database selected");
+            return null;
+        }
         OperationStatus operationStatus = null;
         boolean isTableExist = false;
         String[] query = sql.split("\\s+");
