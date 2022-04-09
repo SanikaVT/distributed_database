@@ -13,6 +13,8 @@ public class QueryRegex {
     public static final Pattern startTransaction = Pattern.compile("^start\\s+transaction;\\s*$", Pattern.CASE_INSENSITIVE);
     public static final Pattern endTransaction = Pattern.compile("^end\\s+transaction;\\s*$", Pattern.CASE_INSENSITIVE);
     public static final Pattern valueBetweenQuotes = Pattern.compile("(?<=\").*?(?=\")");
+    public static final Pattern countQueriesAnalytics = Pattern.compile("count\\s+queries\\s+by\\s+(.*)for\\s+(.*)");
 
     public static final Pattern digitOnlyRegex = Pattern.compile("^[0-9]+$");
+
 }
