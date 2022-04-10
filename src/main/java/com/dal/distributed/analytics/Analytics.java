@@ -2,6 +2,7 @@ package com.dal.distributed.analytics;
 
 import com.dal.distributed.constant.DataConstants;
 import com.dal.distributed.constant.QueryRegex;
+import com.dal.distributed.constant.VMConstants;
 import com.dal.distributed.logger.Logger;
 import com.dal.distributed.queryImpl.model.QueryLog;
 import com.dal.distributed.utils.FileOperations;
@@ -145,7 +146,7 @@ public class Analytics {
         String queryLogFile = FileOperations.readFileContent(
                 new File(DataConstants.LOGS_FILE_LOCATION + DataConstants.QUERY_LOG_FILE_NAME));
 
-        String remoteQueryLogFile = RemoteVmUtils.readFileContent(DataConstants.LOGS_FILE_LOCATION + DataConstants.QUERY_LOG_FILE_NAME);
+        String remoteQueryLogFile = RemoteVmUtils.readFileContent(VMConstants.projectPath + DataConstants.LOGS_FILE_LOCATION + DataConstants.QUERY_LOG_FILE_NAME);
         StringBuilder sb = new StringBuilder()
                 .append(queryLogFile)
                 .append(remoteQueryLogFile);

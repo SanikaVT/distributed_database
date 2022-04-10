@@ -169,7 +169,7 @@ public class ExportDatabase {
 
     private String generateInsertDataForRemoteTable(String database, Table table) throws Exception {
         String dataFilePath = DatabaseUtils.getDataFilePathFromTable(database, table.getTableName());
-        String data = RemoteVmUtils.readFileContent(dataFilePath);
+        String data = RemoteVmUtils.readFileContent(VMConstants.projectPath + dataFilePath);
         List<String> rowsWithHeader = Arrays.asList(data.split("\n"));
         List<String> columnNames = table.getColumns().stream()
                 .map(Column::getColumnName).collect(Collectors.toList());
