@@ -85,20 +85,19 @@ public class ExportDatabase {
             return null;
             }
         List<File> schemaFiles = DatabaseUtils.getTableSchemaFiles(database);
-            System.out.println("Table schema files in local: ");
-            schemaFiles.stream().forEach(x -> {
-                System.out.println(x.getName());
-            });
         List<Table> remoteTables = DatabaseUtils.getRemoteTables(database);
         if ((schemaFiles == null || schemaFiles.isEmpty()) && (remoteTables == null || remoteTables.isEmpty())) {
             logger.info("Selected database is empty! Please choose another one to export");
             return null;
         }
         List<Table> tables = new ArrayList<>();
+        System.out.println("Tables length: " + tables.size());
         for (File tableFile: schemaFiles) {
+            System.out.println("Local schema file: " + tableFile.getName());
             List<String> columnDefs = DatabaseUtils.getColumnDefinitions(database, tableFile);
             Table table = Table.createTableModel(tableFile.getName(), database, columnDefs);
             tables.add(table);
+            System.out.println("Table model created for: " + tableFile.getName() + "is: "+ table.getTableName());
         }
         tables.addAll(remoteTables);
         System.out.println("All tables remote and local:");
