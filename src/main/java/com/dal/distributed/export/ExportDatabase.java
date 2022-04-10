@@ -86,6 +86,10 @@ public class ExportDatabase {
             }
         List<File> schemaFiles = DatabaseUtils.getTableSchemaFiles(database);
         List<Table> remoteTables = DatabaseUtils.getRemoteTables(database);
+        System.out.println("Remote Table name:");
+        remoteTables.stream().forEach(x -> {
+            System.out.println(x.getTableName());
+        });
         if ((schemaFiles == null || schemaFiles.isEmpty()) && (remoteTables == null || remoteTables.isEmpty())) {
             logger.info("Selected database is empty! Please choose another one to export");
             return null;
