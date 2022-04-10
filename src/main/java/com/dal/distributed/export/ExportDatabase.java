@@ -2,11 +2,13 @@ package com.dal.distributed.export;
 
 import com.dal.distributed.constant.DataConstants;
 import com.dal.distributed.constant.MiscConstants;
+import com.dal.distributed.constant.VMConstants;
 import com.dal.distributed.logger.Logger;
 import com.dal.distributed.main.model.Column;
 import com.dal.distributed.main.model.Table;
 import com.dal.distributed.utils.DatabaseUtils;
 import com.dal.distributed.utils.FileOperations;
+import com.dal.distributed.utils.RemoteVmUtils;
 
 import java.io.*;
 import java.util.*;
@@ -29,7 +31,7 @@ public class ExportDatabase {
 
     private static final String EXPORT_OUTPUT_PROMPT = "Your exported file will be found at: %s";
 
-    public void flow(Scanner sc) {
+    public void flow(Scanner sc) throws Exception {
         while (true) {
             logger.info("Please choose any one of the following options:");
             logger.info("\n1. Show Databases list");
@@ -70,7 +72,7 @@ public class ExportDatabase {
         databaseNames.stream().forEach(logger::info);
     }
 
-    private String exportStructureAndValue(String database) {
+    private String exportStructureAndValue(String database) throws Exception {
         File[] databases = FileOperations.readFiles(DataConstants.DATABASES_FOLDER_LOCATION);
         boolean isExist=false;
             for (File file : databases) {
@@ -93,6 +95,7 @@ public class ExportDatabase {
             Table table = Table.createTableModel(tableFile.getName(), database, columnDefs);
             tables.add(table);
         }
+        tables.addAll(DatabaseUtils.getRemoteTables(database));
 
         //sort tables based on the foreign keys
         Collections.sort(tables, (o1, o2) -> {
@@ -113,7 +116,7 @@ public class ExportDatabase {
         return exportDataToSqlFile(database, tables);
     }
 
-    private String exportDataToSqlFile(String database, List<Table> tables) {
+    private String exportDataToSqlFile(String database, List<Table> tables) throws Exception {
         FileOperations.createNewFolderRecursively(DEFAULT_EXPORT_FILE_LOCATION);
         String fileName = String.format(DEFAULT_EXPORT_FILE_NAME, new Date().getTime(), database);
         File exportSqlFile = new File(DEFAULT_EXPORT_FILE_LOCATION + File.separator + fileName);
@@ -124,7 +127,8 @@ public class ExportDatabase {
             bw.write(String.format(USE_DATABASE, database));
             bw.write("\n");
             for (Table table: tables) {
-                String tableQueries = generateCreateTableAlongWithData(database, table);
+                boolean isLocal = !VMConstants.REMOTE.equals(DatabaseUtils.getTableLocation(database, table.getTableName()));
+                String tableQueries = generateCreateTableAlongWithData(database, table, isLocal);
                 bw.write(tableQueries);
                 bw.write("\n");
             }
@@ -136,13 +140,33 @@ public class ExportDatabase {
     }
 
 
-    private String generateCreateTableAlongWithData(String database, Table table) {
+    private String generateCreateTableAlongWithData(String database, Table table, boolean isLocal) throws Exception {
         String createTableQuery = generateCreateTable(database, table);
-        String insertQueries = generateInsertData(database, table);
+        String insertQueries = isLocal? generateInsertData(database, table): generateInsertDataForRemoteTable(database, table);
         StringBuilder createAndInsertQueriesTable = new StringBuilder(createTableQuery);
         createAndInsertQueriesTable.append("\n");
         createAndInsertQueriesTable.append(insertQueries);
         return createAndInsertQueriesTable.toString();
+    }
+
+    private String generateInsertDataForRemoteTable(String database, Table table) throws Exception {
+        String dataFilePath = DatabaseUtils.getDataFilePathFromTable(database, table.getTableName());
+        String data = RemoteVmUtils.readFileContent(dataFilePath);
+        List<String> rowsWithHeader = Arrays.asList(data.split("\n"));
+        List<String> columnNames = table.getColumns().stream()
+                .map(Column::getColumnName).collect(Collectors.toList());
+        Map<String, Column> columnNameToColumn = table.getColumns().stream()
+                .collect(Collectors.toMap(Column::getColumnName, Function.identity()));
+        if (rowsWithHeader.size() == 1)
+            return "\n";
+        String genericInsertQueryPrefix = String.format(INSERT_GENERIC_QUERY_PREFIX, table.getTableName());
+        StringBuilder insertQueryBuilder = new StringBuilder(genericInsertQueryPrefix);
+        for (int i=1; i<rowsWithHeader.size(); i++) {
+            insertQueryBuilder.append(generateRowValuesForInsert(rowsWithHeader.get(i).split(MiscConstants.PIPE), columnNames, columnNameToColumn));
+        }
+        insertQueryBuilder.deleteCharAt(insertQueryBuilder.length()-1);
+        insertQueryBuilder.append(";");
+        return insertQueryBuilder.toString();
     }
 
     private String generateCreateTable(String database, Table table) {
@@ -250,6 +274,27 @@ public class ExportDatabase {
             e.printStackTrace();
         }
         return "";
+    }
+
+    private String generateRowValuesForInsert(String [] rowData, List<String> columnNames, Map<String, Column> columnNameToColumn) {
+        StringBuilder rowDataBuilder = new StringBuilder("(");
+        for (int i=0; i<columnNames.size(); i++) {
+            String columnName = columnNames.get(i);
+            String data = rowData[i];
+            String dataType = columnNameToColumn.get(columnName).getDataType();
+            if (dataType.contains("int")) {
+                rowDataBuilder.append(data);
+            }
+            else {
+                rowDataBuilder.append("'");
+                rowDataBuilder.append(data);
+                rowDataBuilder.append("'");
+            }
+            rowDataBuilder.append(",");
+        }
+        rowDataBuilder.deleteCharAt(rowDataBuilder.length()-1);
+        rowDataBuilder.append("),");
+        return rowDataBuilder.toString();
     }
 
 }

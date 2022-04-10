@@ -2,6 +2,8 @@ package com.dal.distributed.utils;
 
 import com.dal.distributed.constant.DataConstants;
 import com.dal.distributed.constant.MiscConstants;
+import com.dal.distributed.constant.VMConstants;
+import com.dal.distributed.main.model.Table;
 
 import javax.xml.crypto.Data;
 import java.io.BufferedReader;
@@ -9,6 +11,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class DatabaseUtils {
 
@@ -58,6 +61,11 @@ public class DatabaseUtils {
         return new File(dataFilePath);
     }
 
+    public static String getDataFilePathFromTable(String database, String tableName) {
+        String dataFilePath = DataConstants.DATABASES_FOLDER_LOCATION + database + File.separator + tableName + DATA_FILE_SUFFIX;
+        return dataFilePath;
+    }
+
     public static List<String> getColumnNames(File tableDataFile) {
         try (FileReader fr = new FileReader(tableDataFile);
              BufferedReader br = new BufferedReader(fr);){
@@ -89,5 +97,41 @@ public class DatabaseUtils {
             e.printStackTrace();
         }
         throw new IllegalArgumentException("table name doesn't exist in the database");
+    }
+
+    public static Map<String, String> getTableNames(String databaseName) {
+        String metaDataFileLocation = DataConstants.DATABASES_FOLDER_LOCATION + databaseName + META_DATA_FILE_SUFFIX;
+        File metaDataFile = new File(metaDataFileLocation);
+        if (!metaDataFile.exists())
+            throw new IllegalArgumentException("Database doesn't exist");
+        Map<String, String> tableNameToLocation = new HashMap<>();
+        try (FileReader fr = new FileReader(metaDataFile);
+             BufferedReader br = new BufferedReader(fr)){
+            //Buffered read will point after header row
+            br.readLine();
+            String tableInfo;
+            while ((tableInfo= br.readLine())!=null) {
+                String [] tableInfoArr = tableInfo.split(MiscConstants.PIPE);
+                tableNameToLocation.put(tableInfoArr[0], tableInfoArr[1]);
+            }
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        return tableNameToLocation;
+    }
+
+    public static List<Table> getRemoteTables(String databaseName) throws Exception {
+        Map<String, String> tableNameToLocation = getTableNames(databaseName);
+        List<String> remoteTableNames = tableNameToLocation.entrySet().stream()
+                .filter(x -> VMConstants.REMOTE.equals(x.getValue())).map(x -> x.getKey()).collect(Collectors.toList());
+        List<Table> remoteTables = new ArrayList<>();
+        for (String tableName: remoteTableNames) {
+            String tableSchema = RemoteVmUtils.readFileContent(DataConstants.DATABASES_FOLDER_LOCATION + databaseName + File.separator + tableName + SCHEMA_FILE_SUFFIX);
+            List<String> columnStrWithHeaders = Arrays.asList(tableSchema.split("\n"));
+            List<String> columnStr = columnStrWithHeaders.subList(1, columnStrWithHeaders.size());
+            remoteTables.add(Table.createTableModel(databaseName, tableName, columnStr));
+        }
+        return remoteTables;
     }
 }
