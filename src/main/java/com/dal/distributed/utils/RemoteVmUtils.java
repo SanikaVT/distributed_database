@@ -94,15 +94,15 @@ public class RemoteVmUtils {
     /**
      *
      * @param dir
-     * @param needAbsolute
      * @return
      * {
      *     "files" : [],
      *     "folders" : []
      * }
+     * eg: {folders=[chanpreet], files=[a.txt, b.txt, c.txt]}
      * @throws Exception
      */
-    public static Map<String, ArrayList> readFiles(String dir, boolean needAbsolute) throws Exception {
+    public static Map<String, ArrayList> readFiles(String dir) throws Exception {
         String commandResult = getOutput("ls -al " + dir);
         ArrayList folders = new ArrayList();
         ArrayList files = new ArrayList();
@@ -113,18 +113,13 @@ public class RemoteVmUtils {
         if(commandResult!=null){
             String[] outputLines = commandResult.split("\\n");
             for(String eachLine:outputLines){
-                if((!eachLine.contentEquals(".")) && (!eachLine.contentEquals(".."))){
-                    if(eachLine.startsWith("d")){
-                        if(needAbsolute)
-                            folders.add(dir + extractNameFromLS(eachLine));
+                if((eachLine.startsWith("d")) || (eachLine.startsWith("-"))){
+                    String entityName = extractNameFromLS(eachLine);
+                    if((!entityName.contentEquals(".")) && (!entityName.contentEquals(".."))){
+                        if(eachLine.startsWith("d"))
+                            folders.add(entityName);
                         else
-                            files.add(extractNameFromLS(eachLine));
-                    }
-                    else{
-                        if(needAbsolute)
-                            files.add(dir + extractNameFromLS(eachLine));
-                        else
-                            files.add(extractNameFromLS(eachLine));
+                            files.add(entityName);
                     }
                 }
             }
@@ -164,7 +159,8 @@ public class RemoteVmUtils {
      * @throws Exception
      */
     public static void writeToExistingFile(String fileContent, String filename, String fileDirectory) throws Exception {
-        runCommand("cat \"" + fileContent + "\" >> " + fileDirectory + filename);
+        String command = "echo \"" + fileContent + "\" >> " + fileDirectory + filename;
+        runCommand(command);
     }
 
     /**
