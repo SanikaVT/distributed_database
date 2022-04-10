@@ -27,11 +27,12 @@ public class CreateDatabase {
                 }
             }
             FileOperations.createNewFolder(DataConstants.DATABASES_FOLDER_LOCATION, databaseName);
-            FileOperations.writeToExistingFile("tablename|location" + "|", databaseName+".psv", DataConstants.DATABASES_FOLDER_LOCATION);
+            FileOperations.writeToExistingFile("tablename|location", databaseName+".psv", DataConstants.DATABASES_FOLDER_LOCATION);
             FileOperations.writeToExistingFile(databaseName + "|", "databases.psv", DataConstants.DATABASES_FOLDER_LOCATION);
 
             RemoteVmUtils.createNewFolder(DataConstants.DATABASES_FOLDER_LOCATION, databaseName);
             RemoteVmUtils.writeToExistingFile(databaseName + "|", "databases.psv", DataConstants.DATABASES_FOLDER_LOCATION);
+            RemoteVmUtils.writeToExistingFile("tablename|location", databaseName+".psv", DataConstants.DATABASES_FOLDER_LOCATION);
 
             createDbRes.setFirst(true);
             return createDbRes;
