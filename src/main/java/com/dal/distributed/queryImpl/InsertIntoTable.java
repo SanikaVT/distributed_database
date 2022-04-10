@@ -6,9 +6,10 @@ import com.dal.distributed.constant.QueryTypes;
 import com.dal.distributed.logger.Logger;
 import com.dal.distributed.main.Main;
 import com.dal.distributed.queryImpl.model.OperationStatus;
+import com.dal.distributed.utils.DatabaseUtils;
 import com.dal.distributed.utils.FileOperations;
+import com.dal.distributed.utils.RemoteVmUtils;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -20,7 +21,7 @@ public class InsertIntoTable {
     Logger logger = Logger.instance();
     FileOperations fileOperations = new FileOperations();
 
-    public OperationStatus execute(String sql) {
+    public OperationStatus execute(String sql) throws Exception {
         OperationStatus operationStatus = null;
         boolean isTableExist = false;
         String[] query = sql.split("\\s+");
@@ -42,77 +43,87 @@ public class InsertIntoTable {
             return new OperationStatus(false);
         }
 
-        File file[] = fileOperations.readFiles(DataConstants.DATABASES_FOLDER_LOCATION + databaseName);
-        if (null == file) {
-            logger.error("Unknown database " + databaseName);
+        String location = null;
+        try {
+            location = DatabaseUtils.getTableLocation(databaseName, tableName);
+        } catch (IllegalArgumentException ex) {
+            logger.error("Database does not exist");
             return new OperationStatus(false, databaseName);
         }
-        String finalValue = null;
-        for (File f : file) {
-            if (f.getName().toLowerCase().contains(tableName.toLowerCase())) {
-                isTableExist = true;
 
-                String[] values = extractValuesFromQuery(sql);
-
-                List<List<Object>> schema = fileOperations.readDataFromPSV(
-                        DataConstants.DATABASES_FOLDER_LOCATION + databaseName + "/" + tableName + "_Schema.psv");
-
-                if (values.length != schema.size() - 1) {
-                    logger.error("Fields count mismatch: Expected " + (schema.size() - 1) + " fields but received "
-                            + values.length);
-                    return new OperationStatus(false, databaseName);
-                }
-
-                // Primary Key already exists in the database
-                if (checkForPrimaryKeyConstraint(f.getPath(), schema, values)) {
-                    return new OperationStatus(false, databaseName);
-                }
-
-                for (int i = 0; i < values.length; i++) {
-                    values[i] = values[i].trim();
-                    if (schema.get(i + 1).get(1).equals("int")) {
-                        String value;
-                        // store value = 5 instead of "5"
-                        if (values[i].contains("'")) {
-                            Matcher matcher = QueryRegex.valueBetweenQuotes.matcher(values[i]);
-                            value = matcher.group();
-                        } else {
-                            value = values[i];
-                        }
-                        try {
-                            Integer.parseInt(value);
-                        } catch (NumberFormatException ex) {
-                            logger.error("Incorrect integer value: '" + values[i] +
-                                    "' for column '" + schema.get(i + 1).get(0) + "'");
-                            return new OperationStatus(false, databaseName);
-                        }
-                    }
-                }
-                finalValue = Arrays.stream(values).collect(Collectors.joining("|"));
-            }
-            if (!Main.isTransaction) {
-                fileOperations.writeStringToPSV(finalValue, f.getPath());
-                operationStatus = new OperationStatus(true, null, sql, f.getPath(), QueryTypes.INSERT, tableName,
-                        databaseName, 1);
-            } else {
-                List<List<Object>> result = new ArrayList<>();
-                List<Object> resultVal = new ArrayList();
-                resultVal.addAll(Arrays.asList(finalValue.split("|")));
-                result.add(resultVal);
-                operationStatus = new OperationStatus(true, result, sql, f.getPath(), QueryTypes.INSERT, tableName,
-                        databaseName, 1);
-            }
-            break;
-        }
-        if (!isTableExist) {
+        List<List<Object>> schema = new ArrayList<>();
+        if (null == location) {
             logger.error("Table '" + databaseName + "." + query[2] + "' doesn't exist");
+            return new OperationStatus(false, databaseName);
+        } else if (location.equalsIgnoreCase("local")) {
+            schema = fileOperations.readDataFromPSV(
+                    DataConstants.DATABASES_FOLDER_LOCATION + databaseName + "/" + tableName + "_Schema.psv");
+        } else if (location.equalsIgnoreCase("remote")) {
+            schema = RemoteVmUtils.readDataFromPSV(
+                    DataConstants.DATABASES_FOLDER_LOCATION + databaseName + "/" + tableName + "_Schema.psv");
         }
+
+        String[] values = extractValuesFromQuery(sql);
+
+        if (values.length != schema.size() - 1) {
+            logger.error("Fields count mismatch: Expected " + (schema.size() - 1) + " fields but received "
+                    + values.length);
+            return new OperationStatus(false, databaseName);
+        }
+
+        String tablePath = DataConstants.DATABASES_FOLDER_LOCATION + databaseName + "/" + tableName + ".psv";
+        // Primary Key already exists in the database
+        if (checkForPrimaryKeyConstraint(tablePath, schema, values, location)) {
+            return new OperationStatus(false, databaseName);
+        }
+
+        for (int i = 0; i < values.length; i++) {
+            values[i] = values[i].trim();
+            if (schema.get(i + 1).get(1).equals("int")) {
+                String value;
+                // store value = 5 instead of "5"
+                if (values[i].contains("'")) {
+                    Matcher matcher = QueryRegex.valueBetweenQuotes.matcher(values[i]);
+                    value = matcher.group();
+                } else {
+                    value = values[i];
+                }
+                try {
+                    Integer.parseInt(value);
+                } catch (NumberFormatException ex) {
+                    logger.error("Incorrect integer value: '" + values[i] +
+                            "' for column '" + schema.get(i + 1).get(0) + "'");
+                    return new OperationStatus(false, databaseName);
+                }
+            }
+        }
+        String finalValue = Arrays.stream(values).collect(Collectors.joining("|"));
+
+        if (!Main.isTransaction) {
+            fileOperations.writeStringToPSV(finalValue, tablePath);
+            operationStatus = new OperationStatus(true, null, sql, tablePath, QueryTypes.INSERT, tableName,
+                    databaseName, 1);
+        } else {
+            List<List<Object>> result = new ArrayList<>();
+            List<Object> resultVal = new ArrayList();
+            resultVal.addAll(Arrays.asList(finalValue.split("|")));
+            result.add(resultVal);
+            operationStatus = new OperationStatus(true, result, sql, tablePath, QueryTypes.INSERT, tableName,
+                    databaseName, 1);
+        }
+
         return operationStatus;
     }
 
-    private Boolean checkForPrimaryKeyConstraint(String path, List<List<Object>> schema, String[] value) {
+    private Boolean checkForPrimaryKeyConstraint(String path, List<List<Object>> schema, String[] value, String location)
+            throws Exception {
         String primaryKey = getPrimaryKeyColumnName(schema);
-        List<List<Object>> existingFile = fileOperations.readDataFromPSV(path);
+        List<List<Object>> existingFile;
+        if (location.equalsIgnoreCase("local")) {
+            existingFile = fileOperations.readDataFromPSV(path);
+        } else {
+            existingFile = RemoteVmUtils.readDataFromPSV(path);
+        }
 
         // Check for primary key location in the file
         int primaryKeyIndex = 0;
