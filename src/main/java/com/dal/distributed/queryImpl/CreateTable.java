@@ -64,7 +64,7 @@ public class CreateTable {
             FileOperations.writeToExistingFile(columnNames, tableName + ".psv", DataConstants.DATABASES_FOLDER_LOCATION + Main.databaseName + "/");
             FileOperations.writeToExistingFile(schema, tableName + "_Schema" + ".psv", DataConstants.DATABASES_FOLDER_LOCATION + Main.databaseName + "/");
             FileOperations.writeToExistingFile(tableName+"|", Main.databaseName+".psv", DataConstants.DATABASES_FOLDER_LOCATION);
-            FileOperations.writeToExistingFile("\n"+tableName+"|"+location , Main.databaseName+".psv", DataConstants.DATABASES_FOLDER_LOCATION);
+            FileOperations.writeToExistingFile("\n"+tableName+"|"+VMConstants.LOCAL , Main.databaseName+".psv", DataConstants.DATABASES_FOLDER_LOCATION);
             RemoteVmUtils.writeToExistingFile("\n"+tableName+"|"+VMConstants.REMOTE , Main.databaseName+".psv", DataConstants.DATABASES_FOLDER_LOCATION);
         }
         else
