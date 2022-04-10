@@ -85,11 +85,11 @@ public class ExportDatabase {
             return null;
             }
         List<File> schemaFiles = DatabaseUtils.getTableSchemaFiles(database);
+            System.out.println("Table schema files in local: ");
+            schemaFiles.stream().forEach(x -> {
+                System.out.println(x.getName());
+            });
         List<Table> remoteTables = DatabaseUtils.getRemoteTables(database);
-        System.out.println("Remote Table name:");
-        remoteTables.stream().forEach(x -> {
-            System.out.println(x.getTableName());
-        });
         if ((schemaFiles == null || schemaFiles.isEmpty()) && (remoteTables == null || remoteTables.isEmpty())) {
             logger.info("Selected database is empty! Please choose another one to export");
             return null;
@@ -101,6 +101,10 @@ public class ExportDatabase {
             tables.add(table);
         }
         tables.addAll(remoteTables);
+        System.out.println("All tables remote and local:");
+        tables.stream().forEach(x -> {
+            System.out.println(x.getTableName());
+        });
 
         //sort tables based on the foreign keys
         Collections.sort(tables, (o1, o2) -> {
@@ -117,6 +121,11 @@ public class ExportDatabase {
                 }
             }
             return -1;
+        });
+
+        System.out.println("All tables after sorting remote and local:");
+        tables.stream().forEach(x -> {
+            System.out.println(x.getTableName());
         });
         return exportDataToSqlFile(database, tables);
     }
