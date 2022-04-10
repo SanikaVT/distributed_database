@@ -287,7 +287,7 @@ public class RemoteVmUtils {
             System.out.println("FilePath: " + filePath);
             for (List<Object> rowData : rows)
                 sb.append(rowData.toString().replace("[", "").replace("]", "").replaceAll(",", "|")).append("\n");
-            runCommand("echo \"" + sb.toString() + "\" " + filePath);
+            runCommand("echo \"" + sb.toString() + "\" > " + filePath);
         } catch (Exception e) {
             e.getCause();
         }
