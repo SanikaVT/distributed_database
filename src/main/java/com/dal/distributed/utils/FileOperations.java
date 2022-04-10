@@ -249,7 +249,7 @@ public class FileOperations {
         return rows;
     }
 
-    public void writeDataToPSV(List<List<Object>> rows, String filePath) {
+    public static void writeDataToPSV(List<List<Object>> rows, String filePath) {
         FileWriter psvWriter = null;
         try {
             psvWriter = new FileWriter(filePath+".psv");

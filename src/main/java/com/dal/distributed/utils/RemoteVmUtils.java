@@ -262,7 +262,7 @@ public class RemoteVmUtils {
         } else {
             path = filePath + ".psv";
         }
-        String fileContent = readFileContent(filePath);
+        String fileContent = readFileContent(path);
         String[] lines = fileContent.split("\\n");
         int count = 0;
         while(count<lines.length){
@@ -279,7 +279,7 @@ public class RemoteVmUtils {
      * @param rows
      * @param filePath
      */
-    public void writeDataToPSV(List<List<Object>> rows, String filePath) {
+    public static void writeDataToPSV(List<List<Object>> rows, String filePath) {
         filePath = VMConstants.projectPath + filePath;
         StringBuilder sb = new StringBuilder();
         try {

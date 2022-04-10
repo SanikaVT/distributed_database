@@ -56,7 +56,6 @@ public class UpdateTable {
         if (location.equals("local")) {
             data = new FileOperations().readDataFromPSV(filepath);
         } else if (location.equalsIgnoreCase("remote")) {
-            System.out.println("-------------------------Reading-----------------------" + filepath);
             data = RemoteVmUtils.readDataFromPSV(filepath);
         }
         if (data.size() == 1) {
@@ -126,10 +125,11 @@ public class UpdateTable {
             }
         }
         if (!Main.isTransaction) {
-            if (location.equals("local"))
-                new FileOperations().writeDataToPSV(data, filepath);
-            else
-                new RemoteVmUtils().writeDataToPSV(data, filepath);
+            if (location.equalsIgnoreCase("local")) {
+               FileOperations.writeDataToPSV(data, filepath);
+            } else if (location.equalsIgnoreCase("remote")) {
+                RemoteVmUtils.writeDataToPSV(data, filepath);
+            }
             operationStatus = new OperationStatus(true, data, query, filepath, QueryTypes.UPDATE, tableName,
                     Main.databaseName, count);
         } else {
