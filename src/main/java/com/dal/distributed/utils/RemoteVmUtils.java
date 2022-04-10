@@ -299,7 +299,7 @@ public class RemoteVmUtils {
      * @param filePath
      * @throws Exception
      */
-    public void writeStringToPSV(String row, String filePath) throws Exception {
+    public static void writeStringToPSV(String row, String filePath) throws Exception {
         filePath = VMConstants.projectPath + filePath;
         writeToExistingFile(row, null, filePath);
     }

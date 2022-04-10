@@ -23,7 +23,6 @@ public class InsertIntoTable {
 
     public OperationStatus execute(String sql) throws Exception {
         OperationStatus operationStatus = null;
-        boolean isTableExist = false;
         String[] query = sql.split("\\s+");
 
         // If user enters schema.tableName
@@ -46,6 +45,7 @@ public class InsertIntoTable {
         String location = null;
         try {
             location = DatabaseUtils.getTableLocation(databaseName, tableName);
+            logger.info("Location: " + location);
         } catch (IllegalArgumentException ex) {
             logger.error("Database does not exist");
             return new OperationStatus(false, databaseName);
@@ -58,12 +58,16 @@ public class InsertIntoTable {
         } else if (location.equalsIgnoreCase("local")) {
             schema = fileOperations.readDataFromPSV(
                     DataConstants.DATABASES_FOLDER_LOCATION + databaseName + "/" + tableName + "_Schema.psv");
+            logger.info("Found Schema File on local");
         } else if (location.equalsIgnoreCase("remote")) {
             schema = RemoteVmUtils.readDataFromPSV(
                     DataConstants.DATABASES_FOLDER_LOCATION + databaseName + "/" + tableName + "_Schema.psv");
+            logger.info("Remote schema size: " + schema.size());
+            logger.info("Found Schema File on remote");
         }
 
         String[] values = extractValuesFromQuery(sql);
+        logger.info("Length of values: " + values.length);
 
         if (values.length != schema.size() - 1) {
             logger.error("Fields count mismatch: Expected " + (schema.size() - 1) + " fields but received "
@@ -100,7 +104,11 @@ public class InsertIntoTable {
         String finalValue = Arrays.stream(values).collect(Collectors.joining("|"));
 
         if (!Main.isTransaction) {
-            fileOperations.writeStringToPSV(finalValue, tablePath);
+            if (location.equalsIgnoreCase("local")) {
+                fileOperations.writeStringToPSV(finalValue, tablePath);
+            } else {
+                RemoteVmUtils.writeStringToPSV(finalValue, tablePath);
+            }
             operationStatus = new OperationStatus(true, null, sql, tablePath, QueryTypes.INSERT, tableName,
                     databaseName, 1);
         } else {
