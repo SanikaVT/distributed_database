@@ -90,7 +90,7 @@ public class ExportDatabase {
             logger.info("Selected database is empty! Please choose another one to export");
             return null;
         }
-        List<Table> tables = new ArrayList<>();
+        List<Table> tables = remoteTables;
         System.out.println("Tables length: " + tables.size());
         for (File tableFile: schemaFiles) {
             System.out.println("Local schema file: " + tableFile.getName());
@@ -99,9 +99,9 @@ public class ExportDatabase {
             tables.add(table);
             System.out.println("Table model created for: " + tableFile.getName() + "is: "+ table.getTableName());
         }
-        for (Table remoteTable: remoteTables) {
-            tables.add(remoteTable);
-        }
+//        for (Table remoteTable: remoteTables) {
+//            tables.add(remoteTable);
+//        }
         System.out.println("All tables remote and local:");
         tables.stream().forEach(x -> {
             System.out.println(x.getTableName());
