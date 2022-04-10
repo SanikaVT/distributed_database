@@ -103,6 +103,7 @@ public class RemoteVmUtils {
      * @throws Exception
      */
     public static Map<String, ArrayList> readFiles(String dir) throws Exception {
+        dir = VMConstants.projectPath + dir;
         String commandResult = getOutput("ls -al " + dir);
         ArrayList folders = new ArrayList();
         ArrayList files = new ArrayList();
@@ -148,6 +149,7 @@ public class RemoteVmUtils {
      * @throws Exception
      */
     public static String readFileContent(String filePath) throws Exception {
+        filePath = VMConstants.projectPath + filePath;
         return getOutput("cat " + filePath);
     }
 
@@ -159,6 +161,7 @@ public class RemoteVmUtils {
      * @throws Exception
      */
     public static void writeToExistingFile(String fileContent, String filename, String fileDirectory) throws Exception {
+        fileDirectory = VMConstants.projectPath + fileDirectory;
         String command = "echo \"" + fileContent + "\" >> " + fileDirectory + filename;
         runCommand(command);
     }
@@ -171,6 +174,7 @@ public class RemoteVmUtils {
      * @throws Exception
      */
     public static boolean createNewFolder(String filepath, String folderName) throws Exception {
+        filepath = VMConstants.projectPath + filepath;
         StringBuilder sb = new StringBuilder();
         if (filepath != null)
             sb.append(filepath).append("/");
@@ -205,6 +209,7 @@ public class RemoteVmUtils {
      * @throws Exception
      */
     public static ArrayList<Map<String, Object>> readPsvFileForQueryOps(String filePath) throws Exception {
+        filePath = VMConstants.projectPath + filePath;
         ArrayList result = new ArrayList();
         ArrayList columns = new ArrayList();
         String fileContent = readFileContent(filePath);
@@ -249,6 +254,7 @@ public class RemoteVmUtils {
      * @throws Exception
      */
     public List<List<Object>> readDataFromPSV(String filePath) throws Exception {
+        filePath = VMConstants.projectPath + filePath;
         List<List<Object>> rows = new ArrayList<>();
         List<Object> columnValues;
 
@@ -276,6 +282,7 @@ public class RemoteVmUtils {
      * @param filePath
      */
     public void writeDataToPSV(List<List<Object>> rows, String filePath) {
+        filePath = VMConstants.projectPath + filePath;
         StringBuilder sb = new StringBuilder();
         try {
             filePath = filePath + ".psv";
@@ -294,6 +301,7 @@ public class RemoteVmUtils {
      * @throws Exception
      */
     public void writeStringToPSV(String row, String filePath) throws Exception {
+        filePath = VMConstants.projectPath + filePath;
         writeToExistingFile(row, null, filePath);
     }
 }
