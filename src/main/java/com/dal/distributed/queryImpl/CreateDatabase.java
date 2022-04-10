@@ -1,20 +1,18 @@
 package com.dal.distributed.queryImpl;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.dal.distributed.constant.DataConstants;
 import com.dal.distributed.logger.Logger;
 import com.dal.distributed.main.model.Pair;
 import com.dal.distributed.utils.FileOperations;
+import com.dal.distributed.utils.RemoteVmUtils;
+
+import java.io.File;
 
 public class CreateDatabase {
 
     Logger logger = Logger.instance();
 
-    public Pair<Boolean, String> execute(String query) throws IOException {
+    public Pair<Boolean, String> execute(String query) throws Exception {
         Pair<Boolean, String> createDbRes = new Pair<>();
         createDbRes.setFirst(false);
         String[] sql = query.split("\\s+");
@@ -30,10 +28,14 @@ public class CreateDatabase {
             }
             FileOperations.createNewFolder(DataConstants.DATABASES_FOLDER_LOCATION, databaseName);
             FileOperations.writeToExistingFile("tablename|location" + "|", databaseName+".psv", DataConstants.DATABASES_FOLDER_LOCATION);
+            FileOperations.writeToExistingFile(databaseName + "|", "databases.psv", DataConstants.DATABASES_FOLDER_LOCATION);
+
+            RemoteVmUtils.createNewFolder(DataConstants.DATABASES_FOLDER_LOCATION, databaseName);
+            RemoteVmUtils.writeToExistingFile(databaseName + "|", "databases.psv", DataConstants.DATABASES_FOLDER_LOCATION);
+
             createDbRes.setFirst(true);
             return createDbRes;
         } else
             return createDbRes;
-
     }
 }
