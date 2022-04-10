@@ -204,6 +204,10 @@ public class RemoteVmUtils {
             return null;
     }
 
+    public static String readwithoutappend(String filePath) throws Exception {
+        return getOutput("cat " + filePath);
+    }
+
     /**
      * @param filePath
      * @return ArrayList - first element is {"columns" : []}, second onwards - Map<>
@@ -213,7 +217,7 @@ public class RemoteVmUtils {
         filePath = VMConstants.projectPath + filePath;
         ArrayList result = new ArrayList();
         ArrayList columns = new ArrayList();
-        String fileContent = readFileContent(filePath);
+        String fileContent = readwithoutappend(filePath);
         String[] lines = fileContent.split("\\n");
         int count = 0;
         while (count< lines.length) {
@@ -265,9 +269,9 @@ public class RemoteVmUtils {
         } else {
             path = filePath + ".psv";
         }
-        String fileContent = readFileContent(filePath);
+        String fileContent = readwithoutappend(filePath);
         System.out.println("RMUtils: " + fileContent);
-        String[] lines = fileContent.split("\\n|\\r\\n");
+        String[] lines = fileContent.split("\\n");
         System.out.println("Lines Length: " + lines.length);
         int count = 0;
         while(count<lines.length){
