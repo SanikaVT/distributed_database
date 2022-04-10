@@ -4,6 +4,7 @@ import com.dal.distributed.constant.AuthConstants;
 import com.dal.distributed.logger.Logger;
 import com.dal.distributed.authentication.model.SecurityQuestions;
 import com.dal.distributed.authentication.model.UserRegistration;
+import com.dal.distributed.logger.model.EventLog;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.util.ArrayList;
@@ -24,14 +25,19 @@ public class Registration {
 
     public void registerUser() {
         Scanner sc = new Scanner(System.in);
+        EventLog registerEvent = new EventLog();
+        registerEvent.setLogType("REGISTRATION");
 
         String userId;
         String password;
 
         logger.info("Enter a UserID containing 5 to 15 characters: ");
         userId = sc.nextLine();
+        registerEvent.setUserId(userId);
         Boolean userIdValid = performUserIdValidations(userId);
         if (!userIdValid) {
+            registerEvent.setSuccess(false);
+            EventLog.logEvent(registerEvent);
             return;
         }
 
@@ -39,24 +45,32 @@ public class Registration {
         password = sc.nextLine();
         Boolean isPasswordValid = performPasswordValidations(password);
         if (!isPasswordValid) {
+            registerEvent.setSuccess(false);
+            EventLog.logEvent(registerEvent);
             return;
         }
 
         logger.info(AuthConstants.SECURITY_QUESTION_1);
         final String securityAnswerOne = sc.nextLine();
         if (!validateSecurityInput(securityAnswerOne)) {
+            registerEvent.setSuccess(false);
+            EventLog.logEvent(registerEvent);
             return;
         }
 
         logger.info(AuthConstants.SECURITY_QUESTION_2);
         final String securityAnswerTwo = sc.nextLine();
         if (!validateSecurityInput(securityAnswerTwo)) {
+            registerEvent.setSuccess(false);
+            EventLog.logEvent(registerEvent);
             return;
         }
 
         logger.info(AuthConstants.SECURITY_QUESTION_3);
         final String securityAnswerThree = sc.nextLine();
         if (!validateSecurityInput(securityAnswerThree)) {
+            registerEvent.setSuccess(false);
+            EventLog.logEvent(registerEvent);
             return;
         }
 
@@ -73,7 +87,8 @@ public class Registration {
 
         AuthFileUtils file = new AuthFileUtils();
         file.writeUserDetails(AuthConstants.USER_DETAILS_FILE_LOCATION, user.toString());
-
+        registerEvent.setSuccess(true);
+        EventLog.logEvent(registerEvent);
         logger.info("Registration completed successfully!!! You can now access the system with userID and Password.");
     }
 
