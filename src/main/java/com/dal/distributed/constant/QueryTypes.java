@@ -8,4 +8,6 @@ public class QueryTypes {
     public static final String DELETE = "DELETE";
     public static final String INSERT = "INSERT";
     public static final String SELECT = "SELECT";
+    public static final String START_TRANSACTION = "START_TRANSACTION";
+    public static final String END_TRANSACTION = "END_TRANSACTION";
 }

@@ -1,5 +1,4 @@
 package com.dal.distributed.main;
-
 import com.dal.distributed.authentication.Login;
 import com.dal.distributed.authentication.Registration;
 import com.dal.distributed.logger.Logger;
@@ -8,10 +7,12 @@ import java.util.Scanner;
 
 public class Main {
     public static String databaseName="";
+    public static boolean isTransaction=false;
 
     public static void main(String [] args) throws Exception {
         Logger logger = Logger.instance();
         MiscOperations.createInitFolders();
+        MiscOperations.createUserProfileFile();
         logger.info("Welcome to DPG9 Distributed Database");
         while (true) {
             logger.info("\n1. User Registration");
@@ -27,10 +28,10 @@ public class Main {
                     registration.registerUser();
                     break;
                 case "2":
-//                    Login login = new Login();
-//                    login.flow(sc);
-                    OperationsMenu operationsMenu = new OperationsMenu();
-                    operationsMenu.displayOperationsMenu(null, sc);
+                    Login login = new Login();
+                    login.flow(sc);
+//                    OperationsMenu operationsMenu = new OperationsMenu();
+//                    operationsMenu.displayOperationsMenu(null, sc);
                     break;
                 case "3":
                     break;
