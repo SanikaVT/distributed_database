@@ -148,9 +148,6 @@ public class RemoteVmUtils {
      * @throws Exception
      */
     public static String readFileContent(String filePath) throws Exception {
-        System.out.println("<<<<<<<<<<<<<<< In start of readFileContent >>>>>>>>>>>>>>>>");
-        filePath = VMConstants.projectPath + filePath;
-        System.out.println("I am reading this -------------- " + filePath);
         return getOutput("cat " + filePath);
     }
 
@@ -204,10 +201,6 @@ public class RemoteVmUtils {
             return null;
     }
 
-    public static String readwithoutappend(String filePath) throws Exception {
-        return getOutput("cat " + filePath);
-    }
-
     /**
      * @param filePath
      * @return ArrayList - first element is {"columns" : []}, second onwards - Map<>
@@ -217,7 +210,7 @@ public class RemoteVmUtils {
         filePath = VMConstants.projectPath + filePath;
         ArrayList result = new ArrayList();
         ArrayList columns = new ArrayList();
-        String fileContent = readwithoutappend(filePath);
+        String fileContent = readFileContent(filePath);
         String[] lines = fileContent.split("\\n");
         int count = 0;
         while (count< lines.length) {
@@ -269,7 +262,7 @@ public class RemoteVmUtils {
         } else {
             path = filePath + ".psv";
         }
-        String fileContent = readwithoutappend(filePath);
+        String fileContent = readFileContent(filePath);
         System.out.println("RMUtils: " + fileContent);
         String[] lines = fileContent.split("\\n");
         System.out.println("Lines Length: " + lines.length);
@@ -308,7 +301,6 @@ public class RemoteVmUtils {
      * @throws Exception
      */
     public static void writeStringToPSV(String row, String filePath) throws Exception {
-        filePath = VMConstants.projectPath + filePath;
         writeToExistingFile(row, null, filePath);
     }
 }

@@ -132,7 +132,7 @@ public class DatabaseUtils {
                 .filter(x -> VMConstants.REMOTE.equals(x.getValue())).map(x -> x.getKey()).collect(Collectors.toList());
         List<Table> remoteTables = new ArrayList<>();
         for (String tableName: remoteTableNames) {
-            String tableSchema = RemoteVmUtils.readFileContent(DataConstants.DATABASES_FOLDER_LOCATION + databaseName + File.separator + tableName + SCHEMA_FILE_SUFFIX);
+            String tableSchema = RemoteVmUtils.readFileContent(VMConstants.projectPath + DataConstants.DATABASES_FOLDER_LOCATION + databaseName + File.separator + tableName + SCHEMA_FILE_SUFFIX);
             List<String> columnStrWithHeaders = Arrays.asList(tableSchema.split("\n"));
             List<String> columnStr = columnStrWithHeaders.subList(1, columnStrWithHeaders.size());
             remoteTables.add(Table.createTableModel(databaseName, tableName, columnStr));
