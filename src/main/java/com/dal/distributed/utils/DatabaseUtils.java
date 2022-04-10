@@ -8,16 +8,15 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class DatabaseUtils {
 
     private static final String  SCHEMA_FILE_SUFFIX = "_Schema.psv";
 
     private static final String DATA_FILE_SUFFIX = ".psv";
+
+    private static final String META_DATA_FILE_SUFFIX = ".psv";
 
     public static List<File> getTableSchemaFiles(String database) {
         String databaseFolder = DataConstants.DATABASES_FOLDER_LOCATION + File.separator + database;
@@ -68,5 +67,27 @@ public class DatabaseUtils {
             e.printStackTrace();
         }
         return Collections.emptyList();
+    }
+
+    public static String getTableLocation(String databaseName, String tableName) {
+        String metaDataFileLocation = DataConstants.DATABASES_FOLDER_LOCATION + databaseName + META_DATA_FILE_SUFFIX;
+        File metaDataFile = new File(metaDataFileLocation);
+        if (!metaDataFile.exists())
+            throw new IllegalArgumentException("Database doesn't exist");
+        try (FileReader fr = new FileReader(metaDataFile);
+             BufferedReader br = new BufferedReader(fr)){
+            //Buffered read will point after header row
+            br.readLine();
+            String tableInfo;
+            while ((tableInfo= br.readLine())!=null) {
+                String [] tableInfoArr = tableInfo.split(MiscConstants.PIPE);
+                if (tableInfoArr[0].equalsIgnoreCase(tableName))
+                    return tableInfoArr[1];
+            }
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        throw new IllegalArgumentException("table name doesn't exist in the database");
     }
 }
