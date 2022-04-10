@@ -73,35 +73,25 @@ public class ExportDatabase {
     }
 
     private String exportStructureAndValue(String database) throws Exception {
-        File[] databases = FileOperations.readFiles(DataConstants.DATABASES_FOLDER_LOCATION);
-        boolean isExist=false;
-            for (File file : databases) {
-                if (file.getName().equalsIgnoreCase(database)) {
-                   isExist=true;
-                }
-            }
-            if(!isExist){
-            logger.error("Error Code: 1007. Can't export database '" + database + "'; Database doesn't exists.");
+        if (!isDatabaseExists(database))
             return null;
-            }
         List<File> schemaFiles = DatabaseUtils.getTableSchemaFiles(database);
         List<Table> remoteTables = DatabaseUtils.getRemoteTables(database);
         if ((schemaFiles == null || schemaFiles.isEmpty()) && (remoteTables == null || remoteTables.isEmpty())) {
             logger.info("Selected database is empty! Please choose another one to export");
             return null;
         }
-        List<Table> tables = remoteTables;
-        System.out.println("Tables length: " + tables.size());
-        for (File tableFile: schemaFiles) {
-            System.out.println("Local schema file: " + tableFile.getName());
-            List<String> columnDefs = DatabaseUtils.getColumnDefinitions(database, tableFile);
-            Table table = Table.createTableModel(tableFile.getName(), database, columnDefs);
-            tables.add(table);
-            System.out.println("Table model created for: " + tableFile.getName() + "is: "+ table.getTableName());
+        List<Table> tables = new ArrayList<>(remoteTables);
+        if (schemaFiles == null || schemaFiles.isEmpty()) {
+            System.out.println("Going in if block");
+            for (File tableFile: schemaFiles) {
+                System.out.println("Local schema file: " + tableFile.getName());
+                List<String> columnDefs = DatabaseUtils.getColumnDefinitions(database, tableFile);
+                Table table = Table.createTableModel(tableFile.getName(), database, columnDefs);
+                tables.add(table);
+                System.out.println("Table model created for: " + tableFile.getName() + "is: "+ table.getTableName());
+            }
         }
-//        for (Table remoteTable: remoteTables) {
-//            tables.add(remoteTable);
-//        }
         System.out.println("All tables remote and local:");
         tables.stream().forEach(x -> {
             System.out.println(x.getTableName());
@@ -129,6 +119,21 @@ public class ExportDatabase {
             System.out.println(x.getTableName());
         });
         return exportDataToSqlFile(database, tables);
+    }
+
+    private boolean isDatabaseExists(String databaseName) {
+        File[] databases = FileOperations.readFiles(DataConstants.DATABASES_FOLDER_LOCATION);
+        boolean isExist=false;
+        for (File file : databases) {
+            if (file.getName().equalsIgnoreCase(databaseName)) {
+                isExist=true;
+            }
+        }
+        if(!isExist){
+            logger.error("Error Code: 1007. Can't export database '" + databaseName + "'; Database doesn't exists.");
+            return false;
+        }
+        return true;
     }
 
     private String exportDataToSqlFile(String database, List<Table> tables) throws Exception {
