@@ -92,7 +92,7 @@ public class InsertIntoTable {
             }
             if (Main.isTransaction) {
                 fileOperations.writeStringToPSV(finalValue, f.getPath());
-                operationStatus = new OperationStatus(true, databaseName);
+                operationStatus = new OperationStatus(true, null, sql, f.getPath(), QueryTypes.INSERT, tableName, databaseName);
             } else {
                 List<List<Object>> result = new ArrayList<>();
                 List<Object> resultVal = new ArrayList();

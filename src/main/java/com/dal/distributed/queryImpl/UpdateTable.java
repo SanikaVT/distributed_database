@@ -36,6 +36,11 @@ public class UpdateTable {
         int updateColumnIndex = -1;
         String filepath = DataConstants.DATABASES_FOLDER_LOCATION + databaseName + "/" + tableName;
         List<List<Object>> data = new FileOperations().readDataFromPSV(filepath);
+        if(data.size()==1)
+        {
+            System.out.println("No data present in the table");
+            return new OperationStatus(false);
+        }
         for (int i = 0; i < data.size(); i++) {
             for (int j = 0; j < data.get(0).size(); j++) {
                 if (i == 0) {
@@ -89,6 +94,7 @@ public class UpdateTable {
         }
         if (!Main.isTransaction) {
             new FileOperations().writeDataToPSV(data, filepath);
+            operationStatus = new OperationStatus(true, data, query, filepath, QueryTypes.UPDATE, tableName, Main.databaseName);
         } else {
             operationStatus = new OperationStatus(true, data, query, filepath, QueryTypes.UPDATE, tableName, Main.databaseName);
         }

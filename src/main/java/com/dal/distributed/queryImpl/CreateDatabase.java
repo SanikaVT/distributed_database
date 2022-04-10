@@ -19,7 +19,6 @@ public class CreateDatabase {
         createDbRes.setFirst(false);
         String[] sql = query.split("\\s+");
         if (sql[0].equalsIgnoreCase("create") && sql[1].equalsIgnoreCase("database")) {
-            //Remove the semicolon from database name
             String databaseName = sql[2].substring(0, sql[2].length() - 1).toLowerCase();
             createDbRes.setSecond(databaseName);
             File[] databases = FileOperations.readFiles(DataConstants.DATABASES_FOLDER_LOCATION);

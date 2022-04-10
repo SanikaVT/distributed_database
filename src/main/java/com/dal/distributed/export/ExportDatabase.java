@@ -71,6 +71,17 @@ public class ExportDatabase {
     }
 
     private String exportStructureAndValue(String database) {
+        File[] databases = FileOperations.readFiles(DataConstants.DATABASES_FOLDER_LOCATION);
+        boolean isExist=false;
+            for (File file : databases) {
+                if (file.getName().equalsIgnoreCase(database)) {
+                   isExist=true;
+                }
+            }
+            if(!isExist){
+            logger.error("Error Code: 1007. Can't export database '" + database + "'; Database doesn't exists.");
+            return null;
+            }
         List<File> schemaFiles = DatabaseUtils.getTableSchemaFiles(database);
         if (schemaFiles == null || schemaFiles.isEmpty()) {
             logger.info("Selected database is empty! Please choose another one to export");

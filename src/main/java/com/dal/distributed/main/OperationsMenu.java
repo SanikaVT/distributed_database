@@ -97,8 +97,15 @@ public class OperationsMenu {
                 if (useDatabase.execute(query)) {
                     logger.info("Action: " + query + "\nMessage: 0 row(s) affected.\n");
                 }
+                else{
+                    logger.info("Database doesn't exist");
+                }
             } else if (((boolean) queryValidatorResults.get("isValidate")) && (queryValidatorResults.get("queryType") == QueryTypes.CREATE_TABLE)) {
                 EventLog createTableEvent = new EventLog("CREATE_TABLE", userId);
+                if(Main.databaseName==null||Main.databaseName.isEmpty())
+                {
+                    logger.error("Please select database first");
+                }
                 createTableEvent.setDatabaseName(Main.databaseName);
                 logQuery.setOperation(QueryTypes.CREATE_TABLE);
                 logQuery.setTableName((String) queryValidatorResults.get("entity"));
@@ -113,44 +120,95 @@ public class OperationsMenu {
             } else if (((boolean) queryValidatorResults.get("isValidate")) && (queryValidatorResults.get("queryType") == QueryTypes.INSERT)) {
                 logQuery.setOperation(QueryTypes.INSERT);
                 logQuery.setTableName((String) queryValidatorResults.get("entity"));
-                if (Main.isTransaction) {
+                if(Main.databaseName==null||Main.databaseName.isEmpty())
+                {
+                    logger.error("Please select database first");
+                }
+                else if (Main.isTransaction) {
                     transactionQueries.add(insertIntoTable.execute(query));
                 } else {
                     OperationStatus result = insertIntoTable.execute(query);
+                    if(result!=null&&result.isStatus())
+                    {
+                    logger.info("Action: " + query + "\nMessage: 1 row(s) affected.\n");
                     logQuery.setDatabaseName(result.getDatabaseName());
-                }
+                    }
+                    else
+                    {
+                    logger.error("Required table/columns/data does not exist");
+                    } 
+            }
             } else if (((boolean) queryValidatorResults.get("isValidate")) && (queryValidatorResults.get("queryType") == QueryTypes.SELECT)) {
                 logQuery.setOperation(QueryTypes.SELECT);
                 logQuery.setTableName((String) queryValidatorResults.get("entity"));
-                if (Main.isTransaction) {
+                if(Main.databaseName==null||Main.databaseName.isEmpty())
+                {
+                    logger.error("Please select database first");
+                }
+                else if (Main.isTransaction) {
                     transactionQueries.add(selectQuery.execute(query));
                 } else {
                     OperationStatus result = selectQuery.execute(query);
+                    if(result!=null&&result.isStatus())
+                    {
                     logQuery.setDatabaseName(result.getDatabaseName());
+                    }
+                    else
+                    {
+                    logger.error("Required table/columns/data does not exist");
+                    }                
                 }
             } else if (((boolean) queryValidatorResults.get("isValidate")) && (queryValidatorResults.get("queryType") == QueryTypes.UPDATE)) {
                 logQuery.setOperation(QueryTypes.UPDATE);
                 logQuery.setTableName((String) queryValidatorResults.get("entity"));
-                if (Main.isTransaction) {
+                if(Main.databaseName==null||Main.databaseName.isEmpty())
+                {
+                    logger.error("Please select database first");
+                }
+                else if (Main.isTransaction) {
                     transactionQueries.add(updateTable.execute(query));
                 } else {
                     OperationStatus result = updateTable.execute(query);
+                    if(result!=null&&result.isStatus())
+                    {
                     logger.info("Action: " + query + "\nMessage: " + result.getResult().size() + " row(s) affected.\n");
                     logQuery.setDatabaseName(result.getDatabaseName());
+                    }
+                    else
+                    {
+                    logger.error("Required table/columns/data does not exist");
+                    }
                 }
             } else if (((boolean) queryValidatorResults.get("isValidate")) && (queryValidatorResults.get("queryType") == QueryTypes.DELETE)) {
                 logQuery.setOperation(QueryTypes.DELETE);
                 logQuery.setTableName((String) queryValidatorResults.get("entity"));
-                if (Main.isTransaction) {
+                if(Main.databaseName==null||Main.databaseName.isEmpty())
+                {
+                    logger.error("Please select database first");
+                }
+                else if (Main.isTransaction) {
                     transactionQueries.add(deleteDataFromTable.execute(query));
                 } else {
                     OperationStatus result = deleteDataFromTable.execute(query);
+                    if(result!=null&&result.isStatus())
+                    {
                     logger.info("Action: " + query + "\nMessage: " + result.getResult().size() + " row(s) affected.\n");
                     logQuery.setDatabaseName(result.getDatabaseName());
+                    }
+                    else
+                    {
+                        logger.error("Required table/columns/data does not exist");
+                    }
                 }
             } else if (((boolean) queryValidatorResults.get("isValidate")) && (queryValidatorResults.get("queryType") == QueryTypes.START_TRANSACTION)) {
+                if(Main.databaseName==null||Main.databaseName.isEmpty())
+                {
+                    logger.error("Please select database first");
+                }
+                else{
                 logQuery.setOperation(QueryTypes.START_TRANSACTION);
                 Main.isTransaction = true;
+                }
             } else if (((boolean) queryValidatorResults.get("isValidate")) && (queryValidatorResults.get("queryType") == QueryTypes.END_TRANSACTION)) {
                 logQuery.setOperation(QueryTypes.END_TRANSACTION);
                 TransactionProcessing transactionProcessing = new TransactionProcessing();

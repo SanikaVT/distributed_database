@@ -30,6 +30,11 @@ public class DeleteDataFromTable {
         boolean isRemoved = false;
         String filepath = DataConstants.DATABASES_FOLDER_LOCATION + databaseName + "/" + tablename;
         List<List<Object>> data = new FileOperations().readDataFromPSV(filepath);
+        if(data.size()==1)
+        {
+            System.out.println("No data present in the table");
+            return new OperationStatus(false);
+        }
         int rowLength = data.size();
         int columnLength = data.get(0).size();
         for (int i = 0; i < rowLength; i++) {
@@ -92,8 +97,10 @@ public class DeleteDataFromTable {
         }
 
 
-        if (!Main.isTransaction)
+        if (!Main.isTransaction){
             new FileOperations().writeDataToPSV(data, filepath);
+            operationStatus = new OperationStatus(true, data, query, filepath, QueryTypes.UPDATE, tablename, Main.databaseName);
+        }
         else
             operationStatus = new OperationStatus(true, data, query, filepath, QueryTypes.DELETE, tablename, databaseName);
 
