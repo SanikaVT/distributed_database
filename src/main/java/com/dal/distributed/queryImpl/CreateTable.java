@@ -64,17 +64,16 @@ public class CreateTable {
             FileOperations.writeToExistingFile(columnNames, tableName + ".psv", DataConstants.DATABASES_FOLDER_LOCATION + Main.databaseName + "/");
             FileOperations.writeToExistingFile(schema, tableName + "_Schema" + ".psv", DataConstants.DATABASES_FOLDER_LOCATION + Main.databaseName + "/");
             FileOperations.writeToExistingFile(tableName+"|", Main.databaseName+".psv", DataConstants.DATABASES_FOLDER_LOCATION);
-            FileOperations.writeToExistingFile(tableName+"|"+location + "|", Main.databaseName+".psv", DataConstants.DATABASES_FOLDER_LOCATION);
-            RemoteVmUtils.writeToExistingFile(tableName+"|"+location==VMConstants.REMOTE?VMConstants.LOCAL:VMConstants.LOCAL + "|", Main.databaseName+".psv", DataConstants.DATABASES_FOLDER_LOCATION);
-
+            FileOperations.writeToExistingFile("\n"+tableName+"|"+location , Main.databaseName+".psv", DataConstants.DATABASES_FOLDER_LOCATION);
+            RemoteVmUtils.writeToExistingFile("\n"+tableName+"|"+location==VMConstants.REMOTE?VMConstants.LOCAL:VMConstants.REMOTE , Main.databaseName+".psv", DataConstants.DATABASES_FOLDER_LOCATION);
         }
         else
         {
             RemoteVmUtils.writeToExistingFile(columnNames, tableName + ".psv", DataConstants.DATABASES_FOLDER_LOCATION + Main.databaseName + "/");
             RemoteVmUtils.writeToExistingFile(schema, tableName + "_Schema" + ".psv", DataConstants.DATABASES_FOLDER_LOCATION + Main.databaseName + "/");
             RemoteVmUtils.writeToExistingFile(tableName+"|", Main.databaseName+".psv", DataConstants.DATABASES_FOLDER_LOCATION);
-            FileOperations.writeToExistingFile(tableName+"|"+location + "|", Main.databaseName+".psv", DataConstants.DATABASES_FOLDER_LOCATION);
-            RemoteVmUtils.writeToExistingFile(tableName+"|"+location==VMConstants.REMOTE?VMConstants.LOCAL:VMConstants.LOCAL + "|", Main.databaseName+".psv", DataConstants.DATABASES_FOLDER_LOCATION);
+            FileOperations.writeToExistingFile("\n"+tableName+"|"+location , Main.databaseName+".psv", DataConstants.DATABASES_FOLDER_LOCATION);
+            RemoteVmUtils.writeToExistingFile("\n"+tableName+"|"+location==VMConstants.REMOTE?VMConstants.LOCAL:VMConstants.REMOTE , Main.databaseName+".psv", DataConstants.DATABASES_FOLDER_LOCATION);
         }
 
             return new OperationStatus(Boolean.TRUE, Main.databaseName);

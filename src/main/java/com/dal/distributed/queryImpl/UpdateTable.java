@@ -5,6 +5,7 @@ import java.util.List;
 import com.dal.distributed.constant.DataConstants;
 import com.dal.distributed.constant.QueryTypes;
 import com.dal.distributed.constant.RelationalOperators;
+import com.dal.distributed.logger.Logger;
 import com.dal.distributed.main.Main;
 import com.dal.distributed.queryImpl.model.OperationStatus;
 import com.dal.distributed.utils.DataUtils;
@@ -16,6 +17,8 @@ public class UpdateTable {
     private String relationalOp;
 
     public OperationStatus execute(String query) throws Exception {
+        Logger logger = Logger.instance();
+
         if (Main.databaseName == null) {
             System.out.println("No database selected");
             return null;
@@ -38,7 +41,17 @@ public class UpdateTable {
         String databaseName = Main.databaseName;
         int conditionColumnIndex = -1;
         int updateColumnIndex = -1;
-        String location=DatabaseUtils.getTableLocation(databaseName, tableName);
+        String location=null;
+        try {
+            location = DatabaseUtils.getTableLocation(databaseName, tableName);
+        } catch (IllegalArgumentException ex) {
+            logger.error("Database does not exist");
+        }
+        if(location==null)
+        {
+            logger.error("Table does not exist");
+            return new OperationStatus(false);
+        }
         String filepath = DataConstants.DATABASES_FOLDER_LOCATION + databaseName + "/" + tableName;
         List<List<Object>> data;
         if(location.equals("local")){
@@ -114,7 +127,10 @@ public class UpdateTable {
             }
         }
         if (!Main.isTransaction) {
+            if(location.equals("local"))
             new FileOperations().writeDataToPSV(data, filepath);
+            else
+            new RemoteVmUtils().writeDataToPSV(data, filepath);
             operationStatus = new OperationStatus(true, data, query, filepath, QueryTypes.UPDATE, tableName,
                     Main.databaseName, count);
         } else {
