@@ -45,7 +45,6 @@ public class InsertIntoTable {
         String location = null;
         try {
             location = DatabaseUtils.getTableLocation(databaseName, tableName);
-            logger.info("Location: " + location);
         } catch (IllegalArgumentException ex) {
             logger.error("Database does not exist");
             return new OperationStatus(false, databaseName);
