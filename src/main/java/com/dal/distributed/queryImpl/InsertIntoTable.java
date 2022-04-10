@@ -90,7 +90,7 @@ public class InsertIntoTable {
                 }
                 finalValue = Arrays.stream(values).collect(Collectors.joining("|"));
             }
-            if (Main.isTransaction) {
+            if (!Main.isTransaction) {
                 fileOperations.writeStringToPSV(finalValue, f.getPath());
                 operationStatus = new OperationStatus(true, null, sql, f.getPath(), QueryTypes.INSERT, tableName, databaseName);
             } else {
