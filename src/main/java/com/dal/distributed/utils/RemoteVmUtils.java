@@ -284,6 +284,7 @@ public class RemoteVmUtils {
         StringBuilder sb = new StringBuilder();
         try {
             filePath = filePath + ".psv";
+            System.out.println("FilePath: " + filePath);
             for (List<Object> rowData : rows)
                 sb.append(rowData.toString().replace("[", "").replace("]", "").replaceAll(",", "|")).append("\n");
             runCommand("echo \"" + sb.toString() + "\" " + filePath);
