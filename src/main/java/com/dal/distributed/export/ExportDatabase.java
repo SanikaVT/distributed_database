@@ -82,20 +82,11 @@ public class ExportDatabase {
             return null;
         }
         List<Table> tables = new ArrayList<>(remoteTables);
-        if (schemaFiles != null || !schemaFiles.isEmpty()) {
-            System.out.println("Going in if block");
-            for (File tableFile: schemaFiles) {
-                System.out.println("Local schema file: " + tableFile.getName());
-                List<String> columnDefs = DatabaseUtils.getColumnDefinitions(database, tableFile);
-                Table table = Table.createTableModel(tableFile.getName(), database, columnDefs);
-                tables.add(table);
-                System.out.println("Table model created for: " + tableFile.getName() + "is: "+ table.getTableName());
-            }
+        for (File tableFile: schemaFiles) {
+            List<String> columnDefs = DatabaseUtils.getColumnDefinitions(database, tableFile);
+            Table table = Table.createTableModel(tableFile.getName(), database, columnDefs);
+            tables.add(table);
         }
-        System.out.println("All tables remote and local:");
-        tables.stream().forEach(x -> {
-            System.out.println(x.getTableName());
-        });
 
         //sort tables based on the foreign keys
         Collections.sort(tables, (o1, o2) -> {
@@ -113,15 +104,10 @@ public class ExportDatabase {
             }
             return -1;
         });
-
-        System.out.println("All tables after sorting remote and local:");
-        tables.stream().forEach(x -> {
-            System.out.println(x.getTableName());
-        });
         return exportDataToSqlFile(database, tables);
     }
 
-    private boolean isDatabaseExists(String databaseName) {
+    public static boolean isDatabaseExists(String databaseName) {
         File[] databases = FileOperations.readFiles(DataConstants.DATABASES_FOLDER_LOCATION);
         boolean isExist=false;
         for (File file : databases) {

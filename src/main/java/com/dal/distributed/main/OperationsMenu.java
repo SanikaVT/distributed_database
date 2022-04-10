@@ -3,6 +3,7 @@ package com.dal.distributed.main;
 import com.dal.distributed.analytics.Analytics;
 import com.dal.distributed.constant.DataConstants;
 import com.dal.distributed.constant.QueryTypes;
+import com.dal.distributed.erd.Erd;
 import com.dal.distributed.export.ExportDatabase;
 import com.dal.distributed.logger.Logger;
 
@@ -38,6 +39,8 @@ public class OperationsMenu {
                     implementQuery(scanner, userId);
                     break;
                 case "2":
+                    Erd erd = new Erd();
+                    erd.flow(scanner, userId);
                     break;
                 case "3":
                     ExportDatabase export = new ExportDatabase();
