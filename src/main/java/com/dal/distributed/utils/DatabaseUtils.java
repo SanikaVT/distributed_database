@@ -124,6 +124,10 @@ public class DatabaseUtils {
 
     public static List<Table> getRemoteTables(String databaseName) throws Exception {
         Map<String, String> tableNameToLocation = getTableNames(databaseName);
+        System.out.println("table names to locations");
+        tableNameToLocation.entrySet().stream().forEach(x -> {
+            System.out.println(x.getKey() + " " + x.getValue());
+        });
         List<String> remoteTableNames = tableNameToLocation.entrySet().stream()
                 .filter(x -> VMConstants.REMOTE.equals(x.getValue())).map(x -> x.getKey()).collect(Collectors.toList());
         List<Table> remoteTables = new ArrayList<>();
