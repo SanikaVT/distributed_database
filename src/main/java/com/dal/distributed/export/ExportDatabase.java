@@ -82,7 +82,7 @@ public class ExportDatabase {
             return null;
         }
         List<Table> tables = new ArrayList<>(remoteTables);
-        if (schemaFiles == null || schemaFiles.isEmpty()) {
+        if (schemaFiles != null || !schemaFiles.isEmpty()) {
             System.out.println("Going in if block");
             for (File tableFile: schemaFiles) {
                 System.out.println("Local schema file: " + tableFile.getName());

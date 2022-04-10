@@ -135,7 +135,7 @@ public class DatabaseUtils {
             String tableSchema = RemoteVmUtils.readFileContent(VMConstants.projectPath + DataConstants.DATABASES_FOLDER_LOCATION + databaseName + File.separator + tableName + SCHEMA_FILE_SUFFIX);
             List<String> columnStrWithHeaders = Arrays.asList(tableSchema.split("\n"));
             List<String> columnStr = columnStrWithHeaders.subList(1, columnStrWithHeaders.size());
-            remoteTables.add(Table.createTableModel(databaseName, tableName, columnStr));
+            remoteTables.add(Table.createTableModel(tableName, databaseName, columnStr));
         }
         return remoteTables;
     }
