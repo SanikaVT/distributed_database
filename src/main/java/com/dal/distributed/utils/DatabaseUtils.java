@@ -88,9 +88,13 @@ public class DatabaseUtils {
             br.readLine();
             String tableInfo;
             while ((tableInfo= br.readLine())!=null) {
+                System.out.println("tableInfo: " + tableInfo);
                 String [] tableInfoArr = tableInfo.split(MiscConstants.PIPE);
-                if (tableInfoArr[0].equalsIgnoreCase(tableName))
+                System.out.println(tableInfoArr[0] + " " + tableInfoArr[1]);
+                if (tableInfoArr[0].equalsIgnoreCase(tableName)) {
+                    System.out.println("Matched with: " + tableName + " for: " + tableInfoArr[0]);
                     return tableInfoArr[1];
+                }
             }
         }
         catch (IOException e) {
@@ -124,10 +128,6 @@ public class DatabaseUtils {
 
     public static List<Table> getRemoteTables(String databaseName) throws Exception {
         Map<String, String> tableNameToLocation = getTableNames(databaseName);
-        System.out.println("table names to locations");
-        tableNameToLocation.entrySet().stream().forEach(x -> {
-            System.out.println(x.getKey() + " " + x.getValue());
-        });
         List<String> remoteTableNames = tableNameToLocation.entrySet().stream()
                 .filter(x -> VMConstants.REMOTE.equals(x.getValue())).map(x -> x.getKey()).collect(Collectors.toList());
         List<Table> remoteTables = new ArrayList<>();
