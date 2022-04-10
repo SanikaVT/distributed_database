@@ -19,7 +19,7 @@ public class UpdateTable {
     public OperationStatus execute(String query) throws Exception {
         Logger logger = Logger.instance();
 
-        if (Main.databaseName == null) {
+        if (Main.databaseName == null || Main.databaseName.isEmpty()) {
             System.out.println("No database selected");
             return null;
         }
@@ -41,24 +41,23 @@ public class UpdateTable {
         String databaseName = Main.databaseName;
         int conditionColumnIndex = -1;
         int updateColumnIndex = -1;
-        String location=null;
+        String location = null;
         try {
             location = DatabaseUtils.getTableLocation(databaseName, tableName);
         } catch (IllegalArgumentException ex) {
             logger.error("Database does not exist");
         }
-        if(location==null)
-        {
+        if (location == null) {
             logger.error("Table does not exist");
             return new OperationStatus(false);
         }
         String filepath = DataConstants.DATABASES_FOLDER_LOCATION + databaseName + "/" + tableName;
-        List<List<Object>> data;
-        if(location.equals("local")){
+        List<List<Object>> data = null;
+        if (location.equals("local")) {
             data = new FileOperations().readDataFromPSV(filepath);
-        }
-        else{
-           data = new RemoteVmUtils().readDataFromPSV(filepath);
+        } else if (location.equalsIgnoreCase("remote")) {
+            System.out.println("-------------------------Reading-----------------------" + filepath);
+            data = RemoteVmUtils.readDataFromPSV(filepath);
         }
         if (data.size() == 1) {
             System.out.println("No data present in the table");
@@ -127,10 +126,10 @@ public class UpdateTable {
             }
         }
         if (!Main.isTransaction) {
-            if(location.equals("local"))
-            new FileOperations().writeDataToPSV(data, filepath);
+            if (location.equals("local"))
+                new FileOperations().writeDataToPSV(data, filepath);
             else
-            new RemoteVmUtils().writeDataToPSV(data, filepath);
+                new RemoteVmUtils().writeDataToPSV(data, filepath);
             operationStatus = new OperationStatus(true, data, query, filepath, QueryTypes.UPDATE, tableName,
                     Main.databaseName, count);
         } else {
