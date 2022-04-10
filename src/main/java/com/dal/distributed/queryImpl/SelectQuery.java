@@ -23,9 +23,9 @@ public class SelectQuery {
     Logger logger = Logger.instance();
 
     public OperationStatus execute(String query) throws Exception {
-        if (Main.databaseName == null) {
+        if (Main.databaseName == null || Main.databaseName.isEmpty()) {
             System.out.println("No database selected");
-            return null;
+            return new OperationStatus(false);
         }
         OperationStatus operationStatus = null;
         List<Map> resultList = new ArrayList();
@@ -49,7 +49,7 @@ public class SelectQuery {
                     Map x = (Map) fileContent.get(0);
                     projectionList = (ArrayList) x.get("columns");
                 } else {
-                    String[] x = projections.split(MiscConstants.PIPE);
+                    String[] x = projections.split(",");
                     for (String each : x) {
                         each = each.trim();
                         projectionList.add(each);

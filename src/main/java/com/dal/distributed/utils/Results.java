@@ -11,5 +11,6 @@ public class Results {
             }
             System.out.println();
         }
+        System.out.println("\n");
     }
 }
