@@ -99,7 +99,9 @@ public class ExportDatabase {
             tables.add(table);
             System.out.println("Table model created for: " + tableFile.getName() + "is: "+ table.getTableName());
         }
-        tables.addAll(remoteTables);
+        for (Table remoteTable: remoteTables) {
+            tables.add(remoteTable);
+        }
         System.out.println("All tables remote and local:");
         tables.stream().forEach(x -> {
             System.out.println(x.getTableName());
