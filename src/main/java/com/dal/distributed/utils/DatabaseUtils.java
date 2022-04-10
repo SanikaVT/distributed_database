@@ -88,9 +88,13 @@ public class DatabaseUtils {
             br.readLine();
             String tableInfo;
             while ((tableInfo= br.readLine())!=null) {
+                System.out.println("tableInfo: " + tableInfo);
                 String [] tableInfoArr = tableInfo.split(MiscConstants.PIPE);
-                if (tableInfoArr[0].equalsIgnoreCase(tableName))
+                System.out.println(tableInfoArr[0] + " " + tableInfoArr[1]);
+                if (tableInfoArr[0].equalsIgnoreCase(tableName)) {
+                    System.out.println("Matched with: " + tableName + " for: " + tableInfoArr[0]);
                     return tableInfoArr[1];
+                }
             }
         }
         catch (IOException e) {
