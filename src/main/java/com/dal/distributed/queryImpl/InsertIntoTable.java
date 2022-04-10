@@ -45,7 +45,6 @@ public class InsertIntoTable {
         String location = null;
         try {
             location = DatabaseUtils.getTableLocation(databaseName, tableName);
-            logger.info("Location: " + location);
         } catch (IllegalArgumentException ex) {
             logger.error("Database does not exist");
             return new OperationStatus(false, databaseName);
@@ -58,21 +57,12 @@ public class InsertIntoTable {
         } else if (location.equalsIgnoreCase("local")) {
             schema = fileOperations.readDataFromPSV(
                     DataConstants.DATABASES_FOLDER_LOCATION + databaseName + "/" + tableName + "_Schema.psv");
-            logger.info("Remote schema size: " + schema.size());
-            logger.info("Found Schema File on local");
         } else if (location.equalsIgnoreCase("remote")) {
             schema = RemoteVmUtils.readDataFromPSV(
                     DataConstants.DATABASES_FOLDER_LOCATION + databaseName + "/" + tableName + "_Schema.psv");
-            for (int i = 0; i < schema.size(); i++) {
-                for (int j = 0; j < schema.get(i).size(); j++)
-                    logger.info("Schema: " + i + " Value: " + j + " " + schema.get(i).get(j));
-            }
-            logger.info("Remote schema size: " + schema.size());
-            logger.info("Found Schema File on remote");
         }
 
         String[] values = extractValuesFromQuery(sql);
-        logger.info("Length of values: " + values.length);
 
         if (values.length != schema.size() - 1) {
             logger.error("Fields count mismatch: Expected " + (schema.size() - 1) + " fields but received "
