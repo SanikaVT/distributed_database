@@ -65,7 +65,7 @@ public class InsertIntoTable {
                     DataConstants.DATABASES_FOLDER_LOCATION + databaseName + "/" + tableName + "_Schema.psv");
             for (int i = 0; i < schema.size(); i++) {
                 for (int j = 0; j < schema.get(i).size(); j++)
-                    logger.info("Schema " + i + "Value: " + j + " " + schema.get(i).get(j));
+                    logger.info("Schema: " + i + " Value: " + j + " " + schema.get(i).get(j));
             }
             logger.info("Remote schema size: " + schema.size());
             logger.info("Found Schema File on remote");

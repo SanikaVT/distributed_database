@@ -264,7 +264,9 @@ public class RemoteVmUtils {
             path = filePath + ".psv";
         }
         String fileContent = readFileContent(filePath);
+        System.out.println("RMUtils: " + fileContent);
         String[] lines = fileContent.split("\\n|\\r\\n");
+        System.out.println("Lines Length: " + lines.length);
         int count = 0;
         while(count<lines.length){
             String line = lines[count];
