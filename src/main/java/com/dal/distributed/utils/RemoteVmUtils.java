@@ -39,6 +39,7 @@ public class RemoteVmUtils {
             }
 
             responseString = new String(responseStream.toByteArray());
+            System.out.println(responseString);
         } finally {
             if (session != null) {
                 session.disconnect();
@@ -148,6 +149,7 @@ public class RemoteVmUtils {
      * @throws Exception
      */
     public static String readFileContent(String filePath) throws Exception {
+        System.out.println("-------------------------Reading-----------------------" + filePath);
         return getOutput("cat " + filePath);
     }
 

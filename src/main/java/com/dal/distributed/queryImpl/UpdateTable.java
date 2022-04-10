@@ -56,7 +56,6 @@ public class UpdateTable {
         if (location.equals("local")) {
             data = new FileOperations().readDataFromPSV(filepath);
         } else if (location.equalsIgnoreCase("remote")) {
-            System.out.println("-------------------------Reading-----------------------" + filepath);
             data = RemoteVmUtils.readDataFromPSV(filepath);
         }
         if (data.size() == 1) {
