@@ -6,8 +6,8 @@ public class VMConstants {
     public static final int port = 22;
     public static final String KEYNAME = "";
 //    public static final String PRIVATE_KEY = projectPath + "ssh-keys/" + KEYNAME;
-    public static final String PRIVATE_KEY = "/home/chanpreet/Dal_Study/Data_Management/Project/csci-5408-group-project-dpg9/ssh-keys/chanpreets10";
+    public static final String PRIVATE_KEY = projectPath + "ssh-keys/chanpreets10" + KEYNAME;
     public static final String EXTERNAL_IP = "";
-//    VM-1 : 34.66.27.203
+//    VM-1 : 34.132.74.189
 //    VM-2 :
 }
