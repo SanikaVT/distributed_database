@@ -148,7 +148,9 @@ public class RemoteVmUtils {
      * @throws Exception
      */
     public static String readFileContent(String filePath) throws Exception {
+        System.out.println("<<<<<<<<<<<<<<< In start of readFileContent >>>>>>>>>>>>>>>>");
         filePath = VMConstants.projectPath + filePath;
+        System.out.println("I am reading this -------------- " + filePath);
         return getOutput("cat " + filePath);
     }
 
