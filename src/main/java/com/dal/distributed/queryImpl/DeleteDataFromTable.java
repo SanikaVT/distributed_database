@@ -3,17 +3,22 @@ package com.dal.distributed.queryImpl;
 import com.dal.distributed.constant.DataConstants;
 import com.dal.distributed.constant.QueryTypes;
 import com.dal.distributed.constant.RelationalOperators;
+import com.dal.distributed.logger.Logger;
 import com.dal.distributed.main.Main;
 import com.dal.distributed.queryImpl.model.OperationStatus;
 import com.dal.distributed.utils.DataUtils;
+import com.dal.distributed.utils.DatabaseUtils;
 import com.dal.distributed.utils.FileOperations;
+import com.dal.distributed.utils.RemoteVmUtils;
 
 import java.util.List;
 
 public class DeleteDataFromTable {
     private String relationalOp;
 
-    public OperationStatus execute(String query) {
+    public OperationStatus execute(String query) throws Exception {
+        Logger logger = Logger.instance();
+
         if (Main.databaseName == null) {
             System.out.println("No database selected");
             return null;
@@ -30,9 +35,25 @@ public class DeleteDataFromTable {
         int columnIndex = -1;
         boolean isRemoved = false;
         String filepath = DataConstants.DATABASES_FOLDER_LOCATION + databaseName + "/" + tablename;
-        List<List<Object>> data = new FileOperations().readDataFromPSV(filepath);
-        if(data.size()==1)
+        List<List<Object>> data;
+        String location=null;
+        try {
+            location = DatabaseUtils.getTableLocation(databaseName, tablename);
+        } catch (IllegalArgumentException ex) {
+            logger.error("Database does not exist");
+        }
+        if(location==null)
         {
+            logger.error("Table does not exist");
+            return new OperationStatus(false);
+        }
+        if(location.equals("local")){
+            data = new FileOperations().readDataFromPSV(filepath);
+        }
+        else{
+           data = new RemoteVmUtils().readDataFromPSV(filepath);
+        }
+        if (data.size() == 1) {
             System.out.println("No data present in the table");
             return new OperationStatus(false);
         }
@@ -103,14 +124,15 @@ public class DeleteDataFromTable {
             }
         }
 
-
-        if (!Main.isTransaction){
+        if (!Main.isTransaction) {
+            if(location.equals("local"))
             new FileOperations().writeDataToPSV(data, filepath);
-            operationStatus = new OperationStatus(true, data, query, filepath, QueryTypes.UPDATE, tablename, Main.databaseName,count);
+            else
+            new RemoteVmUtils().writeDataToPSV(data, filepath);
+            operationStatus = new OperationStatus(true, data, query, filepath, QueryTypes.UPDATE, tablename,Main.databaseName, count);
+        } else {
+            operationStatus = new OperationStatus(true, data, query, filepath, QueryTypes.UPDATE, tablename, Main.databaseName, count);
         }
-        else
-            operationStatus = new OperationStatus(true, data, query, filepath, QueryTypes.DELETE, tablename, databaseName,count);
-
         return operationStatus;
     }
 }

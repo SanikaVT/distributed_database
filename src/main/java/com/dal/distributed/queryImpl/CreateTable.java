@@ -5,6 +5,7 @@ import com.dal.distributed.constant.VMConstants;
 import com.dal.distributed.logger.Logger;
 import com.dal.distributed.main.Main;
 import com.dal.distributed.queryImpl.model.OperationStatus;
+import com.dal.distributed.utils.DatabaseUtils;
 import com.dal.distributed.utils.FileOperations;
 import com.dal.distributed.utils.RemoteVmUtils;
 
@@ -12,28 +13,29 @@ import java.util.concurrent.ThreadLocalRandom;
 
 
 import java.io.File;
+import java.io.IOException;
 
 public class CreateTable {
 
     private static Logger logger = Logger.instance();
 
-    public OperationStatus execute(String query) {
+    public OperationStatus execute(String query) throws Exception {
         if (Main.databaseName == null || Main.databaseName.isEmpty()) {
             System.out.println("No database selected");
             return new OperationStatus(Boolean.FALSE, null);
         }
-        int min=0, max=1;
-        String location="";
+        int min = 0, max = 1;
+        String location = "";
         int randomNum = ThreadLocalRandom.current().nextInt(min, max + 1);
-        if(randomNum==0)
-        location=VMConstants.LOCAL;
+        if (randomNum == 0)
+            location = VMConstants.LOCAL;
         else
-        location=VMConstants.REMOTE;
+            location = VMConstants.REMOTE;
         String[] sql = query.split("\\s+");
         if (sql.length > 3 && sql[0].toLowerCase().equals("create") && sql[1].toLowerCase().equals("table")) {
             String mainStatement = query.substring(query.indexOf(sql[2]));
             String tableName = mainStatement.substring(0, mainStatement.indexOf("("));
-            if (isTableExisted(Main.databaseName, tableName)) {
+            if (DatabaseUtils.getTableLocation(Main.databaseName, tableName) != null) {
                 logger.error("Table already exists! choose a different name!");
                 return new OperationStatus(Boolean.FALSE, Main.databaseName);
             }
@@ -58,28 +60,38 @@ public class CreateTable {
                 if (j != columns.length - 1)
                     schema += "\n";
             }
-
-            FileOperations.writeToExistingFile(columnNames, tableName + ".psv", DataConstants.DATABASES_FOLDER_LOCATION + Main.databaseName + "/");
-            FileOperations.writeToExistingFile(schema, tableName + "_Schema" + ".psv", DataConstants.DATABASES_FOLDER_LOCATION + Main.databaseName + "/");
-            FileOperations.writeToExistingFile(tableName+"|", Main.databaseName+".psv", DataConstants.DATABASES_FOLDER_LOCATION);
-            FileOperations.writeToExistingFile("tablename|location" + "|", Main.databaseName+".psv", DataConstants.DATABASES_FOLDER_LOCATION);
-
+            if (randomNum == 0) {
+                FileOperations.writeToExistingFile(columnNames, tableName + ".psv", DataConstants.DATABASES_FOLDER_LOCATION + Main.databaseName + "/");
+                FileOperations.writeToExistingFile(schema, tableName + "_Schema" + ".psv", DataConstants.DATABASES_FOLDER_LOCATION + Main.databaseName + "/");
+                FileOperations.writeToExistingFile("\n" + tableName + "|" + VMConstants.LOCAL, Main.databaseName + ".psv", DataConstants.DATABASES_FOLDER_LOCATION);
+                RemoteVmUtils.writeToExistingFile("\n" + tableName + "|" + VMConstants.REMOTE, Main.databaseName + ".psv", DataConstants.DATABASES_FOLDER_LOCATION);
+            } else {
+                RemoteVmUtils.writeToExistingFile(columnNames, tableName + ".psv", DataConstants.DATABASES_FOLDER_LOCATION + Main.databaseName + "/");
+                RemoteVmUtils.writeToExistingFile(schema, tableName + "_Schema" + ".psv", DataConstants.DATABASES_FOLDER_LOCATION + Main.databaseName + "/");
+                FileOperations.writeToExistingFile("\n" + tableName + "|" + VMConstants.REMOTE, Main.databaseName + ".psv", DataConstants.DATABASES_FOLDER_LOCATION);
+                RemoteVmUtils.writeToExistingFile("\n" + tableName + "|" + VMConstants.LOCAL, Main.databaseName + ".psv", DataConstants.DATABASES_FOLDER_LOCATION);
+            }
 
             return new OperationStatus(Boolean.TRUE, Main.databaseName);
         } else
             return new OperationStatus(Boolean.FALSE, Main.databaseName);
     }
 
-    private boolean isTableExisted(String databaseName, String tableName) {
-        File file[] = FileOperations.readFiles(DataConstants.DATABASES_FOLDER_LOCATION + databaseName);
-       // File file[] = RemoteVmUtils.readFiles(DataConstants.DATABASES_FOLDER_LOCATION + databaseName);
-
-        for (File f : file) {
-            if (f.getName().toLowerCase().contains(tableName.toLowerCase())) {
-                return true;
-            }
-        }
-        return false;
-    }
+    // private boolean isTableExisted(String databaseName, String tableName) throws Exception {
+    //    String fileContent=FileOperations.readFileContent(new File(DataConstants.DATABASES_FOLDER_LOCATION + databaseName));
+    //    if(fileContent.contains(tableName))
+    //    {
+    //         return true;
+    //    }
+    //    else
+    //    {
+    //        fileContent=RemoteVmUtils.readFileContent(DataConstants.DATABASES_FOLDER_LOCATION + databaseName);
+    //        if(fileContent.contains(tableName))
+    //        {
+    //            return true;
+    //        }
+    //    }
+    //     return false;
+    // }
 }
 

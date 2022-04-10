@@ -26,8 +26,8 @@ public class OperationsMenu {
 
     public void displayOperationsMenu(String userId, Scanner scanner) throws Exception {
         while (true) {
-            logger.info("Please choose from the following options:");
-            logger.info("\n1. Write Queries");
+            logger.info("\nPlease choose from the following options:");
+            logger.info("1. Write Queries");
             logger.info("2. Generate ERD");
             logger.info("3. Export");
             logger.info("4. Analytics");

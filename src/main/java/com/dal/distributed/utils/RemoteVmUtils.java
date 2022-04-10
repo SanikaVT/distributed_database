@@ -39,7 +39,6 @@ public class RemoteVmUtils {
             }
 
             responseString = new String(responseStream.toByteArray());
-            System.out.println(responseString);
         } finally {
             if (session != null) {
                 session.disconnect();
@@ -253,7 +252,7 @@ public class RemoteVmUtils {
      * @return
      * @throws Exception
      */
-    public List<List<Object>> readDataFromPSV(String filePath) throws Exception {
+    public static List<List<Object>> readDataFromPSV(String filePath) throws Exception {
         filePath = VMConstants.projectPath + filePath;
         List<List<Object>> rows = new ArrayList<>();
         List<Object> columnValues;
@@ -300,7 +299,7 @@ public class RemoteVmUtils {
      * @param filePath
      * @throws Exception
      */
-    public void writeStringToPSV(String row, String filePath) throws Exception {
+    public static void writeStringToPSV(String row, String filePath) throws Exception {
         filePath = VMConstants.projectPath + filePath;
         writeToExistingFile(row, null, filePath);
     }

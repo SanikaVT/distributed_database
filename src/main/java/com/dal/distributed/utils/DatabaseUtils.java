@@ -96,7 +96,8 @@ public class DatabaseUtils {
         catch (IOException e) {
             e.printStackTrace();
         }
-        throw new IllegalArgumentException("table name doesn't exist in the database");
+        //throw new IllegalArgumentException("table name doesn't exist in the database");
+        return null;
     }
 
     public static Map<String, String> getTableNames(String databaseName) {

@@ -9,3 +9,4 @@ target/
 run-designite.bat
 output-designite/
 usr/
+src/main/java/com/dal/distributed/constant/VMConstants.java

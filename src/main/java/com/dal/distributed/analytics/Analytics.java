@@ -5,16 +5,16 @@ import com.dal.distributed.constant.QueryRegex;
 import com.dal.distributed.logger.Logger;
 import com.dal.distributed.queryImpl.model.QueryLog;
 import com.dal.distributed.utils.FileOperations;
+import com.dal.distributed.utils.RemoteVmUtils;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.*;
 import java.util.regex.Matcher;
 
 public class Analytics {
     Logger logger = Logger.instance();
 
-    public void analyze(Scanner scanner) throws IOException {
+    public void analyze(Scanner scanner) throws Exception {
         while (true) {
             logger.info("\nPlease choose any one of the following options:");
             logger.info("1. Analytics");
@@ -37,7 +37,7 @@ public class Analytics {
         }
     }
 
-    private void analyzeQueries(String queryString) throws IOException {
+    private void analyzeQueries(String queryString) throws Exception {
         String[] query = queryString.split(" ");
         if (query[1].contains("queries")) {
             countQueries(queryString);
@@ -54,7 +54,7 @@ public class Analytics {
         }
     }
 
-    private void countOperationType(String operation) throws IOException {
+    private void countOperationType(String operation) throws Exception {
         List<QueryLog> queryLogs = getQueryLogFileInformation();
         HashMap<String, Integer> tableMap = new HashMap<>();
         for (QueryLog queryLog : queryLogs) {
@@ -78,7 +78,7 @@ public class Analytics {
         }
     }
 
-    private void countQueries(String queryString) throws IOException {
+    private void countQueries(String queryString) throws Exception {
         String [] query = queryString.split(" ");
         Matcher matcher = QueryRegex.countQueriesAnalytics.matcher(queryString);
         if (matcher.find()) {
@@ -90,7 +90,7 @@ public class Analytics {
         }
     }
 
-    private void countTotalQueries() throws IOException {
+    private void countTotalQueries() throws Exception {
         List<QueryLog> queryLogs = getQueryLogFileInformation();
         HashMap<String, Integer> userMap = new HashMap<>();
         for (QueryLog queryLog : queryLogs) {
@@ -116,7 +116,7 @@ public class Analytics {
         }
     }
 
-    private void countQueriesForUser(String userName, String databaseName) throws IOException {
+    private void countQueriesForUser(String userName, String databaseName) throws Exception {
         List<QueryLog> queryLogs = getQueryLogFileInformation();
         HashMap<String, Integer> userMap = new HashMap<>();
         for (QueryLog queryLog : queryLogs) {
@@ -141,10 +141,16 @@ public class Analytics {
         }
     }
 
-    private List<QueryLog> getQueryLogFileInformation() throws IOException {
+    private List<QueryLog> getQueryLogFileInformation() throws Exception {
         String queryLogFile = FileOperations.readFileContent(
                 new File(DataConstants.LOGS_FILE_LOCATION + DataConstants.QUERY_LOG_FILE_NAME));
-        Matcher matcher = QueryRegex.valueBetweenQuotes.matcher(queryLogFile);
+
+        String remoteQueryLogFile = RemoteVmUtils.readFileContent(DataConstants.LOGS_FILE_LOCATION + DataConstants.QUERY_LOG_FILE_NAME);
+        StringBuilder sb = new StringBuilder()
+                .append(queryLogFile)
+                .append(remoteQueryLogFile);
+
+        Matcher matcher = QueryRegex.valueBetweenQuotes.matcher(sb.toString());
         List<QueryLog> queryLogList = new ArrayList<>();
 
         //JSON to Java Object List
