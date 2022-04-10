@@ -5,9 +5,7 @@ import com.dal.distributed.constant.MiscConstants;
 import com.dal.distributed.constant.QueryRegex;
 import com.dal.distributed.constant.QueryTypes;
 import com.dal.distributed.constant.RelationalOperators;
-import com.dal.distributed.utils.DataUtils;
-import com.dal.distributed.utils.FileOperations;
-import com.dal.distributed.utils.Results;
+import com.dal.distributed.utils.*;
 import com.dal.distributed.logger.Logger;
 import com.dal.distributed.main.Main;
 import com.dal.distributed.queryImpl.model.OperationStatus;
@@ -37,7 +35,25 @@ public class SelectQuery {
             // Uncomment the line when not testing
             String filePath = DataConstants.DATABASES_FOLDER_LOCATION + Main.databaseName + "/" + tableName
                     + DataConstants.FILE_FORMAT;
-            ArrayList fileContent = FileOperations.readPsvFileForQueryOps(filePath);
+
+            String location = null;
+            try {
+                location = DatabaseUtils.getTableLocation(Main.databaseName, tableName);
+            } catch (IllegalArgumentException ex) {
+                logger.error("Database does not exist");
+                return new OperationStatus(false, Main.databaseName);
+            }
+
+            ArrayList fileContent = null;
+            if (null == location) {
+                logger.error("Table '" + tableName + "' doesn't exist");
+                return new OperationStatus(false, Main.databaseName);
+            } else if (location.equalsIgnoreCase("local")) {
+                fileContent = FileOperations.readPsvFileForQueryOps(filePath);
+            } else if (location.equalsIgnoreCase("remote")) {
+                fileContent = RemoteVmUtils.readPsvFileForQueryOps(filePath);
+            }
+
             // ArrayList fileContent =
             // FileOperations.readPsvFileForQueryOps(DataConstants.DATABASES_FOLDER_LOCATION
             // + "dbdbdb/" + tableName + DataConstants.FILE_FORMAT);
