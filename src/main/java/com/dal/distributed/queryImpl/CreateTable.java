@@ -49,7 +49,7 @@ public class CreateTable {
 
             FileOperations.writeToExistingFile(columnNames, tableName + ".psv", DataConstants.DATABASES_FOLDER_LOCATION + Main.databaseName + "/");
             FileOperations.writeToExistingFile(schema, tableName + "_Schema" + ".psv", DataConstants.DATABASES_FOLDER_LOCATION + Main.databaseName + "/");
-            //FileOperations.writeToExistingFile(tableName+"|", Main.databaseName+".psv", DataConstants.LOGS_FILE_LOCATION);
+            FileOperations.writeToExistingFile(tableName+"|", Main.databaseName+".psv", DataConstants.DATABASES_FOLDER_LOCATION);
             return new OperationStatus(Boolean.TRUE, Main.databaseName);
         } else
             return new OperationStatus(Boolean.FALSE, Main.databaseName);
