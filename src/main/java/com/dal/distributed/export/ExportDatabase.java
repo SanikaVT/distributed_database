@@ -199,6 +199,7 @@ public class ExportDatabase {
         Map<String, Column> columnNameToColumn = table.getColumns().stream()
                 .collect(Collectors.toMap(Column::getColumnName, Function.identity()));
         String genericInsertQueryPrefix = String.format(INSERT_GENERIC_QUERY_PREFIX, table.getTableName());
+        boolean isDataPresent = false;
         try (FileReader fr = new FileReader(dataFile);
              BufferedReader br = new BufferedReader(fr);) {
             // Buffered reader will now point after the header row
@@ -207,6 +208,7 @@ public class ExportDatabase {
             // This builds the entire insert query
             StringBuilder dataQueryBuilder = new StringBuilder(genericInsertQueryPrefix);
             while ((line = br.readLine()) != null) {
+                isDataPresent = true;
                 String [] rowData = line.split(MiscConstants.PIPE);
                 //This builds only comma separated list for a single row.
                 StringBuilder rowDataBuilder = new StringBuilder("(");
@@ -228,6 +230,8 @@ public class ExportDatabase {
                 rowDataBuilder.append("),");
                 dataQueryBuilder.append(rowDataBuilder);
             }
+            if (!isDataPresent)
+                return "";
             dataQueryBuilder.deleteCharAt(dataQueryBuilder.length()-1);
             dataQueryBuilder.append(";");
             return dataQueryBuilder.toString();

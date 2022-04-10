@@ -1,4 +1,5 @@
 package com.dal.distributed.main;
+import com.dal.distributed.authentication.Login;
 import com.dal.distributed.authentication.Registration;
 import com.dal.distributed.logger.Logger;
 import com.dal.distributed.miscellaneous.MiscOperations;
@@ -27,10 +28,10 @@ public class Main {
                     registration.registerUser();
                     break;
                 case "2":
-//                    Login login = new Login();
-//                    login.flow(sc);
-                    OperationsMenu operationsMenu = new OperationsMenu();
-                    operationsMenu.displayOperationsMenu(null, sc);
+                    Login login = new Login();
+                    login.flow(sc);
+//                    OperationsMenu operationsMenu = new OperationsMenu();
+//                    operationsMenu.displayOperationsMenu(null, sc);
                     break;
                 case "3":
                     break;

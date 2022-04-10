@@ -15,9 +15,9 @@ import java.util.List;
 
 public class DatabaseUtils {
 
-    private static final String  SCHEMA_FILE_SUFFIX = "_structure.psv";
+    private static final String  SCHEMA_FILE_SUFFIX = "_Schema.psv";
 
-    private static final String DATA_FILE_SUFFIX = "_data.psv";
+    private static final String DATA_FILE_SUFFIX = ".psv";
 
     public static List<File> getTableSchemaFiles(String database) {
         String databaseFolder = DataConstants.DATABASES_FOLDER_LOCATION + File.separator + database;

@@ -45,7 +45,7 @@ public class InsertIntoTable {
         File file[] = fileOperations.readFiles(DataConstants.DATABASES_FOLDER_LOCATION + databaseName);
         if (null == file) {
             logger.error("Unknown database " + databaseName);
-            return new OperationStatus(false);
+            return new OperationStatus(false, databaseName);
         }
         String finalValue = null;
         for (File f : file) {
@@ -90,9 +90,9 @@ public class InsertIntoTable {
                 }
                 finalValue = Arrays.stream(values).collect(Collectors.joining("|"));
             }
-            if (!Main.isTransaction) {
+            if (Main.isTransaction) {
                 fileOperations.writeStringToPSV(finalValue, f.getPath());
-                operationStatus = new OperationStatus(true);
+                operationStatus = new OperationStatus(true, databaseName);
             } else {
                 List<List<Object>> result = new ArrayList<>();
                 List<Object> resultVal = new ArrayList();
@@ -135,6 +135,8 @@ public class InsertIntoTable {
 
         String constraint;
         for (int i = 1; i < schema.size(); i++) {
+            if (schema.get(i).size()<3)
+                continue;
             constraint = (String) schema.get(i).get(2);
             if (constraint.equalsIgnoreCase("PRIMARY KEY")) {
                 primaryKey = schema.get(i).get(0).toString();
