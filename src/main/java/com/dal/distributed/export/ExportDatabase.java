@@ -128,7 +128,10 @@ public class ExportDatabase {
             bw.write(String.format(USE_DATABASE, database));
             bw.write("\n");
             for (Table table: tables) {
-                boolean isLocal = !VMConstants.REMOTE.equals(DatabaseUtils.getTableLocation(database, table.getTableName()));
+                String tableLocation = DatabaseUtils.getTableLocation(database, table.getTableName());
+                System.out.println(table.getTableName() + " is in: " + tableLocation);
+                boolean isLocal = !VMConstants.REMOTE.equals(tableLocation);
+                System.out.println(table.getTableName() + " is in local: " + isLocal);
                 String tableQueries = generateCreateTableAlongWithData(database, table, isLocal);
                 bw.write(tableQueries);
                 bw.write("\n");
