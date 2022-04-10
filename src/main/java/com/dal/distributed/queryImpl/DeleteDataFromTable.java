@@ -18,6 +18,7 @@ public class DeleteDataFromTable {
             System.out.println("No database selected");
             return null;
         }
+        int count=0;
         relationalOp = DataUtils.checkRelationalOperator(query);
         OperationStatus operationStatus = null;
         String[] sql = query.split("\\s+");
@@ -52,6 +53,7 @@ public class DeleteDataFromTable {
                         case RelationalOperators.EQUAL:
                             if (data.get(i).get(columnIndex).toString().equals(value)) {
                                 data.remove(data.get(i));
+                                count++;
                                 rowLength -= rowLength;
                                 isRemoved = true;
                             }
@@ -59,24 +61,28 @@ public class DeleteDataFromTable {
                         case RelationalOperators.GREATER:
                             if (Integer.parseInt(data.get(i).get(columnIndex).toString()) > Integer.parseInt(value)) {
                                 data.remove(data.get(i));
+                                count++;
                                 rowLength -= rowLength;
                                 break;
                             }
                         case RelationalOperators.LESS:
                             if (Integer.parseInt(data.get(i).get(columnIndex).toString()) < Integer.parseInt(value)) {
                                 data.remove(data.get(i));
+                                count++;
                                 rowLength -= rowLength;
                                 break;
                             }
                         case RelationalOperators.GREATEREQUAL:
                             if (Integer.parseInt(data.get(i).get(columnIndex).toString()) >= Integer.parseInt(value)) {
                                 data.remove(data.get(i));
+                                count++;
                                 rowLength -= rowLength;
                                 break;
                             }
                         case RelationalOperators.LESSEQUAL:
                             if (Integer.parseInt(data.get(i).get(columnIndex).toString()) <= Integer.parseInt(value)) {
                                 data.remove(data.get(i));
+                                count++;
                                 rowLength -= rowLength;
                                 break;
                             }
@@ -85,6 +91,7 @@ public class DeleteDataFromTable {
                         case RelationalOperators.NOTEQUAL2:
                             if (Integer.parseInt(data.get(i).get(columnIndex).toString()) != Integer.parseInt(value)) {
                                 data.remove(data.get(i));
+                                count++;
                                 rowLength -= rowLength;
                                 break;
                             }
@@ -99,10 +106,10 @@ public class DeleteDataFromTable {
 
         if (!Main.isTransaction){
             new FileOperations().writeDataToPSV(data, filepath);
-            operationStatus = new OperationStatus(true, data, query, filepath, QueryTypes.UPDATE, tablename, Main.databaseName);
+            operationStatus = new OperationStatus(true, data, query, filepath, QueryTypes.UPDATE, tablename, Main.databaseName,count);
         }
         else
-            operationStatus = new OperationStatus(true, data, query, filepath, QueryTypes.DELETE, tablename, databaseName);
+            operationStatus = new OperationStatus(true, data, query, filepath, QueryTypes.DELETE, tablename, databaseName,count);
 
         return operationStatus;
     }

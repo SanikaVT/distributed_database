@@ -11,8 +11,10 @@ public class OperationStatus {
     private String tableName;
     private boolean isRepeatTable;
     private String databaseName;
+    private int count;
 
-    public OperationStatus(boolean status, List<List<Object>> result, String query, String filePath, String queryType, String tableName, String databaseName) {
+    public OperationStatus(boolean status, List<List<Object>> result, String query, String filePath, String queryType,
+            String tableName, String databaseName, int count) {
         this.status = status;
         this.result = result;
         this.query = query;
@@ -20,6 +22,7 @@ public class OperationStatus {
         this.queryType = queryType;
         this.tableName = tableName;
         this.databaseName = databaseName;
+        this.count = count;
     }
 
     public OperationStatus(boolean status) {
@@ -94,4 +97,13 @@ public class OperationStatus {
     public void setDatabaseName(String databaseName) {
         this.databaseName = databaseName;
     }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
 }

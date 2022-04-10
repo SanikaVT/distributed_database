@@ -25,12 +25,12 @@ public class InsertIntoTable {
         boolean isTableExist = false;
         String[] query = sql.split("\\s+");
 
-        //If user enters schema.tableName
+        // If user enters schema.tableName
         String[] table = query[2].split("\\.");
         String tableName = null;
         String databaseName = null;
 
-        //If user has executed "USE databaseName"
+        // If user has executed "USE databaseName"
         if (table.length == 2) {
             databaseName = table[0];
             tableName = table[1];
@@ -54,16 +54,16 @@ public class InsertIntoTable {
 
                 String[] values = extractValuesFromQuery(sql);
 
-                List<List<Object>> schema =
-                        fileOperations.readDataFromPSV(
-                                DataConstants.DATABASES_FOLDER_LOCATION + databaseName + "/" + tableName + "_Schema.psv");
+                List<List<Object>> schema = fileOperations.readDataFromPSV(
+                        DataConstants.DATABASES_FOLDER_LOCATION + databaseName + "/" + tableName + "_Schema.psv");
 
                 if (values.length != schema.size() - 1) {
-                    logger.error("Fields count mismatch: Expected " + (schema.size() - 1) + " fields but received " + values.length);
+                    logger.error("Fields count mismatch: Expected " + (schema.size() - 1) + " fields but received "
+                            + values.length);
                     return new OperationStatus(false, databaseName);
                 }
 
-                //Primary Key already exists in the database
+                // Primary Key already exists in the database
                 if (checkForPrimaryKeyConstraint(f.getPath(), schema, values)) {
                     return new OperationStatus(false, databaseName);
                 }
@@ -72,7 +72,7 @@ public class InsertIntoTable {
                     values[i] = values[i].trim();
                     if (schema.get(i + 1).get(1).equals("int")) {
                         String value;
-                        //store value = 5 instead of "5"
+                        // store value = 5 instead of "5"
                         if (values[i].contains("'")) {
                             Matcher matcher = QueryRegex.valueBetweenQuotes.matcher(values[i]);
                             value = matcher.group();
@@ -92,13 +92,15 @@ public class InsertIntoTable {
             }
             if (!Main.isTransaction) {
                 fileOperations.writeStringToPSV(finalValue, f.getPath());
-                operationStatus = new OperationStatus(true, null, sql, f.getPath(), QueryTypes.INSERT, tableName, databaseName);
+                operationStatus = new OperationStatus(true, null, sql, f.getPath(), QueryTypes.INSERT, tableName,
+                        databaseName, 1);
             } else {
                 List<List<Object>> result = new ArrayList<>();
                 List<Object> resultVal = new ArrayList();
                 resultVal.addAll(Arrays.asList(finalValue.split("|")));
                 result.add(resultVal);
-                operationStatus = new OperationStatus(true, result, sql, f.getPath(), QueryTypes.INSERT, tableName, databaseName);
+                operationStatus = new OperationStatus(true, result, sql, f.getPath(), QueryTypes.INSERT, tableName,
+                        databaseName, 1);
             }
             break;
         }
@@ -112,7 +114,7 @@ public class InsertIntoTable {
         String primaryKey = getPrimaryKeyColumnName(schema);
         List<List<Object>> existingFile = fileOperations.readDataFromPSV(path);
 
-        //Check for primary key location in the file
+        // Check for primary key location in the file
         int primaryKeyIndex = 0;
         for (int i = 0; i < existingFile.get(0).size(); i++) {
             if (primaryKey.equalsIgnoreCase(existingFile.get(0).get(i).toString())) {
@@ -120,7 +122,7 @@ public class InsertIntoTable {
             }
         }
 
-        //Check for primary key constraint
+        // Check for primary key constraint
         for (int i = 1; i < existingFile.size(); i++) {
             if (existingFile.get(i).get(primaryKeyIndex).toString().equalsIgnoreCase(value[primaryKeyIndex])) {
                 logger.error("Duplicate entry '" + value[primaryKeyIndex] + "' for key '" + primaryKey + "'");
@@ -135,7 +137,7 @@ public class InsertIntoTable {
 
         String constraint;
         for (int i = 1; i < schema.size(); i++) {
-            if (schema.get(i).size()<3)
+            if (schema.get(i).size() < 3)
                 continue;
             constraint = (String) schema.get(i).get(2);
             if (constraint.equalsIgnoreCase("PRIMARY KEY")) {

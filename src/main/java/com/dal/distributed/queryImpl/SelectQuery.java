@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 
-
 public class SelectQuery {
     Logger logger = Logger.instance();
 
@@ -34,11 +33,14 @@ public class SelectQuery {
         Matcher matcher = QueryRegex.selectDataFromTable.matcher(query);
         if (matcher.find()) {
             String tableName = matcher.group(5);
-//        Query to test: select * from Persons2;
-//        Uncomment the line when not testing
-            String filePath = DataConstants.DATABASES_FOLDER_LOCATION + Main.databaseName + "/" + tableName + DataConstants.FILE_FORMAT;
+            // Query to test: select * from Persons2;
+            // Uncomment the line when not testing
+            String filePath = DataConstants.DATABASES_FOLDER_LOCATION + Main.databaseName + "/" + tableName
+                    + DataConstants.FILE_FORMAT;
             ArrayList fileContent = FileOperations.readPsvFileForQueryOps(filePath);
-            //ArrayList fileContent = FileOperations.readPsvFileForQueryOps(DataConstants.DATABASES_FOLDER_LOCATION + "dbdbdb/" + tableName + DataConstants.FILE_FORMAT);
+            // ArrayList fileContent =
+            // FileOperations.readPsvFileForQueryOps(DataConstants.DATABASES_FOLDER_LOCATION
+            // + "dbdbdb/" + tableName + DataConstants.FILE_FORMAT);
             String projections = matcher.group(1);
             if (projections == null)
                 logger.info("Oops.. looks like you did not add projections! Please try again!");
@@ -72,7 +74,8 @@ public class SelectQuery {
                         case RelationalOperators.EQUAL:
                             for (int i = 1; i < fileContent.size(); i++) {
                                 Map<String, String> dataDict = (Map) fileContent.get(i);
-                                if ((dataDict.containsKey(compareColumn)) && (dataDict.get(compareColumn).equals(value)))
+                                if ((dataDict.containsKey(compareColumn))
+                                        && (dataDict.get(compareColumn).equals(value)))
                                     resultList.add(dataDict);
                             }
                             break;
@@ -80,40 +83,48 @@ public class SelectQuery {
                             for (int i = 1; i < fileContent.size(); i++) {
                                 Map<String, String> dataDict = (Map) fileContent.get(i);
                                 if (valueType == "int") {
-                                    if ((dataDict.containsKey(compareColumn)) && (Integer.parseInt(dataDict.get(compareColumn)) > Integer.parseInt(value)))
+                                    if ((dataDict.containsKey(compareColumn)) && (Integer
+                                            .parseInt(dataDict.get(compareColumn)) > Integer.parseInt(value)))
                                         resultList.add(dataDict);
                                 } else
-                                    logger.error("I cannot apply " + RelationalOperators.GREATER + " on datatypes other than int!");
+                                    logger.error("I cannot apply " + RelationalOperators.GREATER
+                                            + " on datatypes other than int!");
                             }
                             break;
                         case RelationalOperators.LESS:
                             for (int i = 1; i < fileContent.size(); i++) {
                                 Map<String, String> dataDict = (Map) fileContent.get(i);
                                 if (valueType == "int") {
-                                    if ((dataDict.containsKey(compareColumn)) && (Integer.parseInt(dataDict.get(compareColumn)) < Integer.parseInt(value)))
+                                    if ((dataDict.containsKey(compareColumn)) && (Integer
+                                            .parseInt(dataDict.get(compareColumn)) < Integer.parseInt(value)))
                                         resultList.add(dataDict);
                                 } else
-                                    logger.error("I cannot apply " + RelationalOperators.LESS + " on datatypes other than int!");
+                                    logger.error("I cannot apply " + RelationalOperators.LESS
+                                            + " on datatypes other than int!");
                             }
                             break;
                         case RelationalOperators.GREATEREQUAL:
                             for (int i = 1; i < fileContent.size(); i++) {
                                 Map<String, String> dataDict = (Map) fileContent.get(i);
                                 if (valueType == "int") {
-                                    if ((dataDict.containsKey(compareColumn)) && (Integer.parseInt(dataDict.get(compareColumn)) >= Integer.parseInt(value)))
+                                    if ((dataDict.containsKey(compareColumn)) && (Integer
+                                            .parseInt(dataDict.get(compareColumn)) >= Integer.parseInt(value)))
                                         resultList.add(dataDict);
                                 } else
-                                    logger.error("I cannot apply " + RelationalOperators.GREATEREQUAL + " on datatypes other than int!");
+                                    logger.error("I cannot apply " + RelationalOperators.GREATEREQUAL
+                                            + " on datatypes other than int!");
                             }
                             break;
                         case RelationalOperators.LESSEQUAL:
                             for (int i = 1; i < fileContent.size(); i++) {
                                 Map<String, String> dataDict = (Map) fileContent.get(i);
                                 if (valueType == "int") {
-                                    if ((dataDict.containsKey(compareColumn)) && (Integer.parseInt(dataDict.get(compareColumn)) >= Integer.parseInt(value)))
+                                    if ((dataDict.containsKey(compareColumn)) && (Integer
+                                            .parseInt(dataDict.get(compareColumn)) >= Integer.parseInt(value)))
                                         resultList.add(dataDict);
                                 } else
-                                    logger.error("I cannot apply " + RelationalOperators.LESSEQUAL + " on datatypes other than int!");
+                                    logger.error("I cannot apply " + RelationalOperators.LESSEQUAL
+                                            + " on datatypes other than int!");
                             }
                             break;
                         case RelationalOperators.NOTEQUAL:
@@ -122,10 +133,12 @@ public class SelectQuery {
                             for (int i = 1; i < fileContent.size(); i++) {
                                 Map<String, String> dataDict = (Map) fileContent.get(i);
                                 if (valueType == "int") {
-                                    if ((dataDict.containsKey(compareColumn)) && (Integer.parseInt(dataDict.get(compareColumn)) != Integer.parseInt(value)))
+                                    if ((dataDict.containsKey(compareColumn)) && (Integer
+                                            .parseInt(dataDict.get(compareColumn)) != Integer.parseInt(value)))
                                         resultList.add(dataDict);
                                 } else {
-                                    if ((dataDict.containsKey(compareColumn)) && (!dataDict.get(compareColumn).equals(value)))
+                                    if ((dataDict.containsKey(compareColumn))
+                                            && (!dataDict.get(compareColumn).equals(value)))
                                         resultList.add(dataDict);
                                 }
                             }
@@ -155,7 +168,8 @@ public class SelectQuery {
                     }
                     queryResult.add(mapToList);
                 }
-                operationStatus = new OperationStatus(true, queryResult, query, filePath, QueryTypes.SELECT, tableName, Main.databaseName);
+                operationStatus = new OperationStatus(true, queryResult, query, filePath, QueryTypes.SELECT, tableName,
+                        Main.databaseName, queryResult.size());
                 if (!Main.isTransaction)
                     Results.printResult(queryResult);
             }

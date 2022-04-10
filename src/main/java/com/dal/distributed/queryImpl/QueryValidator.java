@@ -9,9 +9,11 @@ import java.util.regex.Matcher;
 
 public class QueryValidator {
     public Map validateQuery(String query) {
-        Map result = new HashMap() {{
-            put("isValidate", false);
-        }};
+        Map result = new HashMap() {
+            {
+                put("isValidate", false);
+            }
+        };
         Matcher matcher = QueryRegex.createDatabase.matcher(query);
         if (matcher.find()) {
             result.replace("isValidate", true);

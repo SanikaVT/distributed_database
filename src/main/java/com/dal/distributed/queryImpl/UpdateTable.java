@@ -18,13 +18,15 @@ public class UpdateTable {
             System.out.println("No database selected");
             return null;
         }
+        int count = 0;
         OperationStatus operationStatus = null;
         relationalOp = DataUtils.checkRelationalOperator(query);
         String[] sql = query.split("\\s+");
         String tableName = sql[1];
         String updateStatement = query.substring(query.toLowerCase().indexOf("set") + 4);
         String updateColumn = updateStatement.substring(0, updateStatement.indexOf(relationalOp));
-        String updateValue = updateStatement.substring(updateStatement.indexOf(relationalOp) + 1, updateStatement.indexOf("where") - 1);
+        String updateValue = updateStatement.substring(updateStatement.indexOf(relationalOp) + 1,
+                updateStatement.indexOf("where") - 1);
         String condition = query.substring(query.toLowerCase().indexOf("where") + 6, query.indexOf(";"));
         String column_name = condition.substring(0, condition.indexOf(relationalOp));
         String value = condition.substring(condition.indexOf(relationalOp) + 1);
@@ -36,8 +38,7 @@ public class UpdateTable {
         int updateColumnIndex = -1;
         String filepath = DataConstants.DATABASES_FOLDER_LOCATION + databaseName + "/" + tableName;
         List<List<Object>> data = new FileOperations().readDataFromPSV(filepath);
-        if(data.size()==1)
-        {
+        if (data.size() == 1) {
             System.out.println("No data present in the table");
             return new OperationStatus(false);
         }
@@ -56,33 +57,44 @@ public class UpdateTable {
                         case RelationalOperators.EQUAL:
                             if (data.get(i).get(conditionColumnIndex).toString().equals(value)) {
                                 data.get(i).set(updateColumnIndex, updateValue);
+                                count++;
                             }
                             break;
                         case RelationalOperators.GREATER:
-                            if (Integer.parseInt(data.get(i).get(conditionColumnIndex).toString()) > Integer.parseInt(value)) {
+                            if (Integer.parseInt(data.get(i).get(conditionColumnIndex).toString()) > Integer
+                                    .parseInt(value)) {
                                 data.get(i).set(updateColumnIndex, updateValue);
+                                count++;
                                 break;
                             }
                         case RelationalOperators.LESS:
-                            if (Integer.parseInt(data.get(i).get(conditionColumnIndex).toString()) < Integer.parseInt(value)) {
+                            if (Integer.parseInt(data.get(i).get(conditionColumnIndex).toString()) < Integer
+                                    .parseInt(value)) {
                                 data.get(i).set(updateColumnIndex, updateValue);
+                                count++;
                                 break;
                             }
                         case RelationalOperators.GREATEREQUAL:
-                            if (Integer.parseInt(data.get(i).get(conditionColumnIndex).toString()) >= Integer.parseInt(value)) {
+                            if (Integer.parseInt(data.get(i).get(conditionColumnIndex).toString()) >= Integer
+                                    .parseInt(value)) {
                                 data.get(i).set(updateColumnIndex, updateValue);
+                                count++;
                                 break;
                             }
                         case RelationalOperators.LESSEQUAL:
-                            if (Integer.parseInt(data.get(i).get(conditionColumnIndex).toString()) <= Integer.parseInt(value)) {
+                            if (Integer.parseInt(data.get(i).get(conditionColumnIndex).toString()) <= Integer
+                                    .parseInt(value)) {
                                 data.get(i).set(updateColumnIndex, updateValue);
+                                count++;
                                 break;
                             }
                         case RelationalOperators.NOTEQUAL:
                         case RelationalOperators.NOTEQUAL1:
                         case RelationalOperators.NOTEQUAL2:
-                            if (Integer.parseInt(data.get(i).get(conditionColumnIndex).toString()) != Integer.parseInt(value)) {
+                            if (Integer.parseInt(data.get(i).get(conditionColumnIndex).toString()) != Integer
+                                    .parseInt(value)) {
                                 data.get(i).set(updateColumnIndex, updateValue);
+                                count++;
                                 break;
                             }
                     }
@@ -94,9 +106,11 @@ public class UpdateTable {
         }
         if (!Main.isTransaction) {
             new FileOperations().writeDataToPSV(data, filepath);
-            operationStatus = new OperationStatus(true, data, query, filepath, QueryTypes.UPDATE, tableName, Main.databaseName);
+            operationStatus = new OperationStatus(true, data, query, filepath, QueryTypes.UPDATE, tableName,
+                    Main.databaseName, count);
         } else {
-            operationStatus = new OperationStatus(true, data, query, filepath, QueryTypes.UPDATE, tableName, Main.databaseName);
+            operationStatus = new OperationStatus(true, data, query, filepath, QueryTypes.UPDATE, tableName,
+                    Main.databaseName, count);
         }
         return operationStatus;
     }
