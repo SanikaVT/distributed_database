@@ -85,7 +85,8 @@ public class ExportDatabase {
             return null;
             }
         List<File> schemaFiles = DatabaseUtils.getTableSchemaFiles(database);
-        if (schemaFiles == null || schemaFiles.isEmpty()) {
+        List<Table> remoteTables = DatabaseUtils.getRemoteTables(database);
+        if ((schemaFiles == null || schemaFiles.isEmpty()) && (remoteTables == null || remoteTables.isEmpty())) {
             logger.info("Selected database is empty! Please choose another one to export");
             return null;
         }
@@ -95,7 +96,7 @@ public class ExportDatabase {
             Table table = Table.createTableModel(tableFile.getName(), database, columnDefs);
             tables.add(table);
         }
-        tables.addAll(DatabaseUtils.getRemoteTables(database));
+        tables.addAll(remoteTables);
 
         //sort tables based on the foreign keys
         Collections.sort(tables, (o1, o2) -> {
