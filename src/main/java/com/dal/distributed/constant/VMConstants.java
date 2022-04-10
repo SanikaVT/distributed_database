@@ -8,6 +8,8 @@ public class VMConstants {
 //    public static final String PRIVATE_KEY = projectPath + "ssh-keys/" + KEYNAME;
     public static final String PRIVATE_KEY = projectPath + "ssh-keys/chanpreets10" + KEYNAME;
     public static final String EXTERNAL_IP = "";
+    public static final String LOCAL="local";
+    public static final String REMOTE="remote";
 //    VM-1 : 34.132.74.189
 //    VM-2 :
 }

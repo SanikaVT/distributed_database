@@ -1,10 +1,15 @@
 package com.dal.distributed.queryImpl;
 
 import com.dal.distributed.constant.DataConstants;
+import com.dal.distributed.constant.VMConstants;
 import com.dal.distributed.logger.Logger;
 import com.dal.distributed.main.Main;
 import com.dal.distributed.queryImpl.model.OperationStatus;
 import com.dal.distributed.utils.FileOperations;
+import com.dal.distributed.utils.RemoteVmUtils;
+
+import java.util.concurrent.ThreadLocalRandom;
+
 
 import java.io.File;
 
@@ -17,6 +22,13 @@ public class CreateTable {
             System.out.println("No database selected");
             return new OperationStatus(Boolean.FALSE, null);
         }
+        int min=0, max=1;
+        String location="";
+        int randomNum = ThreadLocalRandom.current().nextInt(min, max + 1);
+        if(randomNum==0)
+        location=VMConstants.LOCAL;
+        else
+        location=VMConstants.REMOTE;
         String[] sql = query.split("\\s+");
         if (sql.length > 3 && sql[0].toLowerCase().equals("create") && sql[1].toLowerCase().equals("table")) {
             String mainStatement = query.substring(query.indexOf(sql[2]));
@@ -50,6 +62,9 @@ public class CreateTable {
             FileOperations.writeToExistingFile(columnNames, tableName + ".psv", DataConstants.DATABASES_FOLDER_LOCATION + Main.databaseName + "/");
             FileOperations.writeToExistingFile(schema, tableName + "_Schema" + ".psv", DataConstants.DATABASES_FOLDER_LOCATION + Main.databaseName + "/");
             FileOperations.writeToExistingFile(tableName+"|", Main.databaseName+".psv", DataConstants.DATABASES_FOLDER_LOCATION);
+            FileOperations.writeToExistingFile("tablename|location" + "|", Main.databaseName+".psv", DataConstants.DATABASES_FOLDER_LOCATION);
+
+
             return new OperationStatus(Boolean.TRUE, Main.databaseName);
         } else
             return new OperationStatus(Boolean.FALSE, Main.databaseName);
@@ -57,6 +72,8 @@ public class CreateTable {
 
     private boolean isTableExisted(String databaseName, String tableName) {
         File file[] = FileOperations.readFiles(DataConstants.DATABASES_FOLDER_LOCATION + databaseName);
+       // File file[] = RemoteVmUtils.readFiles(DataConstants.DATABASES_FOLDER_LOCATION + databaseName);
+
         for (File f : file) {
             if (f.getName().toLowerCase().contains(tableName.toLowerCase())) {
                 return true;
