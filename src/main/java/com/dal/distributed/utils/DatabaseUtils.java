@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 public class DatabaseUtils {
 
-    private static final String  SCHEMA_FILE_SUFFIX = "_Schema.psv";
+    private static final String SCHEMA_FILE_SUFFIX = "_Schema.psv";
 
     private static final String DATA_FILE_SUFFIX = ".psv";
 
@@ -23,11 +23,11 @@ public class DatabaseUtils {
 
     public static List<File> getTableSchemaFiles(String database) {
         String databaseFolder = DataConstants.DATABASES_FOLDER_LOCATION + File.separator + database;
-        File [] databaseFiles = FileOperations.readFiles(databaseFolder);
+        File[] databaseFiles = FileOperations.readFiles(databaseFolder);
         if (databaseFiles.length == 1)
             return Collections.emptyList();
         List<File> schemaFiles = new ArrayList<>();
-        for (File databaseFile: databaseFiles) {
+        for (File databaseFile : databaseFiles) {
             if (databaseFile.getName().endsWith(SCHEMA_FILE_SUFFIX))
                 schemaFiles.add(databaseFile);
         }
@@ -36,17 +36,16 @@ public class DatabaseUtils {
 
     public static List<String> getColumnDefinitions(String database, File tableSchemaFile) {
         try (FileReader fr = new FileReader(tableSchemaFile);
-             BufferedReader br = new BufferedReader(fr)){
+             BufferedReader br = new BufferedReader(fr)) {
             //The buffered reader will now point after header row
             br.readLine();
             List<String> columnDefinitions = new ArrayList<>();
             String colDefinition;
-            while ((colDefinition = br.readLine())!=null) {
+            while ((colDefinition = br.readLine()) != null) {
                 columnDefinitions.add(colDefinition);
             }
             return columnDefinitions;
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return Collections.emptyList();
@@ -68,10 +67,9 @@ public class DatabaseUtils {
 
     public static List<String> getColumnNames(File tableDataFile) {
         try (FileReader fr = new FileReader(tableDataFile);
-             BufferedReader br = new BufferedReader(fr);){
-             return Arrays.asList(br.readLine().split(MiscConstants.PIPE));
-        }
-        catch (IOException e) {
+             BufferedReader br = new BufferedReader(fr);) {
+            return Arrays.asList(br.readLine().split(MiscConstants.PIPE));
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return Collections.emptyList();
@@ -83,21 +81,17 @@ public class DatabaseUtils {
         if (!metaDataFile.exists())
             throw new IllegalArgumentException("Database doesn't exist");
         try (FileReader fr = new FileReader(metaDataFile);
-             BufferedReader br = new BufferedReader(fr)){
+             BufferedReader br = new BufferedReader(fr)) {
             //Buffered read will point after header row
             br.readLine();
             String tableInfo;
-            while ((tableInfo= br.readLine())!=null) {
-                System.out.println("tableInfo: " + tableInfo);
-                String [] tableInfoArr = tableInfo.split(MiscConstants.PIPE);
-                System.out.println(tableInfoArr[0] + " " + tableInfoArr[1]);
+            while ((tableInfo = br.readLine()) != null) {
+                String[] tableInfoArr = tableInfo.split(MiscConstants.PIPE);
                 if (tableInfoArr[0].equalsIgnoreCase(tableName)) {
-                    System.out.println("Matched with: " + tableName + " for: " + tableInfoArr[0]);
                     return tableInfoArr[1];
                 }
             }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         //throw new IllegalArgumentException("table name doesn't exist in the database");
@@ -111,16 +105,15 @@ public class DatabaseUtils {
             throw new IllegalArgumentException("Database doesn't exist");
         Map<String, String> tableNameToLocation = new HashMap<>();
         try (FileReader fr = new FileReader(metaDataFile);
-             BufferedReader br = new BufferedReader(fr)){
+             BufferedReader br = new BufferedReader(fr)) {
             //Buffered read will point after header row
             br.readLine();
             String tableInfo;
-            while ((tableInfo= br.readLine())!=null) {
-                String [] tableInfoArr = tableInfo.split(MiscConstants.PIPE);
+            while ((tableInfo = br.readLine()) != null) {
+                String[] tableInfoArr = tableInfo.split(MiscConstants.PIPE);
                 tableNameToLocation.put(tableInfoArr[0], tableInfoArr[1]);
             }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return tableNameToLocation;
@@ -131,7 +124,7 @@ public class DatabaseUtils {
         List<String> remoteTableNames = tableNameToLocation.entrySet().stream()
                 .filter(x -> VMConstants.REMOTE.equals(x.getValue())).map(x -> x.getKey()).collect(Collectors.toList());
         List<Table> remoteTables = new ArrayList<>();
-        for (String tableName: remoteTableNames) {
+        for (String tableName : remoteTableNames) {
             String tableSchema = RemoteVmUtils.readFileContent(VMConstants.projectPath + DataConstants.DATABASES_FOLDER_LOCATION + databaseName + File.separator + tableName + SCHEMA_FILE_SUFFIX);
             List<String> columnStrWithHeaders = Arrays.asList(tableSchema.split("\n"));
             List<String> columnStr = columnStrWithHeaders.subList(1, columnStrWithHeaders.size());

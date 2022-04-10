@@ -78,7 +78,6 @@ public class RemoteVmUtils {
             }
 
             responseString = new String(responseStream.toByteArray());
-            System.out.println(responseString);
         } finally {
             if (session != null) {
                 session.disconnect();

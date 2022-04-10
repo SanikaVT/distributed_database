@@ -23,7 +23,7 @@ public class DeleteDataFromTable {
             System.out.println("No database selected");
             return null;
         }
-        int count=0;
+        int count = 0;
         relationalOp = DataUtils.checkRelationalOperator(query);
         OperationStatus operationStatus = null;
         String[] sql = query.split("\\s+");
@@ -36,22 +36,20 @@ public class DeleteDataFromTable {
         boolean isRemoved = false;
         String filepath = DataConstants.DATABASES_FOLDER_LOCATION + databaseName + "/" + tablename;
         List<List<Object>> data;
-        String location=null;
+        String location = null;
         try {
             location = DatabaseUtils.getTableLocation(databaseName, tablename);
         } catch (IllegalArgumentException ex) {
             logger.error("Database does not exist");
         }
-        if(location==null)
-        {
+        if (location == null) {
             logger.error("Table does not exist");
             return new OperationStatus(false);
         }
-        if(location.equals("local")){
+        if (location.equalsIgnoreCase("local")) {
             data = new FileOperations().readDataFromPSV(filepath);
-        }
-        else{
-           data = new RemoteVmUtils().readDataFromPSV(filepath);
+        } else {
+            data = new RemoteVmUtils().readDataFromPSV(filepath);
         }
         if (data.size() == 1) {
             System.out.println("No data present in the table");
@@ -125,11 +123,11 @@ public class DeleteDataFromTable {
         }
 
         if (!Main.isTransaction) {
-            if(location.equals("local"))
-            new FileOperations().writeDataToPSV(data, filepath);
+            if (location.equals("local"))
+                new FileOperations().writeDataToPSV(data, filepath);
             else
-            new RemoteVmUtils().writeDataToPSV(data, filepath);
-            operationStatus = new OperationStatus(true, data, query, filepath, QueryTypes.UPDATE, tablename,Main.databaseName, count);
+                new RemoteVmUtils().writeDataToPSV(data, filepath);
+            operationStatus = new OperationStatus(true, data, query, filepath, QueryTypes.UPDATE, tablename, Main.databaseName, count);
         } else {
             operationStatus = new OperationStatus(true, data, query, filepath, QueryTypes.UPDATE, tablename, Main.databaseName, count);
         }
