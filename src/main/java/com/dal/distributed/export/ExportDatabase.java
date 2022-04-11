@@ -73,7 +73,7 @@ public class ExportDatabase {
     }
 
     private String exportStructureAndValue(String database) throws Exception {
-        if (!isDatabaseExists(database))
+        if (!ExportDatabase.isDatabaseExists(database))
             return null;
         List<File> schemaFiles = DatabaseUtils.getTableSchemaFiles(database);
         List<Table> remoteTables = DatabaseUtils.getRemoteTables(database);
@@ -82,10 +82,12 @@ public class ExportDatabase {
             return null;
         }
         List<Table> tables = new ArrayList<>(remoteTables);
-        for (File tableFile: schemaFiles) {
-            List<String> columnDefs = DatabaseUtils.getColumnDefinitions(database, tableFile);
-            Table table = Table.createTableModel(tableFile.getName(), database, columnDefs);
-            tables.add(table);
+        if (schemaFiles != null || !schemaFiles.isEmpty()) {
+            for (File tableFile : schemaFiles) {
+                List<String> columnDefs = DatabaseUtils.getColumnDefinitions(database, tableFile);
+                Table table = Table.createTableModel(tableFile.getName(), database, columnDefs);
+                tables.add(table);
+            }
         }
 
         //sort tables based on the foreign keys
